@@ -1,0 +1,25 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "trace": "verboser",
+  "configurations": [
+    {
+      "name": "Graphql Express Server: debug server-side",
+      "type": "node",
+      "request": "attach", 
+      "outFiles": ["${workspaceFolder}/build/**/*.js"],
+      "sourceMaps": true,
+      "smartStep": true,
+      "address": "127.0.0.1",
+      "port": 9934,
+      "continueOnAttach": true,
+      "autoAttachChildProcesses": true,
+      "restart": true,
+      "sourceMapPathOverrides": {
+        "webpack:///./*": "${workspaceFolder}/*"
+      }
+    }
+  ]
+}
