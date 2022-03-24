@@ -2,7 +2,7 @@
 import mysql from "serverless-mysql";
 import SqlString from "sqlstring";
 
-const db: mysql.ServerlessMysql =
+export const db: mysql.ServerlessMysql =
   process.env.MYSQL_PASS &&
   (mysql({
     config: {

@@ -14,16 +14,17 @@
 
 -- Дамп структуры для таблица github-next-js.manufacturer
 CREATE TABLE IF NOT EXISTS `manufacturer` (
-  `manufacturer_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `manufacturer_name` text NOT NULL,
-  PRIMARY KEY (`manufacturer_id`),
-  UNIQUE KEY `Индекс 2` (`manufacturer_name`(100))
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4;
+  `manufacturerId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `manufacturerName` varchar(1024) NOT NULL,
+  PRIMARY KEY (`manufacturerId`) USING BTREE,
+  UNIQUE KEY `Индекс 2` (`manufacturerName`(100)) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4;
 
 -- Дамп данных таблицы github-next-js.manufacturer: ~1 rows (приблизительно)
 /*!40000 ALTER TABLE `manufacturer` DISABLE KEYS */;
-INSERT IGNORE INTO `manufacturer` (`manufacturer_id`, `manufacturer_name`) VALUES
-	(13, 'uu');
+INSERT IGNORE INTO `manufacturer` (`manufacturerId`, `manufacturerName`) VALUES
+	(13, 'uu'),
+	(16, 'EincodeTest');
 /*!40000 ALTER TABLE `manufacturer` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

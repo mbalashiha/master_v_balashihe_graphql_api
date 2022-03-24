@@ -18,10 +18,13 @@ CREATE TABLE IF NOT EXISTS `product_option_name` (
   `name` varchar(255) NOT NULL,
   PRIMARY KEY (`nameId`) USING BTREE,
   UNIQUE KEY `name_unique` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4;
 
--- Дамп данных таблицы github-next-js.product_option_name: ~0 rows (приблизительно)
+-- Дамп данных таблицы github-next-js.product_option_name: ~2 rows (приблизительно)
 /*!40000 ALTER TABLE `product_option_name` DISABLE KEYS */;
+INSERT IGNORE INTO `product_option_name` (`nameId`, `name`) VALUES
+	(5, 'Color'),
+	(4, 'Size');
 /*!40000 ALTER TABLE `product_option_name` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

@@ -19,10 +19,16 @@ CREATE TABLE IF NOT EXISTS `product_option` (
   `valueId` int(10) unsigned NOT NULL,
   PRIMARY KEY (`optionId`),
   UNIQUE KEY `FK_product_option_product` (`nameId`,`valueId`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4;
 
--- Дамп данных таблицы github-next-js.product_option: ~0 rows (приблизительно)
+-- Дамп данных таблицы github-next-js.product_option: ~5 rows (приблизительно)
 /*!40000 ALTER TABLE `product_option` DISABLE KEYS */;
+INSERT IGNORE INTO `product_option` (`optionId`, `nameId`, `valueId`) VALUES
+	(3, 4, 3),
+	(6, 4, 6),
+	(7, 4, 7),
+	(4, 5, 4),
+	(5, 5, 5);
 /*!40000 ALTER TABLE `product_option` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
