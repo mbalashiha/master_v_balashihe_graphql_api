@@ -17,6 +17,7 @@
       "continueOnAttach": true,
       "autoAttachChildProcesses": true,
       "restart": true,
+      "internalConsoleOptions": "openOnSessionStart",
       "sourceMapPathOverrides": {
         "webpack:///./*": "${workspaceFolder}/*"
       }
