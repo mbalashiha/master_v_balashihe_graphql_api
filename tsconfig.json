@@ -28,6 +28,6 @@
     "jsx": "preserve",
     "incremental": true
   },
-  "include": ["**/*.ts", "**/*.tsx"],
+  "include": ["**/*.ts", "**/*.tsx", "src/zzz_type-defs.tsexcluded"],
   "exclude": ["node_modules"]
 }

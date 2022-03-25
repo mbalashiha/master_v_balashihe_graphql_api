@@ -1,0 +1,271 @@
+import graphql from "graphql";
+const {
+  GraphQLObjectType,
+  GraphQLList,
+  GraphQLInt,
+  GraphQLID,
+  GraphQLString,
+  GraphQLBoolean,
+  GraphQLSchema,
+  GraphQLNonNull,
+  GraphQLInterfaceType,
+} = graphql;
+
+const PageInfoType = new GraphQLObjectType({
+  name: "PageInfo",
+  fields: () => ({
+    startCursor: { type: GraphQLString },
+    endCursor: { type: GraphQLString },
+    hasNextPage: { type: GraphQLBoolean },
+    hasPreviousPage: { type: GraphQLBoolean },
+  }),
+});
+const MoneyV2Type = new GraphQLObjectType({
+  name: "MoneyV2",
+  fields: () => ({
+    amount: { type: GraphQLInt },
+    currencyCode: { type: GraphQLString },
+  }),
+});
+const PriceRangeType = new GraphQLObjectType({
+  name: "PriceRange",
+  fields: () => ({
+    value: { type: GraphQLInt },
+    minVariantPrice: { type: MoneyV2Type },
+    maxVariantPrice: { type: MoneyV2Type },
+  }),
+});
+const ImageEdgeType = new GraphQLObjectType({
+  name: "ImageEdge",
+  fields: () => ({
+    value: { type: MoneyV2Type },
+    currencyCode: { type: MoneyV2Type },
+  }),
+});
+const ImageConnectionType = new GraphQLObjectType({
+  name: "Image",
+  fields: () => ({
+    cursor: { type: new GraphQLNonNull(GraphQLString) },
+    node: { type: ImageType },
+  }),
+});
+const ImageType = new GraphQLObjectType({
+  name: "Image",
+  fields: () => ({
+    pageInfo: { type: new GraphQLNonNull(PageInfoType) },
+    originalSrc: { type: GraphQLString },
+    altText: { type: GraphQLString },
+    height: { type: GraphQLInt },
+    width: { type: GraphQLInt },
+  }),
+});
+const OptionType = new GraphQLObjectType({
+  name: "Option",
+  fields: () => ({
+    id: { type: GraphQLID },
+    name: { type: GraphQLString },
+    values: { type: new GraphQLList(GraphQLString) },
+  }),
+});
+const SelectedOptionType = new GraphQLObjectType({
+  name: "SelectedOption",
+  fields: () => ({
+    name: { type: GraphQLString },
+    value: { type: GraphQLString },
+  }),
+});
+const VariantEdgeType = new GraphQLObjectType({
+  name: "VariantEdge",
+  fields: () => ({
+    cursor: { type: new GraphQLNonNull(GraphQLString) },
+    node: { type: VariantType },
+  }),
+});
+const VariantType = new GraphQLObjectType({
+  name: "Variant",
+  fields: () => ({
+    id: { type: GraphQLID },
+    title: { type: GraphQLString },
+    sku: { type: GraphQLString },
+    selectedOptions: { type: new GraphQLList(SelectedOptionType) },
+    priceV2: { type: MoneyV2Type },
+    compareAtPriceV2: { type: MoneyV2Type },
+    image: { type: ImageType },
+    product: { type: ProductType },
+  }),
+});
+const VariantConnectionType = new GraphQLObjectType({
+  name: "VariantConnection",
+  fields: () => ({
+    pageInfo: { type: new GraphQLNonNull(PageInfoType) },
+    edges: { type: new GraphQLList(VariantEdgeType) },
+  }),
+});
+const ValueType = new GraphQLObjectType({
+  name: "Value",
+  fields: () => ({
+    label: { type: GraphQLString },
+    isDefaul: { type: GraphQLBoolean },
+    hexColors: { type: new GraphQLList(GraphQLString) },
+  }),
+});
+const ProductOptionType = new GraphQLObjectType({
+  name: "ProductOption",
+  fields: () => ({
+    entityId: { type: GraphQLInt },
+    displayName: { type: GraphQLString },
+    values: { type: new GraphQLList(GraphQLString) },
+  }),
+});
+const NodeInterface = new GraphQLInterfaceType({
+  name: "Node",
+  fields: () => ({
+    id: { type: GraphQLID },
+  }),
+});
+const ProductConnectionType = new GraphQLObjectType({
+  name: "ProductConnection",
+  fields: () => ({
+    pageInfo: { type: new GraphQLList(PageInfoType) },
+    edges: { type: new GraphQLList(ProductEdgeType) },
+  }),
+});
+const ProductEdgeType = new GraphQLObjectType({
+  name: "ProductEdge",
+  fields: () => ({
+    cursor: { type: new GraphQLNonNull(GraphQLString) },
+    node: { type: ProductType },
+  }),
+});
+const ProductType = new GraphQLObjectType({
+  name: "Product",
+  interfaces: () => [NodeInterface],
+  fields: () => ({
+    id: { type: GraphQLID },
+    title: { type: GraphQLString },
+    handle: { type: GraphQLString },
+    description: { type: GraphQLString },
+    descriptionHtml: { type: GraphQLString },
+    vendor: { type: GraphQLString },
+    priceRange: { type: PriceRangeType },
+    options: { type: new GraphQLList(OptionType) },
+    images: {
+      type: ImageConnectionType,
+      args: {
+        first: { type: GraphQLInt },
+      },
+      resolve(parent, args) {
+        // let user = new User({
+        //     name: args.name,
+        //     email: args.email,
+        //     password: args.password,
+        // });
+        // return user.save();
+      },
+    },
+    images: {
+      type: ImageConnectionType,
+      args: {
+        first: { type: GraphQLInt },
+      },
+      resolve(parent, args) {
+        // let user = new User({
+        //     name: args.name,
+        //     email: args.email,
+        //     password: args.password,
+        // });
+        // return user.save();
+      },
+    },
+  }),
+});
+export const typeDefsSchema = `
+  type Product implements Node {
+    id: ID!
+    title: String
+    handle: String
+    description: String
+    descriptionHtml: String
+    vendor: String
+    priceRange: PriceRange
+    options: [Option]
+    images(first: Int): ImageConnection
+    variants(first: Int): VariantConnection
+  }
+
+  type CheckoutUserError {
+    field: String
+    message: String
+  }
+
+  type LineItem implements Node {
+    id: ID!
+    quantity: Int
+    title: String
+    unityPrice: MoneyV2
+    variant: Variant
+    product: Product
+  }
+
+  type LineItemEdge {
+    cursor: String!
+    node: LineItem
+  }
+
+  type LineItemConnection {
+    pageInfo: PageInfo!
+    edges: [LineItemEdge]
+  }
+
+  type Checkout implements Node {
+    id: ID!
+    webUrl: String
+    subtotalPriceV2: MoneyV2
+    totalTaxV2: MoneyV2
+    totalPriceV2: MoneyV2
+    completedAt: String
+    createdAt: String
+    taxesIncluded: Boolean
+    lineItems(first: Int): LineItemConnection
+  }
+
+  type CheckoutResponse {
+    checkoutUserErrors: [CheckoutUserError]
+    checkout: Checkout
+  }
+
+  type Query {
+    products(first: Int): ProductConnection
+    productByHandle(handle: String): Product
+    hello: String
+    node(id: ID!): Node
+  }
+
+  input CheckoutLineItemInput {
+    variantId: ID
+    quantity: Int
+  }
+
+  input CheckoutLineItemUpdateInput {
+    id: ID
+    variantId: ID
+    quantity: Int
+  }
+
+  input CheckoutCreateInput {
+    id: ID
+  }
+
+  type Mutation {
+    checkoutCreate(input: CheckoutCreateInput): CheckoutResponse
+    checkoutLineItemsAdd(
+      checkoutId: ID
+      lineItems: [CheckoutLineItemInput]
+    ): CheckoutResponse
+    checkoutLineItemsUpdate(
+      checkoutId: ID
+      lineItems: [CheckoutLineItemUpdateInput]
+    ): CheckoutResponse
+    checkoutLineItemsRemove(checkoutId: ID, lineItemIds: [ID]): CheckoutResponse
+  }
+`;

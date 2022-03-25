@@ -4,15 +4,20 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "build": "webpack --config webpack.config.prod.js",
     "start:dev": "webpack",
-    "run:dev": "nodemon --inspect=9934 build/index.js"
+    "run:dev": "nodemon --inspect=9934 build/index.js",
+    "build": "webpack --config webpack.config.prod.js"
+  },
+  "nodemonConfig": {
+    "ext": "ts,json,js,graphql,tsx,jsx"
   },
   "dependencies": {
     "@types/express": "^4.17.13",
     "express": "^4.17.3",
     "express-graphql": "^0.12.0",
     "graphql": "^16.3.0",
+    "graphql-fields": "^2.0.3",
+    "graphql-tag": "^2.12.6",
     "serverless-mysql": "^1.5.4",
     "sqlstring": "^2.3.3"
   },

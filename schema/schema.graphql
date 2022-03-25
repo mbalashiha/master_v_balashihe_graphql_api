@@ -1,0 +1,179 @@
+type PageInfo {
+  startCursor: Int
+  endCursor: Int
+  hasNextPage: Boolean
+  hasPreviousPage: Boolean
+}
+
+type Price {
+  amount: Int
+  currencyCode: String
+}
+
+type PriceRange {
+  value: Int
+  minVariantPrice: Price
+  maxVariantPrice: Price
+}
+
+type ImageEdge {
+  cursor: String!
+  node: Image
+}
+
+type ImageConnection {
+  pageInfo: PageInfo!
+  edges: [ImageEdge]
+}
+
+type Image {
+  pageInfo: PageInfo!
+  originalSrc: String
+  altText: String
+  height: Int
+  width: Int
+}
+
+type Option {
+  id: ID
+  name: String
+  values: [String]
+}
+
+type SelectedOption {
+  name: String
+  value: String
+}
+
+type Variant {
+  id: ID
+  title: String
+  sku: String
+  selectedOptions: [SelectedOption]
+  price: Price
+  compareAtPriceV2: Price
+  image: Image
+  product: Product
+}
+
+type VariantEdge {
+  cursor: String!
+  node: Variant
+}
+
+type VariantConnection {
+  pageInfo: PageInfo!
+  edges: [VariantEdge]
+}
+
+type Value {
+  label: String
+  isDefaul: Boolean
+  hexColors: [String]
+}
+
+type ProductOption {
+  entityId: Int
+  displayName: String
+  values: [Value]
+}
+
+type ProductConnection {
+  pageInfo: PageInfo!
+  products: [Product]
+}
+
+type ProductEdge {
+  cursor: String!
+  node: Product
+}
+
+type Product {
+  productId: ID!
+  title: String
+  handle: String
+  description: String
+  descriptionHtml: String
+  vendor: String
+  priceRange: PriceRange
+  options: [Option]
+  images(first: Int): ImageConnection
+  variants(first: Int): VariantConnection
+}
+
+type CheckoutUserError {
+  field: String
+  message: String
+}
+
+type LineItem {
+  id: ID!
+  cursor: ID!
+  quantity: Int
+  title: String
+  unityPrice: Price
+  variant: Variant
+  product: Product
+}
+
+type LineItemEdge {
+  cursor: String!
+  node: LineItem
+}
+
+type LineItemConnection {
+  pageInfo: PageInfo!
+  edges: [LineItemEdge]
+}
+
+type Checkout {
+  cursor: ID!
+  id: ID!
+  webUrl: String
+  subtotalPrice: Price
+  totalTax: Price
+  totalPrice: Price
+  completedAt: String
+  createdAt: String
+  taxesIncluded: Boolean
+  lineItems(first: Int): LineItemConnection
+}
+
+type CheckoutResponse {
+  checkoutUserErrors: [CheckoutUserError]
+  checkout: Checkout
+}
+
+type Query {
+  products(offset: Int, limit: Int): ProductConnection
+  productByHandle(handle: String): Product
+  hello: String
+}
+
+input CheckoutLineItemInput {
+  variantId: ID
+  quantity: Int
+}
+
+input CheckoutLineItemUpdateInput {
+  id: ID
+  variantId: ID
+  quantity: Int
+}
+
+input CheckoutCreateInput {
+  id: ID
+}
+
+type Mutation {
+  checkoutCreate(input: CheckoutCreateInput): CheckoutResponse
+  checkoutLineItemsAdd(
+    checkoutId: ID
+    lineItems: [CheckoutLineItemInput]
+  ): CheckoutResponse
+  checkoutLineItemsUpdate(
+    checkoutId: ID
+    lineItems: [CheckoutLineItemUpdateInput]
+  ): CheckoutResponse
+  checkoutLineItemsRemove(checkoutId: ID, lineItemIds: [ID]): CheckoutResponse
+}

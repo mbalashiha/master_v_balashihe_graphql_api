@@ -7,6 +7,9 @@ const Dotenv = require("dotenv-webpack");
 
 const NODE_ENV = "development";
 module.exports = {
+  devServer: {
+    historyApiFallback: true,
+  },
   entry: "./src/index.ts",
   devtool: false,
   mode: "development",
