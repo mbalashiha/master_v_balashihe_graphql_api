@@ -40,12 +40,11 @@ class MysqlDbWrapper {
       throw new Error("Sql query variable must be set as string.");
     }
     const localReplacer = (_, mainGroup) => {
-      const tNum = /^\d+$/im.test(mainGroup)
-        ? parseInt(mainGroup) - 1
-        : mainGroup;
+      const tryNumberGroup = /^\d+$/im.test(mainGroup) && parseInt(mainGroup) || undefined;
+      const queryKey = tryNumberGroup ? tryNumberGroup - 1 : mainGroup;
       const oneVariable =
-        typeof variables[tNum] !== "undefined"
-          ? variables[tNum]
+        typeof variables[queryKey] !== "undefined"
+          ? variables[queryKey]
           : typeof variables[mainGroup] !== "undefined"
           ? variables[mainGroup]
           : undefined;
@@ -69,7 +68,7 @@ class MysqlDbWrapper {
         }
       }
     );
-    return query;
+    return SqlString.format(query, variables);
   }
   async queryWithArray(
     query: string,
@@ -113,11 +112,7 @@ class MysqlDbWrapper {
         query,
         normalizedVariables
       );
-      const formattedStatement = SqlString.format(
-        myPreformattedQuery,
-        normalizedVariables
-      );
-      const results = await db.query(formattedStatement);
+      const results = await db.query(myPreformattedQuery);
       return results;
     } catch (error: any) {
       if (error.stack) {
