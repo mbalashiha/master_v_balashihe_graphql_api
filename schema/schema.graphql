@@ -1,10 +1,12 @@
 type PageInfo {
+  pagination: Pagination
+}
+type Pagination {
   startCursor: Int
   endCursor: Int
   hasNextPage: Boolean
   hasPreviousPage: Boolean
 }
-
 type Price {
   amount: Int
   currencyCode: String
@@ -22,12 +24,10 @@ type ImageEdge {
 }
 
 type ImageConnection {
-  pageInfo: PageInfo!
   edges: [ImageEdge]
 }
 
 type Image {
-  pageInfo: PageInfo!
   originalSrc: String
   altText: String
   height: Int
@@ -62,7 +62,6 @@ type VariantEdge {
 }
 
 type VariantConnection {
-  pageInfo: PageInfo!
   edges: [VariantEdge]
 }
 
@@ -79,12 +78,10 @@ type ProductOption {
 }
 
 type ProductConnection {
-  pageInfo: PageInfo!
-  products: [Product]
+  nodes: [Product]
 }
 
 type ProductEdge {
-  cursor: String!
   node: Product
 }
 
@@ -97,8 +94,8 @@ type Product {
   vendor: String
   priceRange: PriceRange
   options: [Option]
-  images(first: Int): ImageConnection
-  variants(first: Int): VariantConnection
+  images(limit: Int): [Image]
+  variants(limit: Int): VariantConnection
 }
 
 type CheckoutUserError {

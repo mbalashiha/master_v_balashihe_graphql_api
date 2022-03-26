@@ -5,16 +5,17 @@ import excuteQuery from "@src/db/execute-query";
 import fsa from "fs/promises";
 import fs from "fs";
 import path from "path";
-import db from "@src/db/execute-query";
-import { buildSchema } from "graphql";
 import resolvers from "@root/schema/resolvers";
+import { makeExecutableSchema } from "graphql-tools";
+import db from "@src/db/execute-query";
 // Construct a schema, using GraphQL schema language
-const buildedSchema = buildSchema(
-  fs.readFileSync(
+const executableSchema = makeExecutableSchema({
+  typeDefs: fs.readFileSync(
     path.resolve(__dirname, "..", "schema/schema.graphql"),
     "utf-8"
-  )
-);     
+  ),
+  resolvers,
+});
 
 // The root provides a resolver function for each API endpoint
 // const root = {
@@ -27,8 +28,7 @@ const app = express();
 app.use(
   "/graphql",
   graphqlHTTP({
-    schema: buildedSchema,
-    rootValue: resolvers.Root,
+    schema: executableSchema,
     graphiql: true,
   })
 );
@@ -38,15 +38,15 @@ console.log("express index.js file is executed!");
 
 app.listen(4402, "127.0.0.1", () => {
   console.log("Running a GraphQL API server at http://127.0.0.1:4402/graphql");
-  /*setTimeout(async () => {
-    const result = await excuteQuery({ query: "select * from product" });
+  setTimeout(async () => {
+    const result = await db.excuteQuery({ query: "select * from product" });
     const text = await fsa.readFile(
       path.resolve("original/data/index.json"),
       "utf-8"
     );
     const parsed = JSON.parse(text);
     try {
-      for (const product of parsed.products) {
+      for (const product of parsed.products) {  
         const queryRes = await db
           .transaction()
           .query(`call import_product_from_json(?)`, [JSON.stringify(product)])
@@ -54,12 +54,14 @@ app.listen(4402, "127.0.0.1", () => {
             console.error("rollback error:", e);
           })
           .commit();
-        console.log(queryRes);
+        console.log(queryRes);  
       }
     } catch (e) {
       console.error(e);
+      console.error();
+      console.error();  
     }
-  }, 1500);*/
+  }, 2500);
 });
 // } else {
 //   console.log("express index.js file is NOT executed");

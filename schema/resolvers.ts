@@ -1,18 +1,36 @@
 import util from "util";
 import graphqlFields from "graphql-fields";
 import db from "@src/db/execute-query";
+import { GraphQLResolveInfo } from "graphql";
 const resolvers = {
-  Node: {
-    __resolveType(obj, ctx, info) {
-      return obj.__typename; // GraphQLError is thrown
+  Checkout: {
+    lineItems: (_, variables, _ctx, info: GraphQLResolveInfo) => {},
+  },
+  PageInfo: {
+    pagination: (_, variables, _ctx, info: GraphQLResolveInfo) => {
+      console.log(variables, _ctx, info);
     },
   },
-  Checkout: {
-    lineItems: (args, context, info) => {},
-  },
   Product: {
-    images: (args, context, info) => {},
-    variants: (args, context, info) => {},
+    images: async (parent, variables, _ctx, info: GraphQLResolveInfo) => {
+      try {
+        const rows = await db.excuteQuery({
+          query: `
+      select i2p.productId, i.imageId, i.originalSrc, i.width, i.height, i.altText, i.format 
+        from image_to_product i2p 
+          inner join image i on i.imageId=i2p.imageId
+          where i2p.productId=$[productId]
+      `,
+          variables: parent,
+        });
+        console.log(rows);
+        console.log(variables, _ctx, info);
+        return rows;
+      } catch (e) {
+        throw e;
+      }
+    },
+    variants: (_, variables, _ctx, info: GraphQLResolveInfo) => {},
   },
   Mutation: {
     checkoutLineItemsRemove: async ({ checkoutId, lineItemIds }) => {},
@@ -20,25 +38,26 @@ const resolvers = {
     checkoutLineItemsAdd: async ({ checkoutId, lineItems }) => {},
     checkoutCreate: async () => {},
   },
-  Root: {
-    node: async ({ id }) => {},
+  Query: {
     hello: () => {
       return "Hello world!";
     },
-    productByHandle: async (variables, req, ...rest) => {
+    productByHandle: async (_, variables, _ctx, info: GraphQLResolveInfo) => {
       let { handle } = variables;
     },
-    products: async ({ limit, offset }, req, context) => {
+    products: async (_, { limit, offset }, _ctx, info: GraphQLResolveInfo) => {
+      const query = info.fieldNodes.find(
+        (field) => field.name.value === info.fieldName
+      );
+
       offset = parseInt(offset || 0);
       limit = parseInt(limit || 250);
-      const fields = graphqlFields(context);
-      console.log(util.inspect(fields));
       const products: any = await db.excuteQuery({
         query: "select * from product Limit ?,?",
         variables: [offset, limit],
       });
-      let pageInfo;
-      if (fields.pageInfo) {
+      let pageInfo = {};
+      /*if (fields.pageInfo) {
         const q: any = await db.excuteQuery({
           query: "select count(*) as totalRecords from product",
           variables: [offset, limit],
@@ -51,8 +70,8 @@ const resolvers = {
           hasNextPage,
           hasPreviousPage: offset > 0,
         };
-      }
-      return { pageInfo, products };
+      }*/
+      return { nodes: products };
     },
   },
 };

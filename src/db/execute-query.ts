@@ -16,7 +16,7 @@ interface QueryProps {
   variables?: undefined | null | Array<any> | { [key: string]: any };
 }
 class MysqlDbWrapper {
-  db: mysql.ServerlessMysql;
+  private readonly db: mysql.ServerlessMysql;
   constructor() {
     if (process.env.MYSQL_PASS) {
       this.db = (mysql as any)({
@@ -32,28 +32,52 @@ class MysqlDbWrapper {
       throw database_env_unavailable_error as any;
     }
   }
-  async queryWithArray(query, ...rest) {
-    const db = this.db;
-    try {
-      if (typeof query !== "string" || !query) {
-        throw new Error("Sql query variable must be set as string.");
+  private myEscapeFormatter(
+    query: string,
+    variables: Array<any> | { [key: string | number]: any }
+  ): string {
+    if (typeof query !== "string" || !query) {
+      throw new Error("Sql query variable must be set as string.");
+    }
+    const localReplacer = (_, mainGroup) => {
+      const tNum = /^\d+$/im.test(mainGroup)
+        ? parseInt(mainGroup) - 1
+        : mainGroup;
+      const oneVariable =
+        typeof variables[tNum] !== "undefined"
+          ? variables[tNum]
+          : typeof variables[mainGroup] !== "undefined"
+          ? variables[mainGroup]
+          : undefined;
+      if (Array.isArray(oneVariable) && oneVariable.length) {
+        const variableArray = oneVariable;
+        return `(${variableArray.map((el) => db.escape(el)).join(", ")})`;
+      } else if (typeof oneVariable !== "undefined") {
+        return `${db.escape(oneVariable)}`;
       }
-      const formattedStatement = query.replace(
-        /\$(\d+)|\$\{(\d+)\}/gim,
-        (_, gr1, gr2) => {
-          const tNum = parseInt(gr1 || gr2);
-          if (tNum > 0) {
-            const variableArray = rest[tNum - 1];
-            if (Array.isArray(variableArray)) {
-              return `(${variableArray.map((el) => db.escape(el)).join(", ")})`;
-            } else if (typeof variableArray !== "undefined") {
-              return `${db.escape(variableArray)}`;
-            }
-          }
+      return _;
+    };
+    query = query.replace(
+      /\$([A-Za-zА-Яа-я_\-\d]+)|\$\[([A-Za-zА-Яа-я_\-\d]+)\]/gim,
+      (_, gr1, gr2) => {
+        if (gr1) {
+          return localReplacer(_, gr1);
+        } else if (gr2) {
+          return localReplacer(_, gr2);
+        } else {
           return _;
         }
-      );
-      const results = await db.query(formattedStatement);
+      }
+    );
+    return query;
+  }
+  async queryWithArray(
+    query: string,
+    variables: Array<any> | { [key: string]: any }
+  ) {
+    const db = this.db;
+    try {
+      const results = await db.query(this.myEscapeFormatter(query, variables));
       return results;
     } catch (error: any) {
       if (error.stack) {
@@ -75,8 +99,24 @@ class MysqlDbWrapper {
       if (typeof query !== "string" || !query) {
         throw new Error("Sql query variable must be set as string.");
       }
-      variables = variables || [];
-      const formattedStatement = SqlString.format(query, variables);
+      variables = typeof variables !== "undefined" ? variables : [];
+      let normalizedVariables: Array<any> | { [key: string]: any };
+      if (
+        variables === null ||
+        (!Array.isArray(variables) && typeof variables !== "object")
+      ) {
+        normalizedVariables = [variables];
+      } else {
+        normalizedVariables = variables;
+      }
+      const myPreformattedQuery: string = this.myEscapeFormatter(
+        query,
+        normalizedVariables
+      );
+      const formattedStatement = SqlString.format(
+        myPreformattedQuery,
+        normalizedVariables
+      );
       const results = await db.query(formattedStatement);
       return results;
     } catch (error: any) {
