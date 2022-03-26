@@ -19,18 +19,28 @@ CREATE TABLE IF NOT EXISTS `image_to_product` (
   `orderNumber` tinyint(3) unsigned NOT NULL,
   UNIQUE KEY `FK_image_to_product_image` (`imageId`,`productId`) USING BTREE,
   KEY `FK_image_to_product_product` (`productId`),
-  CONSTRAINT `FK_image_to_product_image` FOREIGN KEY (`imageId`) REFERENCES `image` (`imageId`),
   CONSTRAINT `FK_image_to_product_product` FOREIGN KEY (`productId`) REFERENCES `product` (`productId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Дамп данных таблицы github-next-js.image_to_product: ~1 rows (приблизительно)
+-- Дамп данных таблицы github-next-js.image_to_product: ~0 rows (приблизительно)
 /*!40000 ALTER TABLE `image_to_product` DISABLE KEYS */;
 INSERT IGNORE INTO `image_to_product` (`productId`, `imageId`, `orderNumber`) VALUES
-	(6, 1, 0),
-	(9, 1, 0),
-	(10, 1, 0),
-	(11, 1, 0),
-	(12, 1, 0);
+	(13, 5, 0),
+	(13, 6, 1),
+	(13, 7, 2),
+	(13, 8, 3),
+	(14, 9, 0),
+	(14, 10, 1),
+	(14, 11, 2),
+	(14, 12, 3),
+	(14, 13, 4),
+	(14, 14, 5),
+	(15, 15, 0),
+	(15, 16, 1),
+	(15, 17, 2),
+	(15, 18, 3),
+	(15, 19, 4),
+	(15, 20, 5);
 /*!40000 ALTER TABLE `image_to_product` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

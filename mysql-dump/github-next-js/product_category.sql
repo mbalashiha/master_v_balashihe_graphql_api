@@ -23,13 +23,8 @@ CREATE TABLE IF NOT EXISTS `product_category` (
   CONSTRAINT `FK_product_category_product_category` FOREIGN KEY (`parent_id`) REFERENCES `product_category` (`product_category_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
 
--- Дамп данных таблицы github-next-js.product_category: ~2 rows (приблизительно)
+-- Дамп данных таблицы github-next-js.product_category: ~0 rows (приблизительно)
 /*!40000 ALTER TABLE `product_category` DISABLE KEYS */;
-INSERT IGNORE INTO `product_category` (`product_category_id`, `category_name`, `parent_id`) VALUES
-	(1, '32', NULL),
-	(2, '34324324', NULL),
-	(3, 'vvv', NULL),
-	(4, 'wwwwwwwwwwwwww', NULL);
 /*!40000 ALTER TABLE `product_category` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
