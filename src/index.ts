@@ -6,7 +6,7 @@ import fsa from "fs/promises";
 import fs from "fs";
 import path from "path";
 import resolvers from "@root/schema/resolvers";
-import { makeExecutableSchema } from "graphql-tools";
+import { makeExecutableSchema } from "@graphql-tools/schema";
 import db from "@src/db/execute-query";
 // Construct a schema, using GraphQL schema language
 const executableSchema = makeExecutableSchema({
@@ -39,7 +39,7 @@ console.log("express index.js file is executed!");
 app.listen(4402, "127.0.0.1", () => {
   console.log("Running a GraphQL API server at http://127.0.0.1:4402/graphql");
   setTimeout(async () => {
-    const result = await db.excuteQuery({ query: "select * from product" });
+    // const result = await db.excuteQuery({ query: "select * from product" });
     const text = await fsa.readFile(
       path.resolve("original/data/index.json"),
       "utf-8"
@@ -54,7 +54,7 @@ app.listen(4402, "127.0.0.1", () => {
             console.error("rollback error:", e);
           })
           .commit();
-        console.log(queryRes);  
+        // console.log(queryRes);  
       }
     } catch (e) {
       console.error(e);

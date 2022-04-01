@@ -40,7 +40,8 @@ class MysqlDbWrapper {
       throw new Error("Sql query variable must be set as string.");
     }
     const localReplacer = (_, mainGroup) => {
-      const tryNumberGroup = /^\d+$/im.test(mainGroup) && parseInt(mainGroup) || undefined;
+      const tryNumberGroup =
+        (/^\d+$/im.test(mainGroup) && parseInt(mainGroup)) || undefined;
       const queryKey = tryNumberGroup ? tryNumberGroup - 1 : mainGroup;
       const oneVariable =
         typeof variables[queryKey] !== "undefined"
@@ -51,6 +52,8 @@ class MysqlDbWrapper {
       if (Array.isArray(oneVariable) && oneVariable.length) {
         const variableArray = oneVariable;
         return `(${variableArray.map((el) => db.escape(el)).join(", ")})`;
+      } else if (Array.isArray(oneVariable) && !oneVariable.length) {
+        return `(${db.escape(null as any)})`;
       } else if (typeof oneVariable !== "undefined") {
         return `${db.escape(oneVariable)}`;
       }
@@ -70,14 +73,14 @@ class MysqlDbWrapper {
     );
     return SqlString.format(query, variables);
   }
-  async queryWithArray(
+  async queryWithArray<T = Array<any>>(
     query: string,
     variables: Array<any> | { [key: string]: any }
-  ) {
+  ): Promise<T> {
     const db = this.db;
     try {
       const results = await db.query(this.myEscapeFormatter(query, variables));
-      return results;
+      return this.rowsPostProcessing<T>(results);
     } catch (error: any) {
       if (error.stack) {
         error.message = error.stack;
@@ -89,10 +92,13 @@ class MysqlDbWrapper {
       } catch (e) {}
     }
   }
-  async excuteQuery({ query, variables }: QueryProps) {
+  async excuteQuery<T = Array<any>>({
+    query,
+    variables,
+  }: QueryProps): Promise<T> {
     const db = this.db;
     if (!db) {
-      return database_env_unavailable_error;
+      throw database_env_unavailable_error;
     }
     try {
       if (typeof query !== "string" || !query) {
@@ -112,8 +118,8 @@ class MysqlDbWrapper {
         query,
         normalizedVariables
       );
-      const results = await db.query(myPreformattedQuery);
-      return results;
+      const results = await db.query<T>(myPreformattedQuery);
+      return this.rowsPostProcessing<T>(results);
     } catch (error: any) {
       if (error.stack) {
         error.message = error.stack;
@@ -124,6 +130,21 @@ class MysqlDbWrapper {
         await db.end();
       } catch (e) {}
     }
+  }
+  rowsPostProcessing<T>(rows: any): T {
+    if (!Array.isArray(rows)) {
+      rows = [rows];
+    }
+    for (const row of rows) {
+      for (const [key, value] of Object.entries(row)) {
+        if (typeof value === "string" && /^[\[\{]{1}\"/.test(value)) {
+          try {
+            row[key] = JSON.parse(value);
+          } catch (e) {}
+        }
+      }
+    }
+    return rows;
   }
   connect(wait?: number): Promise<void> {
     return this.db.connect(wait);

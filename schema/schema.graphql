@@ -13,78 +13,60 @@ type Price {
 }
 
 type PriceRange {
-  value: Int
-  minVariantPrice: Price
-  maxVariantPrice: Price
-}
-
-type ImageEdge {
-  cursor: String!
-  node: Image
-}
-
-type ImageConnection {
-  edges: [ImageEdge]
+  minVariantAmount: Int
+  maxVariantAmount: Int
+  currencyCode: String
 }
 
 type Image {
+  imageId: ID
   originalSrc: String
   altText: String
   height: Int
   width: Int
+  products: [Product]
 }
 
 type Option {
-  id: ID
+  optionId: ID
   name: String
   values: [String]
 }
 
 type SelectedOption {
+  optionId: ID
   name: String
   value: String
 }
 
 type Variant {
-  id: ID
+  variantId: ID
   title: String
   sku: String
   selectedOptions: [SelectedOption]
   price: Price
-  compareAtPriceV2: Price
+  compareAtPrice: Price
   image: Image
   product: Product
 }
 
-type VariantEdge {
-  cursor: String!
-  node: Variant
-}
-
-type VariantConnection {
-  edges: [VariantEdge]
-}
-
 type Value {
   label: String
-  isDefaul: Boolean
+  isDefault: Boolean
   hexColors: [String]
 }
 
 type ProductOption {
-  entityId: Int
-  displayName: String
-  values: [Value]
+  optionId: Int
+  name: String
+  values: [String]
 }
-
-type ProductConnection {
-  nodes: [Product]
+type ImageConnection {
+  nodes: [Image]
 }
-
-type ProductEdge {
-  node: Product
+type VariantConnection {
+  nodes: [Variant]
 }
-
 type Product {
   productId: ID!
   title: String
@@ -92,9 +74,11 @@ type Product {
   description: String
   descriptionHtml: String
   vendor: String
+  price: Price
   priceRange: PriceRange
-  options: [Option]
-  images(limit: Int): [Image]
+  options: [ProductOption]
+  image: Image
+  images(limit: Int): ImageConnection
   variants(limit: Int): VariantConnection
 }
 
@@ -113,16 +97,6 @@ type LineItem {
   product: Product
 }
 
-type LineItemEdge {
-  cursor: String!
-  node: LineItem
-}
-
-type LineItemConnection {
-  pageInfo: PageInfo!
-  edges: [LineItemEdge]
-}
-
 type Checkout {
   cursor: ID!
   id: ID!
@@ -133,14 +107,16 @@ type Checkout {
   completedAt: String
   createdAt: String
   taxesIncluded: Boolean
-  lineItems(first: Int): LineItemConnection
+  lineItems(first: Int): [LineItem]
 }
 
 type CheckoutResponse {
   checkoutUserErrors: [CheckoutUserError]
   checkout: Checkout
 }
-
+type ProductConnection {
+  nodes(offset: Int = 0, limit: Int = 250): [Product]
+}
 type Query {
   products(offset: Int, limit: Int): ProductConnection
   productByHandle(handle: String): Product

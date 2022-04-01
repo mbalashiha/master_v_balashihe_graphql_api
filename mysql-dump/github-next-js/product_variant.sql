@@ -27,8 +27,8 @@ CREATE TABLE IF NOT EXISTS `product_variant` (
   `price` int(10) unsigned DEFAULT NULL,
   `compareAtPrice` int(10) unsigned DEFAULT NULL,
   `currencyCodeId` int(10) unsigned NOT NULL DEFAULT 1,
-  `created` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `createdAt` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updatedAt` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `imageId` int(10) unsigned DEFAULT NULL,
   `sku` tinytext DEFAULT NULL,
   PRIMARY KEY (`variantId`),
@@ -56,9 +56,9 @@ CREATE TABLE IF NOT EXISTS `product_variant` (
   CONSTRAINT `FK_product_variant_product_option_8` FOREIGN KEY (`option_id_8`) REFERENCES `product_option` (`optionId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8mb4;
 
--- Дамп данных таблицы github-next-js.product_variant: ~0 rows (приблизительно)
+-- Дамп данных таблицы github-next-js.product_variant: ~12 rows (приблизительно)
 /*!40000 ALTER TABLE `product_variant` DISABLE KEYS */;
-INSERT IGNORE INTO `product_variant` (`variantId`, `productId`, `option_id_1`, `option_id_2`, `option_id_3`, `option_id_4`, `option_id_5`, `option_id_6`, `option_id_7`, `option_id_8`, `price`, `compareAtPrice`, `currencyCodeId`, `created`, `updated`, `imageId`, `sku`) VALUES
+INSERT IGNORE INTO `product_variant` (`variantId`, `productId`, `option_id_1`, `option_id_2`, `option_id_3`, `option_id_4`, `option_id_5`, `option_id_6`, `option_id_7`, `option_id_8`, `price`, `compareAtPrice`, `currencyCodeId`, `createdAt`, `updatedAt`, `imageId`, `sku`) VALUES
 	(27, 13, 3, 4, NULL, NULL, NULL, NULL, NULL, NULL, 20, 30, 3, '2022-03-26 19:22:02', '2022-03-26 19:22:02', 5, NULL),
 	(28, 13, 3, 5, NULL, NULL, NULL, NULL, NULL, NULL, 20, 30, 3, '2022-03-26 19:22:02', '2022-03-26 19:22:02', 5, NULL),
 	(29, 13, 6, 4, NULL, NULL, NULL, NULL, NULL, NULL, 20, 30, 3, '2022-03-26 19:22:02', '2022-03-26 19:22:02', 5, NULL),
