@@ -4,7 +4,7 @@ const webpack = require('webpack')
 const nodeExternals = require("webpack-node-externals");
 const WebpackShellPluginNext = require("webpack-shell-plugin-next");
 const Dotenv = require("dotenv-webpack");
-
+const resolveTsconfigPathsToAlias = require("./resolve-tsconfig-path-to-webpack-alias");
 const NODE_ENV = "development";
 module.exports = {
   devServer: {
@@ -20,10 +20,7 @@ module.exports = {
   },
   resolve: {
     extensions: [".ts", ".js"],
-    alias: {
-      "@src": path.resolve(__dirname, "src"),
-      "@root": path.resolve(__dirname, "./"),
-    },
+    alias: {...resolveTsconfigPathsToAlias()},
   },
   module: {
     rules: [

@@ -20,6 +20,7 @@
     "graphql": "^16.3.0",
     "graphql-fields": "^2.0.3",
     "graphql-tag": "^2.12.6",
+    "hjson": "^3.2.2",
     "serverless-mysql": "^1.5.4",
     "sqlstring": "^2.3.3"
   },

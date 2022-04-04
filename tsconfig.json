@@ -15,7 +15,7 @@
       "@src": ["src"],
       "@src/*": ["src/*"],
       "@root": ["."],
-      "@root/*": ["./*"],
+      "@root/*": ["./*"]
     },
     "noImplicitAny": false,
     "strict": true,
