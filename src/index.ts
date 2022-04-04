@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import { Request, Response } from "express";
 import { graphqlHTTP } from "express-graphql";
 import excuteQuery from "@src/db/execute-query";
@@ -27,6 +28,7 @@ const executableSchema = makeExecutableSchema({
 const app = express();
 app.use(
   "/graphql",
+  cors(),
   graphqlHTTP({
     schema: executableSchema,
     graphiql: true,

@@ -6,13 +6,10 @@ function onlyUnique(value, index, self) {
   return self.indexOf(value) === index;
 }
 const resolvers = {
-  Checkout: {
-    lineItems: (_, variables, _ctx, info: GraphQLResolveInfo) => {},
-  },
   PageInfo: {
-    pagination: (_, variables, _ctx, info: GraphQLResolveInfo) => {
-      console.log(variables, _ctx, info);
-    },
+    // pagination: (_, variables, _ctx, info: GraphQLResolveInfo) => {
+    //   log(variables, _ctx, info);
+    // },
   },
   Variant: {
     selectedOptions: async (
@@ -118,8 +115,6 @@ const resolvers = {
       `,
           variables: parent,
         });
-        console.log(nodes);
-        console.log(variables, _ctx, info);
         return nodes[0];
       } catch (e: any) {
         console.error(e.stack || e.message);
@@ -140,7 +135,6 @@ const resolvers = {
       `,
           variables: parent,
         });
-        console.log(nodes);
         return nodes[0];
       } catch (e: any) {
         console.error(e.stack || e.message);
@@ -161,8 +155,6 @@ const resolvers = {
       `,
           variables: parent,
         });
-        console.log(nodes);
-        console.log(variables, _ctx, info);
         return { nodes };
       } catch (e: any) {
         console.error(e.stack || e.message);
@@ -276,11 +268,149 @@ const resolvers = {
       }
     },
   },
+  CheckoutConnection: {
+    checkout: async (parent, variables, _ctx, info: GraphQLResolveInfo) => {
+      try {
+        variables.checkoutId =
+          parent.id ||
+          parent.checkoutId ||
+          variables.checkoutId ||
+          variables.id;
+        const checkoutRows: any = await db.excuteQuery({
+          query: "select * from checkout where checkoutId=$checkoutId",
+          variables: variables,
+        });
+        return checkoutRows[0];
+      } catch (e: any) {
+        console.error(e.stack || e.message);
+        throw e;
+      }
+    },
+  },
+  Checkout: {
+    totalPrice: async (parent, variables, _ctx, info: GraphQLResolveInfo) => {
+      try {
+        const totalPriceRows: any = await db.excuteQuery({
+          query: `select SUM(Coalesce(v.price, 0)) as amount, c.currencyCode
+                   from checkout_line_item i
+                 Left Join product_variant v on i.variantId=v.variantId
+                 Left Join price_currency_code c On v.currencyCodeId=c.currencyCodeId
+         where i.checkoutId=$checkoutId`,
+          variables: parent,
+        });
+        return totalPriceRows[0];
+      } catch (e: any) {
+        console.error(e.stack || e.message);
+        throw e;
+      }
+    },
+    lineItems: async (parent, variables, _ctx, info: GraphQLResolveInfo) => {
+      return { ...parent, ...variables };
+    },
+  },
+  LineItemConnection: {
+    nodes: async (parent, variables, _ctx, info: GraphQLResolveInfo) => {
+      try {
+        variables.checkoutId = variables.checkoutId || variables.id;
+        const offset = variables.offset || parent.offset || 0;
+        const limit = variables.limit || parent.limit || 250;
+        const nodes: any = await db.excuteQuery({
+          query: `select * from checkout_line_item 
+            where checkoutId=?
+            Limit ?,?`,
+          variables: [parent.checkoutId, offset, limit],
+        });
+        return nodes;
+      } catch (e: any) {
+        console.error(e.stack || e.message);
+        throw e;
+      }
+    },
+  },
+  LineItem: {
+    unityPrice: async (parent, variables, _ctx, info: GraphQLResolveInfo) => {
+      try {
+        const nodes: any = await db.excuteQuery({
+          query: `select (i.quantity * Coalesce(v.price, v.compareAtPrice, 0)) as unityPrice
+                 from checkout_line_item i
+                Left Join product_variant v On i.variantId=v.variantId
+            where i.checkoutId=$checkoutId And i.variantId=$variantId`,
+          variables: parent,
+        });
+        return nodes[0];
+      } catch (e: any) {
+        console.error(e.stack || e.message);
+        throw e;
+      }
+    },
+    variant: async (parent, variables, _ctx, info: GraphQLResolveInfo) => {
+      try {
+        const nodes: any = await db.excuteQuery({
+          query: `select *
+                 from product_variant
+            where variantId=$variantId`,
+          variables: parent,
+        });
+        return nodes[0];
+      } catch (e: any) {
+        console.error(e.stack || e.message);
+        throw e;
+      }
+    },
+    product: async (parent, variables, _ctx, info: GraphQLResolveInfo) => {
+      try {
+        const nodes: any = await db.excuteQuery({
+          query: `select p.* 
+                 from product_variant v
+                 Inner Join product p On v.productId=p.productId
+            where v.variantId=$variantId`,
+          variables: parent,
+        });
+        return nodes[0];
+      } catch (e: any) {
+        console.error(e.stack || e.message);
+        throw e;
+      }
+    },
+    title: async (parent, variables, _ctx, info: GraphQLResolveInfo) => {
+      try {
+        const nodes: any = await db.excuteQuery({
+          query: `select Coalsect(v.title, p.title) title 
+                 from product_variant v
+                 Inner Join product p On v.productId=p.productId
+            where v.variantId=$variantId
+            Group By p.productId`,
+          variables: parent,
+        });
+        return nodes[0];
+      } catch (e: any) {
+        console.error(e.stack || e.message);
+        throw e;
+      }
+    },
+  },
   Mutation: {
-    checkoutLineItemsRemove: async ({ checkoutId, lineItemIds }) => {},
-    checkoutLineItemsUpdate: async ({ checkoutId, lineItems }) => {},
-    checkoutLineItemsAdd: async ({ checkoutId, lineItems }) => {},
-    checkoutCreate: async () => {},
+    checkoutLineItemsRemove: async (
+      _,
+      variables,
+      _ctx,
+      info: GraphQLResolveInfo
+    ) => {},
+    checkoutLineItemsUpdate: async (
+      _,
+      variables,
+      _ctx,
+      info: GraphQLResolveInfo
+    ) => {},
+    checkoutLineItemsAdd: async (
+      _,
+      variables,
+      _ctx,
+      info: GraphQLResolveInfo
+    ) => {
+      console.log(_, variables);
+    },
+    checkoutCreate: async (_, variables, _ctx, info: GraphQLResolveInfo) => {},
   },
   Query: {
     hello: () => {
@@ -295,6 +425,9 @@ const resolvers = {
       return products[0];
     },
     products: async (_, variables, _ctx, info: GraphQLResolveInfo) => {
+      return { ...variables };
+    },
+    checkout: async (_, variables, _ctx, info: GraphQLResolveInfo) => {
       return { ...variables };
     },
   },

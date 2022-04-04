@@ -1,5 +1,6 @@
 type PageInfo {
-  pagination: Pagination
+  hasNextPage: Boolean
+  hasPreviousPage: Boolean
 }
 type Pagination {
   startCursor: Int
@@ -88,18 +89,20 @@ type CheckoutUserError {
 }
 
 type LineItem {
-  id: ID!
-  cursor: ID!
+  checkoutId: ID!
+  variantId: ID!
   quantity: Int
   title: String
   unityPrice: Price
   variant: Variant
   product: Product
 }
-
+type LineItemConnection {
+  pageInfo: PageInfo
+  nodes: [LineItem]
+}
 type Checkout {
-  cursor: ID!
-  id: ID!
+  checkoutId: ID!
   webUrl: String
   subtotalPrice: Price
   totalTax: Price
@@ -107,9 +110,11 @@ type Checkout {
   completedAt: String
   createdAt: String
   taxesIncluded: Boolean
-  lineItems(first: Int): [LineItem]
+  lineItems(offset: Int = 0, limit: Int = 250): LineItemConnection
 }
-
+type CheckoutConnection {
+  checkout: Checkout!
+}
 type CheckoutResponse {
   checkoutUserErrors: [CheckoutUserError]
   checkout: Checkout
@@ -121,11 +126,12 @@ type Query {
   products(offset: Int, limit: Int): ProductConnection
   productByHandle(handle: String): Product
   hello: String
+  checkout(id: ID!): CheckoutConnection
 }
 
 input CheckoutLineItemInput {
-  variantId: ID
-  quantity: Int
+  variantId: ID!
+  quantity: Int!
 }
 
 input CheckoutLineItemUpdateInput {
@@ -141,8 +147,8 @@ input CheckoutCreateInput {
 type Mutation {
   checkoutCreate(input: CheckoutCreateInput): CheckoutResponse
   checkoutLineItemsAdd(
-    checkoutId: ID
-    lineItems: [CheckoutLineItemInput]
+    checkoutId: ID!
+    lineItems: [CheckoutLineItemInput!]!
   ): CheckoutResponse
   checkoutLineItemsUpdate(
     checkoutId: ID
