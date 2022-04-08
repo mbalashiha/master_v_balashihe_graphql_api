@@ -2,6 +2,7 @@ import util from "util";
 import graphqlFields from "graphql-fields";
 import db from "@src/db/execute-query";
 import { GraphQLResolveInfo } from "graphql";
+import { isPositiveInteger } from "@src/util/type-checkers";
 function onlyUnique(value, index, self) {
   return self.indexOf(value) === index;
 }
@@ -308,6 +309,11 @@ const resolvers = {
       return { ...parent, ...variables };
     },
   },
+  CheckoutResponse: {
+    checkout: async (parent, variables, _ctx, info: GraphQLResolveInfo) => {
+      return {...parent, ...variables}
+    },
+  },
   LineItemConnection: {
     nodes: async (parent, variables, _ctx, info: GraphQLResolveInfo) => {
       try {
@@ -408,9 +414,27 @@ const resolvers = {
       _ctx,
       info: GraphQLResolveInfo
     ) => {
-      console.log(_, variables);
+      const __checkoutId = parseInt(variables.checkoutId || 0);
+      const checkoutId =
+        __checkoutId && isPositiveInteger(__checkoutId) ? __checkoutId : 0;
+      const lineItems = Array.isArray(variables.lineItems)
+        ? variables.lineItems
+        : variables.lineItems
+        ? [variables.lineItems]
+        : [];
+      console.log(lineItems);
+      try {
+        const checkoutResult: any = await db.excuteQuery({
+          query: "call checkout_LineItems_Add(?, ?)",
+          variables: [checkoutId, JSON.stringify(lineItems)],
+        });
+        console.log(checkoutResult);
+        return { checkoutId };
+      } catch (e: any) {
+        console.error(e.stack || e.message);
+        throw e;
+      }
     },
-    checkoutCreate: async (_, variables, _ctx, info: GraphQLResolveInfo) => {},
   },
   Query: {
     hello: () => {

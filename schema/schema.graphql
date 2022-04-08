@@ -145,14 +145,13 @@ input CheckoutCreateInput {
 }
 
 type Mutation {
-  checkoutCreate(input: CheckoutCreateInput): CheckoutResponse
   checkoutLineItemsAdd(
-    checkoutId: ID!
+    checkoutId: ID = null
     lineItems: [CheckoutLineItemInput!]!
   ): CheckoutResponse
   checkoutLineItemsUpdate(
-    checkoutId: ID
+    checkoutId: ID!
     lineItems: [CheckoutLineItemUpdateInput]
   ): CheckoutResponse
-  checkoutLineItemsRemove(checkoutId: ID, lineItemIds: [ID]): CheckoutResponse
+  checkoutLineItemsRemove(checkoutId: ID!, lineItemIds: [ID]): CheckoutResponse
 }
