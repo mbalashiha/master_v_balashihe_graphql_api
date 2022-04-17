@@ -94,8 +94,8 @@ type LineItem {
   quantity: Int
   title: String
   unityPrice: Price
-  variant: Variant
   product: Product
+  variant: Variant
 }
 type LineItemConnection {
   pageInfo: PageInfo
@@ -122,12 +122,6 @@ type CheckoutResponse {
 type ProductConnection {
   nodes(offset: Int = 0, limit: Int = 250): [Product]
 }
-type Query {
-  products(offset: Int, limit: Int): ProductConnection
-  productByHandle(handle: String): Product
-  hello: String
-  checkout(id: ID!): CheckoutConnection
-}
 
 input CheckoutLineItemInput {
   variantId: ID!
@@ -135,22 +129,26 @@ input CheckoutLineItemInput {
 }
 
 input CheckoutLineItemUpdateInput {
-  id: ID
+  checkoutId: ID
   variantId: ID
   quantity: Int
 }
 
 input CheckoutCreateInput {
-  id: ID
+  checkoutId: ID = null
+  lineItems: [CheckoutLineItemInput!]!
 }
 
+type Query {
+  products(offset: Int, limit: Int): ProductConnection
+  productByHandle(handle: String): Product
+  hello: String
+  checkout(id: ID!): CheckoutConnection
+}
 type Mutation {
-  checkoutLineItemsAdd(
-    checkoutId: ID = null
-    lineItems: [CheckoutLineItemInput!]!
-  ): CheckoutResponse
+  checkoutLineItemsAdd(input: CheckoutCreateInput): CheckoutResponse
   checkoutLineItemsUpdate(
-    checkoutId: ID!
+    checkoutId: ID = null
     lineItems: [CheckoutLineItemUpdateInput]
   ): CheckoutResponse
   checkoutLineItemsRemove(checkoutId: ID!, lineItemIds: [ID]): CheckoutResponse

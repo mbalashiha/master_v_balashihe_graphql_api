@@ -58,6 +58,21 @@ const resolvers = {
         throw e;
       }
     },
+    product: async (parent, variables, _ctx, info: GraphQLResolveInfo) => {
+      try {
+        const rows = await db.excuteQuery({
+          query: `
+      select * from product
+          where productId=$productId
+      `,
+          variables: parent,
+        });
+        return rows[0];
+      } catch (e: any) {
+        console.error(e.stack || e.message);
+        throw e;
+      }
+    },
   },
   Image: {
     products: async (parent, variables, _ctx, info: GraphQLResolveInfo) => {
@@ -311,22 +326,32 @@ const resolvers = {
   },
   CheckoutResponse: {
     checkout: async (parent, variables, _ctx, info: GraphQLResolveInfo) => {
-      return {...parent, ...variables}
+      return { ...parent, ...variables };
     },
   },
   LineItemConnection: {
     nodes: async (parent, variables, _ctx, info: GraphQLResolveInfo) => {
       try {
-        variables.checkoutId = variables.checkoutId || variables.id;
+        variables.checkoutId =
+          parent.checkoutId ||
+          variables.checkoutId ||
+          variables.id ||
+          parent.id;
+        const { checkoutId } = variables;
+        if (!checkoutId) {
+          throw new Error("No checkoutId for LineItemConnection!");
+        }
         const offset = variables.offset || parent.offset || 0;
         const limit = variables.limit || parent.limit || 250;
         const nodes: any = await db.excuteQuery({
           query: `select * from checkout_line_item 
             where checkoutId=?
             Limit ?,?`,
-          variables: [parent.checkoutId, offset, limit],
+          variables: [checkoutId, offset, limit],
         });
-        return nodes;
+        if (nodes && nodes.length) {
+          return nodes;
+        }
       } catch (e: any) {
         console.error(e.stack || e.message);
         throw e;
@@ -366,9 +391,9 @@ const resolvers = {
     product: async (parent, variables, _ctx, info: GraphQLResolveInfo) => {
       try {
         const nodes: any = await db.excuteQuery({
-          query: `select p.* 
+          query: `select p.*
                  from product_variant v
-                 Inner Join product p On v.productId=p.productId
+                 Join product p on p.productId=v.productId
             where v.variantId=$variantId`,
           variables: parent,
         });
@@ -381,14 +406,14 @@ const resolvers = {
     title: async (parent, variables, _ctx, info: GraphQLResolveInfo) => {
       try {
         const nodes: any = await db.excuteQuery({
-          query: `select Coalsect(v.title, p.title) title 
+          query: `select Coalesce(p.title, v.sku) title 
                  from product_variant v
                  Inner Join product p On v.productId=p.productId
             where v.variantId=$variantId
             Group By p.productId`,
           variables: parent,
         });
-        return nodes[0];
+        return nodes[0] && nodes[0].title;
       } catch (e: any) {
         console.error(e.stack || e.message);
         throw e;
@@ -414,22 +439,30 @@ const resolvers = {
       _ctx,
       info: GraphQLResolveInfo
     ) => {
-      const __checkoutId = parseInt(variables.checkoutId || 0);
-      const checkoutId =
+      const input = variables.input || variables || {};
+      const __checkoutId = parseInt(input.checkoutId || 0);
+      let checkoutId =
         __checkoutId && isPositiveInteger(__checkoutId) ? __checkoutId : 0;
-      const lineItems = Array.isArray(variables.lineItems)
-        ? variables.lineItems
-        : variables.lineItems
-        ? [variables.lineItems]
+      const lineItems = Array.isArray(input.lineItems)
+        ? input.lineItems
+        : input.lineItems
+        ? [input.lineItems]
         : [];
-      console.log(lineItems);
       try {
-        const checkoutResult: any = await db.excuteQuery({
-          query: "call checkout_LineItems_Add(?, ?)",
-          variables: [checkoutId, JSON.stringify(lineItems)],
-        });
-        console.log(checkoutResult);
-        return { checkoutId };
+        if (
+          lineItems &&
+          lineItems[0] &&
+          lineItems[0].variantId &&
+          lineItems[0].quantity
+        ) {
+          const checkoutResult: any = await db.excuteQuery({
+            query: "call checkout_LineItems_Add(?, ?)",
+            variables: [checkoutId, JSON.stringify(lineItems)],
+          });
+          checkoutId = checkoutResult[0][0].checkoutId;
+          console.log(checkoutResult);
+          return { checkoutId };
+        }
       } catch (e: any) {
         console.error(e.stack || e.message);
         throw e;

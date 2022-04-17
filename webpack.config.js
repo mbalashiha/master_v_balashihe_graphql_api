@@ -1,8 +1,9 @@
 const { merge } = require("webpack-merge");
 const path = require("path");
-const webpack = require('webpack')
+const webpack = require("webpack");
 const nodeExternals = require("webpack-node-externals");
 const WebpackShellPluginNext = require("webpack-shell-plugin-next");
+const TerserPlugin = require("terser-webpack-plugin");
 const Dotenv = require("dotenv-webpack");
 const resolveTsconfigPathsToAlias = require("./resolve-tsconfig-path-to-webpack-alias");
 const NODE_ENV = "development";
@@ -20,7 +21,7 @@ module.exports = {
   },
   resolve: {
     extensions: [".ts", ".js"],
-    alias: {...resolveTsconfigPathsToAlias()},
+    alias: { ...resolveTsconfigPathsToAlias() },
   },
   module: {
     rules: [
@@ -50,4 +51,16 @@ module.exports = {
     }),
   ],
   watch: true,
+  optimization: {
+    minimize: true,
+    minimizer: [
+      new TerserPlugin({
+        terserOptions: {
+          compress: {
+            drop_debugger: false,
+          },
+        },
+      }),
+    ],
+  },
 };
