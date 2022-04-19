@@ -12,7 +12,7 @@ const resolvers = {
     //   log(variables, _ctx, info);
     // },
   },
-  Variant: {
+  ProductVariant: {
     selectedOptions: async (
       parent,
       variables,
@@ -30,7 +30,7 @@ const resolvers = {
         }
         const rows = await db.excuteQuery({
           query: `
-      select po.optionId, n.name, v.value from product_option po
+      select po.optionId, n.name as optionName, v.value as optionValue from product_option po
           Inner Join product_option_name n On po.nameId=n.nameId
           Inner Join product_option_name_value v On po.valueId=v.valueId
           where po.optionId In $1
