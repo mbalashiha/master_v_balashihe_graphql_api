@@ -19,7 +19,8 @@ CREATE PROCEDURE `checkout_LineItems_Add`(
 	IN `in_lineItems` LONGTEXT
 )
 BEGIN
-	DECLARE inserted_checkoutId INT UNSIGNED DEFAULT NULL;
+	DECLARE inserted_checkoutId BINARY(16) DEFAULT NULL;
+	DECLARE in_binary_checkoutId BINARY(16) DEFAULT NULL;
 	DECLARE test_main_id INT UNSIGNED DEFAULT NULL;
 	DECLARE test_variantId INT UNSIGNED DEFAULT NULL;
 	DECLARE test_quantity INT UNSIGNED DEFAULT NULL;
@@ -29,9 +30,10 @@ BEGIN
 	DECLARE loop_quantity TINYTEXT DEFAULT NULL;
 	DECLARE try_id INT UNSIGNED DEFAULT NULL;
 	DECLARE next_id INT UNSIGNED DEFAULT NULL;
-	IF in_checkoutId IS NOT NULL AND in_checkoutId > 0
+	IF in_checkoutId IS NOT NULL AND in_checkoutId != '' AND in_checkoutId != 'null'
 	Then
-		SELECT checkoutId INTO inserted_checkoutId FROM checkout WHERE checkoutId=in_checkoutId;
+		SET in_binary_checkoutId := unhex(Trim(in_checkoutId));
+		SELECT checkoutId INTO inserted_checkoutId FROM checkout WHERE checkoutId=in_binary_checkoutId;
 	END IF;
 	If inserted_checkoutId IS Null
 	Then
@@ -39,7 +41,7 @@ BEGIN
 			FROM checkout ch
 			WHERE ch.checkoutId NOT IN (SELECT i.checkoutId FROM checkout_line_item i GROUP BY i.checkoutId);
 		INSERT INTO checkout() VALUES();
-		SET inserted_checkoutId := Last_insert_id();
+		SET inserted_checkoutId := @last_checkoutId;
 	END IF;
 	Set i := 0;
 	SELECT JSON_EXTRACT(in_lineItems, CONCAT('$[',i,']')) INTO loop_lineItem;	
@@ -66,7 +68,7 @@ BEGIN
 		Set i := i + 1;
 	SELECT JSON_EXTRACT(in_lineItems, CONCAT('$[',i,']')) INTO loop_lineItem;
 	END WHILE;
-	SELECT inserted_checkoutId AS checkoutId;
+	SELECT LOWER(Hex(inserted_checkoutId)) AS checkoutId;
 END//
 DELIMITER ;
 

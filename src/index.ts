@@ -40,30 +40,6 @@ console.log("express index.js file is executed!");
 
 app.listen(4402, "127.0.0.1", () => {
   console.log("Running a GraphQL API server at http://127.0.0.1:4402/graphql");
-  setTimeout(async () => {
-    // const result = await db.excuteQuery({ query: "select * from product" });
-    const text = await fsa.readFile(
-      path.resolve("original/data/index.json"),
-      "utf-8"
-    );
-    const parsed = JSON.parse(text);
-    try {
-      for (const product of parsed.products) {  
-        const queryRes = await db
-          .transaction()
-          .query(`call import_product_from_json(?)`, [JSON.stringify(product)])
-          .rollback((e) => {
-            console.error("rollback error:", e);
-          })
-          .commit();
-        // console.log(queryRes);  
-      }
-    } catch (e) {
-      console.error(e);
-      console.error();
-      console.error();  
-    }
-  }, 2500);
 });
 // } else {
 //   console.log("express index.js file is NOT executed");

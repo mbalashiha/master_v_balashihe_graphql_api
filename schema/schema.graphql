@@ -96,6 +96,7 @@ type LineItem {
   unityPrice: Price
   product: Product
   variant: ProductVariant
+  image: Image
 }
 type LineItemConnection {
   pageInfo: PageInfo
@@ -113,10 +114,6 @@ type Checkout {
   lineItems(offset: Int = 0, limit: Int = 250): LineItemConnection
 }
 type CheckoutConnection {
-  checkout: Checkout!
-}
-type CheckoutResponse {
-  checkoutUserErrors: [CheckoutUserError]
   checkout: Checkout
 }
 type ProductConnection {
@@ -138,7 +135,10 @@ input CheckoutCreateInput {
   checkoutId: ID = null
   lineItems: [CheckoutLineItemInput!]!
 }
-
+type CheckoutResponse {
+  checkoutUserErrors: [CheckoutUserError]
+  checkoutConnection: CheckoutConnection
+}
 type Query {
   products(offset: Int, limit: Int): ProductConnection
   productByHandle(handle: String): Product
