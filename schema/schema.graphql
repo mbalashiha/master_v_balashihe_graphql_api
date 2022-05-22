@@ -48,7 +48,7 @@ type ProductVariant {
   price: Price
   compareAtPrice: Price
   image: Image
-  product: Product
+  product: ProductConnection
 }
 
 type Value {
@@ -94,7 +94,7 @@ type LineItem {
   quantity: Int
   title: String
   unityPrice: Price
-  product: Product
+  product: ProductConnection
   variant: ProductVariant
   image: Image
 }
@@ -118,6 +118,7 @@ type CheckoutConnection {
 }
 type ProductConnection {
   nodes(offset: Int = 0, limit: Int = 250): [Product]
+  node(id: ID): Product
 }
 
 input CheckoutLineItemInput {

@@ -4,6 +4,7 @@ import db from "@src/db/execute-query";
 import { GraphQLResolveInfo } from "graphql";
 import { isPositiveInteger } from "@src/util/type-checkers";
 import { sql } from "./sql-query";
+import { Console } from "console";
 function onlyUnique(value, index, self) {
   return self.indexOf(value) === index;
 }
@@ -86,10 +87,19 @@ const resolvers = {
     },
     product: async (parent, variables, _ctx, info: GraphQLResolveInfo) => {
       try {
+        return parent;
+      } catch (e: any) {
+        console.error(e.stack || e.message);
+        throw e;
+      }
+    },
+    price: async (parent, variables, _ctx, info: GraphQLResolveInfo) => {
+      try {
         const rows = await db.excuteQuery({
           query: `
-      select * from product
-          where productId=$productId
+      select coalesce(v.price, v.compareAtPrice) as amount, cc.currencyCode from product_variant v
+          LEFT Join price_currency_code cc On cc.currencyCodeId=v.currencyCodeId
+          where v.variantId=$variantId
       `,
           variables: parent,
         });
@@ -142,6 +152,16 @@ const resolvers = {
         };
       }*/
       return products;
+    },
+    node: async (parent, variables, _ctx, info: GraphQLResolveInfo) => {
+      // console.log(variables);
+      variables.productId =
+        variables.productId || parent.productId || variables.id;
+      const products: any = await db.excuteQuery({
+        query: "select * from product Where productId=$productId",
+        variables,
+      });
+      return products[0];
     },
   },
   Product: {
@@ -414,7 +434,7 @@ const resolvers = {
           throw e;
         }
       }
-      const sliced = parent.lineItems.slice(
+      const sliced = lineItems.slice(
         parent.offset,
         parent.offset + parent.limit
       );
@@ -507,7 +527,24 @@ const resolvers = {
       variables,
       _ctx,
       info: GraphQLResolveInfo
-    ) => {},
+    ) => {
+      try {
+        const { checkoutId, lineItemIds } = variables;
+        for (const variantId of variables.lineItemIds) {
+          if (variantId) {
+            await db.excuteQuery({
+              query: `delete from checkout_line_item
+            where checkoutId=unhex($checkoutId) and variantId=($variantId)`,
+              variables: { checkoutId, variantId },
+            });
+          }
+        }
+        return { checkoutId };
+      } catch (e: any) {
+        console.error(e.stack || e.message);
+        throw e;
+      }
+    },
     checkoutLineItemsUpdate: async (
       _,
       variables,
