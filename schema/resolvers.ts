@@ -2,9 +2,10 @@ import util from "util";
 import graphqlFields from "graphql-fields";
 import db from "@src/db/execute-query";
 import { GraphQLResolveInfo } from "graphql";
-import { isPositiveInteger } from "@src/util/type-checkers";
+import { isPositiveInteger } from "@src/utils/type-checkers";
 import { sql } from "./sql-query";
 import { Console } from "console";
+import { normalizePriceCurrency } from "@src/utils/currency/converter";
 function onlyUnique(value, index, self) {
   return self.indexOf(value) === index;
 }
@@ -103,6 +104,7 @@ const resolvers = {
       `,
           variables: parent,
         });
+        const price = normalizePriceCurrency(rows[0]);
         return rows[0];
       } catch (e: any) {
         console.error(e.stack || e.message);
@@ -177,6 +179,7 @@ const resolvers = {
       `,
           variables: parent,
         });
+        const price = normalizePriceCurrency(nodes[0]);
         return nodes[0];
       } catch (e: any) {
         console.error(e.stack || e.message);
@@ -367,6 +370,16 @@ const resolvers = {
         const checkoutResult = checkoutRows[0] || null;
         if (checkoutResult && checkoutResult.webUrl) {
           checkoutResult.checkoutId = checkoutResult.webUrl;
+          if (checkoutResult.subtotalPrice) {
+            checkoutResult.subtotalPrice = normalizePriceCurrency(
+              checkoutResult.subtotalPrice
+            );
+          }
+          if (checkoutResult.totalPrice) {
+            checkoutResult.totalPrice = normalizePriceCurrency(
+              checkoutResult.totalPrice
+            );
+          }
         }
         return checkoutResult;
       } catch (e: any) {
@@ -387,6 +400,7 @@ const resolvers = {
         ) {
           throw new Error("No checkout total price!");
         }
+        parent.totalPrice = normalizePriceCurrency(parent.totalPrice);
         return parent.totalPrice;
       } catch (e: any) {
         console.error(e.stack || e.message);
@@ -429,6 +443,19 @@ const resolvers = {
             query: sql.cart.getCheckoutQuery,
             variables,
           });
+          const checkoutResult = lineItems;
+          if (checkoutResult) {
+            if (checkoutResult.subtotalPrice) {
+              checkoutResult.subtotalPrice = normalizePriceCurrency(
+                checkoutResult.subtotalPrice
+              );
+            }
+            if (checkoutResult.totalPrice) {
+              checkoutResult.totalPrice = normalizePriceCurrency(
+                checkoutResult.totalPrice
+              );
+            }
+          }
         } catch (e: any) {
           console.error(e.stack || e.message);
           throw e;
@@ -448,33 +475,6 @@ const resolvers = {
     },
   },
   LineItem: {
-    unityPrice: async (parent, variables, _ctx, info: GraphQLResolveInfo) => {
-      try {
-        if (
-          parent.unityPrice &&
-          typeof parent.unityPrice.amount !== "undefined"
-        ) {
-          return parent.unityPrice;
-        }
-        const nodes: any = await db.excuteQuery({
-          query: `select 
-          
-          JSON_OBJECT(
-                'amount', Coalesce( v.price, v.compareAtPrice, 0 ) * i.quantity,  'currencyCode', cc.currencyCode
-             ) as unityPrice
-        FROM checkout_line_item i
-          LEFT JOIN product_variant v ON v.variantId=i.variantId
-          Left Join price_currency_code cc On v.currencyCodeId=cc.currencyCodeId
-          Where i.checkoutId=unhex($checkoutId) And i.variantId=$variantId`,
-          variables: parent,
-        });
-        const unityPrice = nodes[0] && nodes[0].unityPrice;
-        return unityPrice;
-      } catch (e: any) {
-        console.error(e.stack || e.message);
-        throw e;
-      }
-    },
     variant: async (parent, variables, _ctx, info: GraphQLResolveInfo) => {
       try {
         const nodes: any = await db.excuteQuery({
@@ -550,7 +550,27 @@ const resolvers = {
       variables,
       _ctx,
       info: GraphQLResolveInfo
-    ) => {},
+    ) => {
+      try {
+        const input = variables.input || variables || {};
+        const { checkoutId, lineItems } = input;
+        for (const item of lineItems) {
+          const { variantId, quantity } = item;
+          if (variantId && typeof quantity === "number") {
+            await db.excuteQuery({
+              query: `update checkout_line_item
+              Set quantity=$quantity
+            where checkoutId=unhex($checkoutId) and variantId=($variantId)`,
+              variables: { checkoutId, variantId, quantity },
+            });
+          }
+        }
+        return { checkoutId };
+      } catch (e: any) {
+        console.error(e.stack || e.message);
+        throw e;
+      }
+    },
     checkoutLineItemsAdd: async (
       _,
       variables,

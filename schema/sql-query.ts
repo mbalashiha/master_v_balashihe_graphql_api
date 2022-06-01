@@ -20,8 +20,8 @@ export const sql = {
                         ), Null)
                 )
             ) AS lineItemsJson,
-        JSON_OBJECT('amount', SUM(Coalesce(v.price, v.compareAtPrice, 0)), 'currencyCode', cc.currencyCode) AS totalPrice,
-        JSON_OBJECT('amount', SUM(Coalesce(v.price, v.compareAtPrice, 0)), 'currencyCode', cc.currencyCode) AS subtotalPrice
+        JSON_OBJECT('amount', SUM(Coalesce(v.price, v.compareAtPrice, 0) * Coalesce(i.quantity, 1)), 'currencyCode', cc.currencyCode) AS totalPrice,
+        JSON_OBJECT('amount', SUM(Coalesce(v.price, v.compareAtPrice, 0) * Coalesce(i.quantity, 1)), 'currencyCode', cc.currencyCode) AS subtotalPrice
     FROM checkout c
         LEFT JOIN checkout_line_item i ON c.checkoutId=i.checkoutId
         LEFT JOIN product_variant v ON v.variantId=i.variantId

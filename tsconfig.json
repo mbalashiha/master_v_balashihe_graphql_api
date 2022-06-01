@@ -3,7 +3,9 @@
     "target": "es5",
     "skipLibCheck": true,
     // "lib": ["dom", "dom.iterable", "esnext"],
-    "lib": ["esnext"],
+    "downlevelIteration": true,
+    "importHelpers": true,
+    "lib": ["esnext", "dom", "es5", "es2015.collection", "es2015.iterable"],
     "allowJs": true,
     "noEmit": false,
     "noEmitOnError": false,
@@ -19,7 +21,7 @@
     },
     "noImplicitAny": false,
     "strict": true,
-    "forceConsistentCasingInFileNames": true,
+    "forceConsistentCasingInFileNames": false,
     "esModuleInterop": true,
     "module": "esnext",
     "moduleResolution": "node",
@@ -28,6 +30,6 @@
     "jsx": "preserve",
     "incremental": true
   },
-  "include": ["**/*.ts", "**/*.tsx", "src/zzz_type-defs.tsexcluded"],
+  "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]
 }

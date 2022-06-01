@@ -9,7 +9,7 @@ type Pagination {
   hasPreviousPage: Boolean
 }
 type Price {
-  amount: Int
+  amount: Float
   currencyCode: String
 }
 
@@ -93,7 +93,6 @@ type LineItem {
   variantId: ID!
   quantity: Int
   title: String
-  unityPrice: Price
   product: ProductConnection
   variant: ProductVariant
   image: Image
@@ -126,12 +125,6 @@ input CheckoutLineItemInput {
   quantity: Int!
 }
 
-input CheckoutLineItemUpdateInput {
-  checkoutId: ID
-  variantId: ID
-  quantity: Int
-}
-
 input CheckoutCreateInput {
   checkoutId: ID = null
   lineItems: [CheckoutLineItemInput!]!
@@ -148,9 +141,6 @@ type Query {
 }
 type Mutation {
   checkoutLineItemsAdd(input: CheckoutCreateInput): CheckoutResponse
-  checkoutLineItemsUpdate(
-    checkoutId: ID = null
-    lineItems: [CheckoutLineItemUpdateInput]
-  ): CheckoutResponse
+  checkoutLineItemsUpdate(input: CheckoutCreateInput): CheckoutResponse
   checkoutLineItemsRemove(checkoutId: ID!, lineItemIds: [ID]): CheckoutResponse
 }

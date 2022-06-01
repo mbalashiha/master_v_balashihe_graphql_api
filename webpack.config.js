@@ -51,16 +51,5 @@ module.exports = {
     }),
   ],
   watch: true,
-  optimization: {
-    minimize: true,
-    minimizer: [
-      new TerserPlugin({
-        terserOptions: {
-          compress: {
-            drop_debugger: false,
-          },
-        },
-      }),
-    ],
-  },
+  optimization: {},
 };
