@@ -521,7 +521,61 @@ const resolvers = {
       }
     },
   },
+  UploadedImagesResponse: {
+    imagesConnection: async (
+      parent,
+      variables,
+      _ctx,
+      info: GraphQLResolveInfo
+    ) => {
+      try {
+        if (!parent.images) {
+          parent.images = [];
+        }
+        return parent;
+        const nodes: any = await db.excuteQuery({
+          query: `select *
+                 from product_variant
+            where variantId=$variantId`,
+          variables: parent,
+        });
+        return nodes[0];
+      } catch (e: any) {
+        console.error(e.stack || e.message);
+        throw e;
+      }
+    },
+  },
   Mutation: {
+    productImagesUpdate: async (
+      parent,
+      variables,
+      _ctx,
+      info: GraphQLResolveInfo
+    ) => {
+      try {
+        variables.draftProductId = variables.draftProductId || null;
+        if (!Array.isArray(variables.images) || variables.images.length <= 0) {
+          throw new Error(
+            "No variable images! Should be array of images input."
+          );
+        }
+        variables.images = JSON.stringify(variables.images);
+        console.log(variables);
+        console.log(parent);
+        const res = await db.excuteQuery({
+          query: "call product_Images_Update($draftProductId, $images);",
+          variables,
+        });
+        console.log(res);
+        console.log();
+        return { draftProductId: res[0][0].draftProductId };
+      } catch (e: any) {
+        console.error(e.stack || e.message);
+        debugger;
+        throw e;
+      }
+    },
     checkoutLineItemsRemove: async (
       _,
       variables,

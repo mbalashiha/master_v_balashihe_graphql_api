@@ -16,7 +16,7 @@ interface QueryProps {
   variables?: undefined | null | Array<any> | { [key: string]: any };
 }
 class MysqlDbWrapper {
-  private readonly db: mysql.ServerlessMysql;
+  public readonly db: mysql.ServerlessMysql;
   constructor() {
     if (process.env.MYSQL_PASS) {
       this.db = (mysql as any)({
@@ -32,7 +32,7 @@ class MysqlDbWrapper {
       throw database_env_unavailable_error as any;
     }
   }
-  private myEscapeFormatter(
+  public format(
     query: string,
     variables: Array<any> | { [key: string | number]: any }
   ): string {
@@ -79,7 +79,7 @@ class MysqlDbWrapper {
   ): Promise<T> {
     const db = this.db;
     try {
-      const results = await db.query(this.myEscapeFormatter(query, variables));
+      const results = await db.query(this.format(query, variables));
       return this.rowsPostProcessing<T>(results);
     } catch (error: any) {
       if (error.stack) {
@@ -114,7 +114,7 @@ class MysqlDbWrapper {
       } else {
         normalizedVariables = variables;
       }
-      const myPreformattedQuery: string = this.myEscapeFormatter(
+      const myPreformattedQuery: string = this.format(
         query,
         normalizedVariables
       );
@@ -131,7 +131,7 @@ class MysqlDbWrapper {
       } catch (e) {}
     }
   }
-  rowsPostProcessing<T>(rows: any): T {
+  public rowsPostProcessing<T>(rows: any): T {
     if (!Array.isArray(rows)) {
       rows = [rows];
     }

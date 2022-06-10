@@ -217,7 +217,7 @@ export const normalizePriceCurrency = (price: any) => {
       const cource = currency.cource;
       price.amount = (
         parseFloat(cource as any) * parseFloat(price.amount)
-      ).toFixed(4);
+      ).toFixed(6);
       price.currencyCode = "RUB";
     }
   }

@@ -20,29 +20,31 @@ CREATE TABLE IF NOT EXISTS `image` (
   `height` int(10) unsigned NOT NULL,
   `altText` text DEFAULT NULL,
   `format` tinytext DEFAULT NULL,
+  `createdAt` timestamp NULL DEFAULT current_timestamp(),
+  `updatedAt` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   PRIMARY KEY (`imageId`) USING BTREE,
   UNIQUE KEY `uniq_imgSrc` (`originalSrc`(100)) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4;
 
 -- Дамп данных таблицы github-next-js.image: ~14 rows (приблизительно)
 /*!40000 ALTER TABLE `image` DISABLE KEYS */;
-INSERT IGNORE INTO `image` (`imageId`, `originalSrc`, `width`, `height`, `altText`, `format`) VALUES
-	(5, 'Hat-front-black__72990.1603748583.png', 2048, 2048, NULL, NULL),
-	(6, 'Hat-back-black__57260.1602591509.png', 2048, 2048, NULL, NULL),
-	(7, 'Hat-left-black__51142.1602591510.png', 2048, 2048, NULL, NULL),
-	(8, 'Hat-front-white__31525.1602591510.png', 2048, 2048, NULL, NULL),
-	(9, 'Men-Jacket-Front-Black__15466.1603283963.png', 2048, 2048, NULL, NULL),
-	(10, 'Men-Jacket-Side-Black__68202.1603283961.png', 2048, 2048, NULL, NULL),
-	(11, 'Men-Jacket-Back-Black__33864.1603283963.png', 2048, 2048, NULL, NULL),
-	(12, 'Men-Jacket-Front-White__95300.1603283963.png', 2048, 2048, NULL, NULL),
-	(13, 'Men-Jacket-Side-White__91924.1603283962.png', 2048, 2048, NULL, NULL),
-	(14, 'Men-Jacket-Back-White__02866.1603283963.png', 2048, 2048, NULL, NULL),
-	(15, 'Men-TShirt-Black-Front__70046.1603748348.png', 2048, 2048, NULL, NULL),
-	(16, 'Men-TShirt-Black-Left-Side__72119.1603284781.png', 2048, 2048, NULL, NULL),
-	(17, 'Men-TShirt-Black-Back__57266.1603748348.png', 2048, 2048, NULL, NULL),
-	(18, 'Men-TShirt-White-Front__99616.1603284781.png', 2048, 2048, NULL, NULL),
-	(19, 'Men-TShirt-White-Left-Side__69000.1603284781.png', 2048, 2048, NULL, NULL),
-	(20, 'Men-TShirt-White-Back__33450.1603284781.png', 2048, 2048, NULL, NULL);
+INSERT IGNORE INTO `image` (`imageId`, `originalSrc`, `width`, `height`, `altText`, `format`, `createdAt`, `updatedAt`) VALUES
+	(5, 'Hat-front-black__72990.1603748583.png', 2048, 2048, NULL, NULL, '2022-06-10 22:43:22', '2022-06-10 22:43:42'),
+	(6, 'Hat-back-black__57260.1602591509.png', 2048, 2048, NULL, NULL, '2022-06-10 22:43:22', '2022-06-10 22:43:42'),
+	(7, 'Hat-left-black__51142.1602591510.png', 2048, 2048, NULL, NULL, '2022-06-10 22:43:22', '2022-06-10 22:43:42'),
+	(8, 'Hat-front-white__31525.1602591510.png', 2048, 2048, NULL, NULL, '2022-06-10 22:43:22', '2022-06-10 22:43:42'),
+	(9, 'Men-Jacket-Front-Black__15466.1603283963.png', 2048, 2048, NULL, NULL, '2022-06-10 22:43:22', '2022-06-10 22:43:42'),
+	(10, 'Men-Jacket-Side-Black__68202.1603283961.png', 2048, 2048, NULL, NULL, '2022-06-10 22:43:22', '2022-06-10 22:43:42'),
+	(11, 'Men-Jacket-Back-Black__33864.1603283963.png', 2048, 2048, NULL, NULL, '2022-06-10 22:43:22', '2022-06-10 22:43:42'),
+	(12, 'Men-Jacket-Front-White__95300.1603283963.png', 2048, 2048, NULL, NULL, '2022-06-10 22:43:22', '2022-06-10 22:43:42'),
+	(13, 'Men-Jacket-Side-White__91924.1603283962.png', 2048, 2048, NULL, NULL, '2022-06-10 22:43:22', '2022-06-10 22:43:42'),
+	(14, 'Men-Jacket-Back-White__02866.1603283963.png', 2048, 2048, NULL, NULL, '2022-06-10 22:43:22', '2022-06-10 22:43:42'),
+	(15, 'Men-TShirt-Black-Front__70046.1603748348.png', 2048, 2048, NULL, NULL, '2022-06-10 22:43:22', '2022-06-10 22:43:42'),
+	(16, 'Men-TShirt-Black-Left-Side__72119.1603284781.png', 2048, 2048, NULL, NULL, '2022-06-10 22:43:22', '2022-06-10 22:43:42'),
+	(17, 'Men-TShirt-Black-Back__57266.1603748348.png', 2048, 2048, NULL, NULL, '2022-06-10 22:43:22', '2022-06-10 22:43:42'),
+	(18, 'Men-TShirt-White-Front__99616.1603284781.png', 2048, 2048, NULL, NULL, '2022-06-10 22:43:22', '2022-06-10 22:43:42'),
+	(19, 'Men-TShirt-White-Left-Side__69000.1603284781.png', 2048, 2048, NULL, NULL, '2022-06-10 22:43:22', '2022-06-10 22:43:42'),
+	(20, 'Men-TShirt-White-Back__33450.1603284781.png', 2048, 2048, NULL, NULL, '2022-06-10 22:43:22', '2022-06-10 22:43:42');
 /*!40000 ALTER TABLE `image` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

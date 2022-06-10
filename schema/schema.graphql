@@ -87,7 +87,10 @@ type CheckoutUserError {
   field: String
   message: String
 }
-
+type UserError {
+  field: String
+  message: String
+}
 type LineItem {
   checkoutId: ID!
   variantId: ID!
@@ -139,8 +142,33 @@ type Query {
   hello: String
   checkout(id: ID!): CheckoutConnection
 }
+type ImageInfo {
+  imgSrc: String
+  width: Int!
+  height: Int!
+  format: String
+  orderNumber: Int!
+  createdAt: String
+  updatedAt: String
+}
+input ImageInfoInput {
+  imgSrc: String
+  width: Int!
+  height: Int!
+  format: String
+  orderNumber: Int!
+}
+type UploadedImagesResponse {
+  userErrors: [UserError]
+  imagesConnection: UploadedImagesConnection
+}
+type UploadedImagesConnection {
+  draftProductId: ID!
+  images: [ImageInfo]
+}
 type Mutation {
   checkoutLineItemsAdd(input: CheckoutCreateInput): CheckoutResponse
   checkoutLineItemsUpdate(input: CheckoutCreateInput): CheckoutResponse
   checkoutLineItemsRemove(checkoutId: ID!, lineItemIds: [ID]): CheckoutResponse
+  productImagesUpdate(draftProductId: ID = null, images: [ImageInfoInput!]!): UploadedImagesResponse
 }
