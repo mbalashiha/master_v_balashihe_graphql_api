@@ -136,12 +136,6 @@ type CheckoutResponse {
   checkoutUserErrors: [CheckoutUserError]
   checkoutConnection: CheckoutConnection
 }
-type Query {
-  products(offset: Int, limit: Int): ProductConnection
-  productByHandle(handle: String): Product
-  hello: String
-  checkout(id: ID!): CheckoutConnection
-}
 type ImageInfo {
   imgSrc: String
   width: Int!
@@ -153,22 +147,57 @@ type ImageInfo {
 }
 input ImageInfoInput {
   imgSrc: String
-  width: Int!
-  height: Int!
+  width: Int
+  height: Int
   format: String
-  orderNumber: Int!
+  orderNumber: Int
 }
 type UploadedImagesResponse {
   userErrors: [UserError]
   imagesConnection: UploadedImagesConnection
 }
+type RemovedImagesResponse {
+  userErrors: [UserError]
+  removedImages: [ImageInfo]
+  imagesConnection: UploadedImagesConnection
+}
 type UploadedImagesConnection {
-  draftProductId: ID!
-  images: [ImageInfo]
+  draftProductId: ID
+  images: UploadedImagesNodes
+}
+type UploadedImagesNodes {
+  nodes: [ImageInfo]
+}
+type CurrencyCode {
+  currencyCodeId: ID!
+  currencyCode: String!
+  symbolCode: String
+}
+type ProductCategory {
+  id: ID!
+  name: String!
+  parentId: String
+  productsCount: Int
+}
+type CurrencyCodesResponse {
+  nodes: [CurrencyCode!]!
+}
+type ProductsCategoriesResponse {
+  nodes: [ProductCategory!]!
 }
 type Mutation {
   checkoutLineItemsAdd(input: CheckoutCreateInput): CheckoutResponse
   checkoutLineItemsUpdate(input: CheckoutCreateInput): CheckoutResponse
   checkoutLineItemsRemove(checkoutId: ID!, lineItemIds: [ID]): CheckoutResponse
   productImagesUpdate(draftProductId: ID = null, images: [ImageInfoInput!]!): UploadedImagesResponse
+  removeProductImage(draftProductId: ID!, images: [ImageInfoInput!]!): RemovedImagesResponse
+}
+type Query {
+  products(offset: Int, limit: Int): ProductConnection
+  productByHandle(handle: String): Product
+  hello: String
+  checkout(id: ID!): CheckoutConnection
+  draftProductImages(draftProductId: ID!): UploadedImagesResponse
+  priceCurrencyCodes: CurrencyCodesResponse
+  productsCategories: ProductsCategoriesResponse
 }

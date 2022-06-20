@@ -521,6 +521,35 @@ const resolvers = {
       }
     },
   },
+  UploadedImagesNodes: {
+    nodes: async (parent, variables, _ctx, info: GraphQLResolveInfo) => {
+      try {
+        const images = await db.excuteQuery({
+          query: `select i.*, i.originalSrc as imgSrc, ip.orderNumber
+                 from draft_product p
+                 Left JOIN draft_image_to_product ip On p.draftProductId=ip.draftProductId
+                 Inner JOIN draft_image i On ip.draftImageId=i.draftImageId
+            where p.draftProductId=unhex($draftProductId)
+            order By ip.orderNumber`,
+          variables: parent,
+        });
+        return images;
+      } catch (e: any) {
+        console.error(e.stack || e.message);
+        throw e;
+      }
+    },
+  },
+  UploadedImagesConnection: {
+    images: async (parent, variables, _ctx, info: GraphQLResolveInfo) => {
+      try {
+        return { ...parent, ...variables };
+      } catch (e: any) {
+        console.error(e.stack || e.message);
+        throw e;
+      }
+    },
+  },
   UploadedImagesResponse: {
     imagesConnection: async (
       parent,
@@ -529,24 +558,115 @@ const resolvers = {
       info: GraphQLResolveInfo
     ) => {
       try {
-        if (!parent.images) {
-          parent.images = [];
-        }
-        return parent;
-        const nodes: any = await db.excuteQuery({
-          query: `select *
-                 from product_variant
-            where variantId=$variantId`,
-          variables: parent,
-        });
-        return nodes[0];
+        return { ...parent, ...variables };
       } catch (e: any) {
         console.error(e.stack || e.message);
         throw e;
       }
     },
   },
+  RemovedImagesResponse: {
+    imagesConnection: async (
+      parent,
+      variables,
+      _ctx,
+      info: GraphQLResolveInfo
+    ) => {
+      try {
+        return { ...parent, ...variables };
+      } catch (e: any) {
+        console.error(e.stack || e.message);
+        throw e;
+      }
+    },
+    removedImages: async (
+      parent,
+      variables,
+      _ctx,
+      info: GraphQLResolveInfo
+    ) => {
+      try {
+        return parent.removedImages;
+      } catch (e: any) {
+        console.error(e.stack || e.message);
+        throw e;
+      }
+    },
+  },
+  ProductCategory: {
+    productsCount: async (
+      parent,
+      variables,
+      _ctx,
+      info: GraphQLResolveInfo
+    ) => {
+      try {
+        const nodes: any = await db.excuteQuery({
+          query: `select count(*) as productsCount
+                 from product
+            where product_category_id=$id`,
+          variables: parent,
+        });
+        return (nodes[0] && nodes[0].productsCount) || 0;
+      } catch (e: any) {
+        console.error(e.stack || e.message);
+        throw e;
+      }
+    },
+  },
+
   Mutation: {
+    removeProductImage: async (
+      parent,
+      variables,
+      _ctx,
+      info: GraphQLResolveInfo
+    ) => {
+      try {
+        variables.draftProductId = variables.draftProductId || null;
+        if (!Array.isArray(variables.images) || variables.images.length <= 0) {
+          throw new Error(
+            "No variable images! Should be array of images input."
+          );
+        }
+        if (!variables.draftProductId) {
+          throw new Error(
+            "No variable draftProductId! Should be string for ID."
+          );
+        }
+        const removedImages: any[] = [];
+        for (const image of variables.images) {
+          image.draftProductId = variables.draftProductId;
+          const res1 = await db.excuteQuery({
+            query: `
+            delete draft_image_to_product from draft_image_to_product 
+              INNER JOIN draft_image ON 
+                  draft_image.originalSrc=$imgSrc And 
+                  draft_image.draftImageId=draft_image_to_product.draftImageId
+              Where draft_image.originalSrc=$imgSrc And draft_image_to_product.draftProductId=unhex($draftProductId)
+          `,
+            variables: image,
+          });
+          const res2: Array<any> = await db.excuteQuery({
+            query: `
+            delete draft_image from draft_image 
+              Where 
+                  draft_image.originalSrc=$imgSrc And
+                  draft_image.draftImageId Not IN (select draftImageId from draft_image_to_product)
+          `,
+            variables: image,
+          });
+          if (res2[0] && res2[0].affectedRows) {
+            removedImages.push(image);
+          }
+        }
+        return { removedImages, draftProductId: variables.draftProductId };
+      } catch (e: any) {
+        console.error(e.stack || e.message);
+        debugger;
+        throw e;
+      }
+    },
     productImagesUpdate: async (
       parent,
       variables,
@@ -561,18 +681,13 @@ const resolvers = {
           );
         }
         variables.images = JSON.stringify(variables.images);
-        console.log(variables);
-        console.log(parent);
         const res = await db.excuteQuery({
           query: "call product_Images_Update($draftProductId, $images);",
           variables,
         });
-        console.log(res);
-        console.log();
         return { draftProductId: res[0][0].draftProductId };
       } catch (e: any) {
         console.error(e.stack || e.message);
-        debugger;
         throw e;
       }
     },
@@ -664,6 +779,29 @@ const resolvers = {
     hello: () => {
       return "Hello world!";
     },
+    productsCategories: async (
+      _,
+      variables,
+      _ctx,
+      info: GraphQLResolveInfo
+    ) => {
+      const codes = await db.excuteQuery({
+        query:
+          "select product_category_id as id, category_name as name, parent_id as parentId  from product_category",
+      });
+      return { nodes: codes };
+    },
+    priceCurrencyCodes: async (
+      _,
+      variables,
+      _ctx,
+      info: GraphQLResolveInfo
+    ) => {
+      const codes = await db.excuteQuery({
+        query: "select * from price_currency_code",
+      });
+      return { nodes: codes };
+    },
     productByHandle: async (_, variables, _ctx, info: GraphQLResolveInfo) => {
       const { handle } = variables;
       const products: any = await db.excuteQuery({
@@ -679,6 +817,14 @@ const resolvers = {
       if (variables.id && !variables.checkoutId) {
         variables.checkoutId = variables.id;
       }
+      return { ...variables };
+    },
+    draftProductImages: async (
+      _,
+      variables,
+      _ctx,
+      info: GraphQLResolveInfo
+    ) => {
       return { ...variables };
     },
   },
