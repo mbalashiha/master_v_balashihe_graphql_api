@@ -1,5 +1,7 @@
 import fsa from "fs/promises";
+import fse from "fs-extra";
 import path from "path";
+let lastFetchErrorTimestamp: number | undefined;
 import {
   BROWSER_API_URL,
   CB_CURRENCIES_URL,
@@ -123,7 +125,11 @@ export const getCurrencyCources = async (
   } catch (e: any) {
     console.error("getCurrencyCources:", e.stack || e.message);
   }
-  if (needToRefresh(currenciesEnv)) {
+  if (
+    (!lastFetchErrorTimestamp ||
+      Date.now() - lastFetchErrorTimestamp > 10 * 60 * 1000) &&
+    needToRefresh(currenciesEnv)
+  ) {
     try {
       const resp = await fetch(uri);
       if (resp.status !== 200) {
@@ -133,7 +139,9 @@ export const getCurrencyCources = async (
       currenciesEnv = {
         modified: Date.now(),
       };
+      lastFetchErrorTimestamp = undefined;
     } catch (e: any) {
+      lastFetchErrorTimestamp = Date.now();
       console.error("getCurrencyCources:", e.stack || e.message);
     }
   }
@@ -171,7 +179,17 @@ export const getCurrencyCources = async (
   // }
   currenciesEnv.currencies = resultMap;
   try {
-    await fsa.writeFile(cacheFilepath, JSON.stringify(currenciesEnv, replacer));
+    if (
+      text &&
+      currenciesEnv &&
+      currenciesEnv.currencies &&
+      currenciesEnv.currencies.size
+    ) {
+      await fsa.writeFile(
+        cacheFilepath,
+        JSON.stringify(currenciesEnv, replacer)
+      );
+    }
   } catch (e: any) {
     console.error("getCurrencyCources:", e.stack || e.message);
   }
@@ -183,14 +201,20 @@ const cache = new Cache({
   staleWhileRevalidate: 6 * 60 * 60 * 1000,
   revalidate: async function (url, callback) {
     try {
-      const resp = await fetch(url);
-      if (resp.status !== 200) {
-        callback(resp);
-      } else {
-        const text = await resp.text();
-        callback(null, text);
+      if (
+        !lastFetchErrorTimestamp ||
+        Date.now() - lastFetchErrorTimestamp > 10 * 60 * 1000
+      ) {
+        const resp = await fetch(url);
+        if (resp.status !== 200) {
+          callback(resp);
+        } else {
+          const text = await resp.text();
+          callback(null, text);
+        }
       }
     } catch (e) {
+      lastFetchErrorTimestamp = Date.now();
       callback(e);
     }
   },

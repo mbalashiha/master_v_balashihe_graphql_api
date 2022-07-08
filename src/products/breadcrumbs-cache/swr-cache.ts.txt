@@ -1,0 +1,122 @@
+function capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+import path from "path";
+import fsa from "fs/promises";
+import delay from "delay";
+import db from "@src/db/execute-query";
+import { createStaleWhileRevalidateCache } from "stale-while-revalidate-cache";
+const cacheFilepath = path.join(
+  __dirname,
+  "cache.Product_Categories_Breadcrumbs.json"
+);
+const breadcrumbsMap = new Map<string, Array<string>>();
+const readCacheFile = async function () {
+  try {
+    const text = await fsa.readFile(cacheFilepath, "utf-8");
+    const parsed = JSON.parse(text);
+    for (const [key, val] of Object.entries(parsed)) {
+      breadcrumbsMap.set(key, val as any);
+    }
+  } catch (e: any) {
+    console.error(e.stack);
+  } finally {
+  }
+};
+readCacheFile();
+let savingTimoutId;
+const updateCacheFile = function () {
+  if (!savingTimoutId) {
+    savingTimoutId = setTimeout(async () => {
+      try {
+        const keys = breadcrumbsMap.keys();
+        const payload = {};
+        for (const key of keys) {
+          if (!key.endsWith("_time")) {
+            payload[key] = breadcrumbsMap.get(key);
+          }
+        }
+        console.error(
+          "\n",
+          "writing new modified cache json file:",
+          cacheFilepath
+        );
+        await fsa.writeFile(cacheFilepath, JSON.stringify(payload));
+      } catch (e: any) {
+        console.error(e.stack);
+      } finally {
+        savingTimoutId = undefined;
+      }
+    }, 5000);
+  }
+};
+export const getProductCategoryBreadcrumbs = async (cacheKey: string) => {
+  try {
+    let nextParent: null | { id: string } = { id: cacheKey };
+    const breadcrumbs: Array<string> = [];
+    do {
+      const result: Array<any> = await db.excuteQuery({
+        query: `select 
+            product_category_id as id, product_category.* 
+                 from product_category 
+            where product_category_id=$id`,
+        variables: nextParent,
+      });
+      if (result[0] && result[0].id && result[0].category_name) {
+        breadcrumbs.unshift(
+          capitalizeFirstLetter((result[0] && result[0].category_name) || "")
+        );
+        nextParent.id = result[0].parent_id;
+      } else {
+        nextParent = null;
+      }
+    } while (nextParent);
+    if (breadcrumbs.length <= 0) {
+      throw new Error("No breadcrumbs for product category.");
+    }
+    return breadcrumbs;
+  } catch (e: any) {
+    console.error(e.stack || e.message);
+    throw e;
+  }
+};
+const swr = createStaleWhileRevalidateCache({
+  minTimeToStale: 10 * 1000,
+  maxTimeToLive: 1 * 60 * 60 * 1000, // 1 hour
+  serialize: (val) => val, // serialize product object to string
+  deserialize: (val) => val, // deserialize cached product string to object
+  storage: {
+    async getItem(cacheKey: string) {
+      return breadcrumbsMap.get(cacheKey);
+    },
+    async setItem(cacheKey: string, cacheValue: Array<string>) {
+      if (!cacheKey.endsWith("_time")) {
+        if (
+          !breadcrumbsMap.has(cacheKey) ||
+          JSON.stringify(cacheValue) !==
+            JSON.stringify(breadcrumbsMap.get(cacheKey))
+        ) {
+          updateCacheFile();
+        }
+      }
+      breadcrumbsMap.set(cacheKey, cacheValue);
+    },
+  },
+});
+const wrappedSWR = async <R = any>(
+  cacheKey: string | (() => string),
+  fn: () => Promise<R>
+): Promise<R> => {
+  let result: R;
+  let counter = 0;
+  do {
+    result = await swr(cacheKey, fn);
+    if (typeof result === "undefined") {
+      counter++;
+      await delay(1);
+    } else {
+    }
+  } while (typeof result === "undefined" && counter < 1024);
+  return result;
+};
+export default wrappedSWR;

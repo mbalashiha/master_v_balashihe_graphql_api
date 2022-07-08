@@ -152,7 +152,7 @@ class MysqlDbWrapper {
   config(config?: ConnectionConfig): ConnectionConfig {
     return this.db.config(config);
   }
-  query<T>(...args): Promise<T> {
+  query<T = Array<any>>(...args): Promise<T> {
     return this.db.query(...args) as any as Promise<T>;
   }
   end(): Promise<void> {

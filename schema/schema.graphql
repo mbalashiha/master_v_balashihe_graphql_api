@@ -82,7 +82,6 @@ type Product {
   images(limit: Int): ImageConnection
   variants(limit: Int): VariantConnection
 }
-
 type CheckoutUserError {
   field: String
   message: String
@@ -122,12 +121,10 @@ type ProductConnection {
   nodes(offset: Int = 0, limit: Int = 250): [Product]
   node(id: ID): Product
 }
-
 input CheckoutLineItemInput {
   variantId: ID!
   quantity: Int!
 }
-
 input CheckoutCreateInput {
   checkoutId: ID = null
   lineItems: [CheckoutLineItemInput!]!
@@ -151,6 +148,20 @@ input ImageInfoInput {
   height: Int
   format: String
   orderNumber: Int
+}
+input ProductCategoryInput {  
+  id: ID
+  name: String
+  parentId: String
+  productsCount: Int
+}
+input SlugInput {
+  name: String!
+  slug: String!
+}
+input CreateCategoryInput {
+  parentCategory: ProductCategoryInput
+  slugs: [SlugInput!]!
 }
 type UploadedImagesResponse {
   userErrors: [UserError]
@@ -176,13 +187,24 @@ type CurrencyCode {
 type ProductCategory {
   id: ID!
   name: String!
+  slug: String
   parentId: String
   productsCount: Int
+  breadcrumbs: [String]
 }
 type CurrencyCodesResponse {
   nodes: [CurrencyCode!]!
 }
 type ProductsCategoriesResponse {
+  userErrors: [UserError]
+  createdCategory: ProductCategory
+  categoriesConnection: ProductsCategoriesConnection
+}
+type RemovedCategoryResponse {
+  userErrors: [UserError]
+  categoriesConnection: ProductsCategoriesConnection
+}
+type ProductsCategoriesConnection {
   nodes: [ProductCategory!]!
 }
 type Mutation {
@@ -191,6 +213,8 @@ type Mutation {
   checkoutLineItemsRemove(checkoutId: ID!, lineItemIds: [ID]): CheckoutResponse
   productImagesUpdate(draftProductId: ID = null, images: [ImageInfoInput!]!): UploadedImagesResponse
   removeProductImage(draftProductId: ID!, images: [ImageInfoInput!]!): RemovedImagesResponse
+  createProductCategory(categoryInput: CreateCategoryInput!): ProductsCategoriesResponse
+  removeProductCategory(categoryId: ID): ProductsCategoriesResponse
 }
 type Query {
   products(offset: Int, limit: Int): ProductConnection
@@ -199,5 +223,5 @@ type Query {
   checkout(id: ID!): CheckoutConnection
   draftProductImages(draftProductId: ID!): UploadedImagesResponse
   priceCurrencyCodes: CurrencyCodesResponse
-  productsCategories: ProductsCategoriesResponse
+  productsCategories: ProductsCategoriesConnection
 }

@@ -51,5 +51,8 @@ module.exports = {
     }),
   ],
   watch: true,
+  watchOptions: {
+    ignored: ["build/**", "/build", "/build/**", "*.cache.json"],
+  },
   optimization: {},
 };

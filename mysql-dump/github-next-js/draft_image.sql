@@ -26,19 +26,16 @@ CREATE TABLE IF NOT EXISTS `draft_image` (
   UNIQUE KEY `uniq_imgSrc` (`originalSrc`(100)) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Дамп данных таблицы github-next-js.draft_image: ~3 rows (приблизительно)
+-- Дамп данных таблицы github-next-js.draft_image: ~7 rows (приблизительно)
 /*!40000 ALTER TABLE `draft_image` DISABLE KEYS */;
 INSERT IGNORE INTO `draft_image` (`draftImageId`, `originalSrc`, `width`, `height`, `altText`, `format`, `createdAt`, `updatedAt`) VALUES
-	(_binary 0x0652C26AE8F511ECB6DE02004C4F4F50, '/uploads/drafts/avatar-nnm-Small-120x120-pirate-penguin-1644835286015-12208.jpg', 120, 120, NULL, 'jpeg', '2022-06-10 22:41:05', '2022-06-10 22:41:54'),
-	(_binary 0x259E6B3CE8FA11ECB6DE02004C4F4F50, '/uploads/drafts/avatar-nnm-pirate-penguin-1644574095000-71638.jpg', 750, 1000, NULL, 'jpeg', '2022-06-10 23:16:04', '2022-06-10 23:16:04'),
-	(_binary 0x25AB944CE8FA11ECB6DE02004C4F4F50, '/uploads/drafts/nnm-avatar-120x120-1644231061776-15135.png', 120, 120, NULL, 'png', '2022-06-10 23:16:04', '2022-06-10 23:16:04'),
-	(_binary 0x25AC9DCCE8FA11ECB6DE02004C4F4F50, '/uploads/drafts/Avatar-kartinka-policejskij-smajlik-1614103989630-7372.jpg', 225, 225, NULL, 'jpeg', '2022-06-10 23:16:04', '2022-06-10 23:16:04'),
-	(_binary 0x25ADBF23E8FA11ECB6DE02004C4F4F50, '/uploads/drafts/gosuslugi-1571928636256-3843558.png', 1250, 1023, NULL, 'png', '2022-06-10 23:16:04', '2022-06-10 23:16:04'),
-	(_binary 0x3E6F849FE8F911ECB6DE02004C4F4F50, '/uploads/drafts/DSC03438-1611251723520-1684654.jpg', 1900, 1900, NULL, 'jpeg', '2022-06-10 23:09:36', '2022-06-10 23:09:36'),
-	(_binary 0x4F481004E8F911ECB6DE02004C4F4F50, '/uploads/drafts/nnm-avatar-1644230939702-59712.png', 274, 274, NULL, 'png', '2022-06-10 23:10:04', '2022-06-10 23:10:04'),
-	(_binary 0xB109C619E8F611ECB6DE02004C4F4F50, '/uploads/drafts/dollardollar-clipart-freebsd-freebsd-devil-1585413601569-373803.png', 920, 1113, NULL, 'png', '2022-06-10 22:51:20', '2022-06-10 22:51:20'),
-	(_binary 0xCA36EE90E8F911ECB6DE02004C4F4F50, '/uploads/drafts/F1A10725AC9E3847469761D6E058129DC122B2F7327B022884pimgpsh-fullsize-distr-1461589367184-5588046.png', 2560, 1600, NULL, 'png', '2022-06-10 23:13:31', '2022-06-10 23:13:31'),
-	(_binary 0xCC6074ACE8F611ECB6DE02004C4F4F50, '/uploads/drafts/avatar-DSC03438-1611251798645-30908.png', 120, 120, NULL, 'png', '2022-06-10 22:52:06', '2022-06-10 22:52:06');
+	(_binary 0x37E20757F95711EC8D6D02004C4F4F50, '/uploads/drafts/Avatar-kartinka-policejskij-smajlik-1614103989630-7372.jpg', 225, 225, NULL, 'jpeg', '2022-07-01 19:02:33', '2022-07-01 19:02:33'),
+	(_binary 0x8870E720EDBA11ECB87B02004C4F4F50, '/uploads/drafts/avatar-nnm-Cutted-to-Squere-pirate-penguin-1644835172956-121540.jpg', 683, 683, NULL, 'jpeg', '2022-06-17 00:23:18', '2022-06-17 00:23:18'),
+	(_binary 0x9B64B22BECEC11ECB71202004C4F4F50, '/uploads/drafts/avatar-DSC03438-1611251798645-30908.png', 120, 120, NULL, 'png', '2022-06-15 23:49:14', '2022-06-15 23:49:14'),
+	(_binary 0xA8170F99EF3E11ECB66302004C4F4F50, '/uploads/drafts/avatar-nnm-Small-120x120-pirate-penguin-1644835286015-12208.jpg', 120, 120, NULL, 'jpeg', '2022-06-18 22:41:36', '2022-06-18 22:41:36'),
+	(_binary 0xB41D392FEF3E11ECB66302004C4F4F50, '/uploads/drafts/nnm-avatar-120x120-1644231061776-15135.png', 120, 120, NULL, 'png', '2022-06-18 22:41:56', '2022-06-18 22:41:56'),
+	(_binary 0xB84AEF55EF3D11ECB66302004C4F4F50, '/uploads/drafts/kisspng-bsd-daemon-berkeley-1585413536140-69971.jpg', 900, 580, NULL, 'jpeg', '2022-06-18 22:34:54', '2022-06-18 22:34:54'),
+	(_binary 0xBE480E3AEF3D11ECB66302004C4F4F50, '/uploads/drafts/avatar-nnm-120x120-pirate-penguin-1644836043083-17486.png', 120, 120, NULL, 'png', '2022-06-18 22:35:04', '2022-06-18 22:35:04');
 /*!40000 ALTER TABLE `draft_image` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

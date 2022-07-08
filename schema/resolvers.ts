@@ -6,6 +6,7 @@ import { isPositiveInteger } from "@src/utils/type-checkers";
 import { sql } from "./sql-query";
 import { Console } from "console";
 import { normalizePriceCurrency } from "@src/utils/currency/converter";
+
 function onlyUnique(value, index, self) {
   return self.indexOf(value) === index;
 }
@@ -601,21 +602,160 @@ const resolvers = {
       info: GraphQLResolveInfo
     ) => {
       try {
-        const nodes: any = await db.excuteQuery({
-          query: `select count(*) as productsCount
-                 from product
-            where product_category_id=$id`,
-          variables: parent,
-        });
-        return (nodes[0] && nodes[0].productsCount) || 0;
+        return parent.productsCount;
+      } catch (e: any) {
+        console.error(e.stack || e.message);
+        throw e;
+      }
+    },
+    breadcrumbs: async (parent, variables, _ctx, info: GraphQLResolveInfo) => {
+      try {
+        return (parent.breadcrumbs || "").split("/");
       } catch (e: any) {
         console.error(e.stack || e.message);
         throw e;
       }
     },
   },
-
+  RemovedCategoryResponse: {
+    categoriesConnection: async (
+      parent,
+      variables,
+      _ctx,
+      info: GraphQLResolveInfo
+    ) => {
+      try {
+        return { ...parent, ...variables };
+      } catch (e: any) {
+        console.error(e.stack || e.message);
+        throw e;
+      }
+    },
+  },
+  ProductsCategoriesResponse: {
+    categoriesConnection: async (
+      parent,
+      variables,
+      _ctx,
+      info: GraphQLResolveInfo
+    ) => {
+      try {
+        return { ...parent, ...variables };
+      } catch (e: any) {
+        console.error(e.stack || e.message);
+        throw e;
+      }
+    },
+  },
+  ProductsCategoriesConnection: {
+    nodes: async (parent, variables, _ctx, info: GraphQLResolveInfo) => {
+      try {
+        const nodes = await db.excuteQuery({
+          query: `select *
+            from product_category_breadcrumbs`,
+        });
+        return nodes;
+      } catch (e: any) {
+        console.error(e.stack || e.message);
+        throw e;
+      }
+    },
+  },
   Mutation: {
+    createProductCategory: async (
+      parent,
+      variables,
+      _ctx,
+      info: GraphQLResolveInfo
+    ) => {
+      try {
+        const {
+          categoryInput: { parentCategory, slugs },
+        } = variables;
+        if (!Array.isArray(slugs) || slugs.length <= 0) {
+          throw new Error(
+            "No New Category slugs array! Should be array of slugs input."
+          );
+        }
+        let parent_id: string | null = null;
+        let parent_slug: string = "";
+        let last_slug: string | null = null;
+        if (parentCategory && parentCategory.id) {
+          const rows1 = await db.excuteQuery<
+            Array<{ product_category_id: string; category_slug: string }>
+          >({
+            query: `select product_category_id, category_slug from product_category where product_category_id=$id`,
+            variables: { id: parentCategory.id },
+          });
+          parent_id = (rows1[0] && rows1[0].product_category_id) || null;
+          if (parent_id && rows1[0] && rows1[0].category_slug) {
+            parent_slug = rows1[0].category_slug;
+            last_slug = parent_slug + "/";
+          }
+        }
+        for (const { name, slug } of slugs) {
+          if (name && slug) {
+            let current_slug: string;
+            const rows1 = await db.excuteQuery<
+              Array<{
+                parent_id: string;
+                product_category_id: string;
+                category_slug: string;
+              }>
+            >({
+              query: `select parent_id, product_category_id, category_slug from product_category 
+                  where 
+                  IF($parent_id is NULL, parent_id Is Null, parent_id=$parent_id)
+                  And category_name=$name`,
+              variables: { parent_id, name },
+            });
+            if (rows1[0] && rows1[0].product_category_id) {
+              current_slug = rows1[0].category_slug;
+              parent_id = rows1[0].product_category_id;
+            } else {
+              const [insertRes] = await db.excuteQuery<
+                Array<{ insertId: string; affectedRows: number }>
+              >({
+                query: `insert into product_category(category_name, category_slug, parent_id)
+                  Values($name, $slug, $parent_id)`,
+                variables: { name, slug: (last_slug || "") + slug, parent_id },
+              });
+              parent_id = insertRes.insertId;
+              current_slug = slug;
+            }
+            if (!parent_id || !current_slug) {
+              throw new Error("wtf??");
+            }
+            last_slug = last_slug || "";
+            last_slug += current_slug + "/";
+          }
+        }
+        const [createdCategory] = await db.excuteQuery({
+          query: `
+          select 
+              product_category_id as id, 
+              category_name as name, 
+              category_slug as slug,
+              parent_id as parentId
+            from product_category
+            where product_category_id=$id `,
+          variables: { id: parent_id },
+        });
+        const nodes = await db.excuteQuery({
+          query: `select 
+              product_category_id as id, 
+              category_name as name, 
+              category_slug as slug, 
+              parent_id as parentId 
+            from product_category`,
+        });
+        return { createdCategory, nodes };
+      } catch (e: any) {
+        console.error(e.stack || e.message);
+        debugger;
+        throw e;
+      }
+    },
     removeProductImage: async (
       parent,
       variables,
@@ -774,6 +914,24 @@ const resolvers = {
         throw e;
       }
     },
+    removeProductCategory: async (
+      parent,
+      variables,
+      _ctx,
+      info: GraphQLResolveInfo
+    ) => {
+      try {
+        const deleteResult = await db.excuteQuery({
+          query: `delete from product_category where product_category_id=$categoryId`,
+          variables,
+        });
+        return deleteResult;
+      } catch (e: any) {
+        console.error(e.stack || e.message);
+        debugger;
+        throw e;
+      }
+    },
   },
   Query: {
     hello: () => {
@@ -785,11 +943,7 @@ const resolvers = {
       _ctx,
       info: GraphQLResolveInfo
     ) => {
-      const codes = await db.excuteQuery({
-        query:
-          "select product_category_id as id, category_name as name, parent_id as parentId  from product_category",
-      });
-      return { nodes: codes };
+      return { ..._, ...variables };
     },
     priceCurrencyCodes: async (
       _,

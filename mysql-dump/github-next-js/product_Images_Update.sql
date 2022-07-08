@@ -62,7 +62,7 @@ BEGIN
 				
 		SET loop_orderNumber := Json_unquote(JSON_extract(loop_orderNumber, "$.orderNumber"));
 		SET loop_orderNumber := IF(loop_orderNumber = '' OR loop_orderNumber = 'null', NULL, loop_orderNumber);	
-			
+		
 		SET test_imgSrc := NULL;
 		SET test_draftProductId := NULL;
 		SET loop_draftImageId := NULL;
@@ -74,6 +74,12 @@ BEGIN
 				INSERT INTO draft_image(originalSrc, width, height, FORMAT) VALUES(loop_imgSrc, loop_width, loop_height,loop_format);
 				SET loop_draftImageId := @last_draftImageId;
 			END if;
+			
+			IF loop_orderNumber IS NULL
+			Then
+			   SET loop_orderNumber := i;
+			END IF;
+		
 			if NOT EXISTS(SELECT 1 FROM draft_image_to_product d WHERE d.draftProductId=inserted_draftProductId AND d.draftImageId=loop_draftImageId)
 			Then
 				INSERT INTO draft_image_to_product(draftProductId, draftImageId, orderNumber) VALUES(inserted_draftProductId, loop_draftImageId, loop_orderNumber);
