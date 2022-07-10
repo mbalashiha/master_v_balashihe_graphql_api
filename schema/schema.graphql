@@ -11,8 +11,13 @@ type Pagination {
 type Price {
   amount: Float
   currencyCode: String
+  currencyCodeId: ID
 }
-
+input PriceInput {
+  amount: Float
+  currencyCode: String
+  currencyCodeId: ID
+}
 type PriceRange {
   minVariantAmount: Int
   maxVariantAmount: Int
@@ -81,6 +86,16 @@ type Product {
   image: Image
   images(limit: Int): ImageConnection
   variants(limit: Int): VariantConnection
+}
+input ProductInput {
+  draftProductId: ID!
+  productId: ID
+  title: String
+  handle: String
+  description: String
+  descriptionHtml: String
+  vendor: String
+  price: PriceInput
 }
 type CheckoutUserError {
   field: String
@@ -207,6 +222,25 @@ type RemovedCategoryResponse {
 type ProductsCategoriesConnection {
   nodes: [ProductCategory!]!
 }
+type ProductCategoryId {
+  id: ID
+}
+type DraftProductResponse {
+  draftProductId: String
+  productId: String
+  title: String
+  handle: String
+  description: String
+  descriptionHtml: String
+  vendor: String
+  price: Price
+  category: ProductCategoryId
+  manufacturerId: ID
+  imagesConnection: UploadedImagesConnection
+}
+type SaveDraftProductPayload {
+  productDraft: DraftProductResponse
+}
 type Mutation {
   checkoutLineItemsAdd(input: CheckoutCreateInput): CheckoutResponse
   checkoutLineItemsUpdate(input: CheckoutCreateInput): CheckoutResponse
@@ -215,12 +249,14 @@ type Mutation {
   removeProductImage(draftProductId: ID!, images: [ImageInfoInput!]!): RemovedImagesResponse
   createProductCategory(categoryInput: CreateCategoryInput!): ProductsCategoriesResponse
   removeProductCategory(categoryId: ID): ProductsCategoriesResponse
+  saveProductDraft(productInput: ProductInput): SaveDraftProductPayload
 }
 type Query {
   products(offset: Int, limit: Int): ProductConnection
   productByHandle(handle: String): Product
   hello: String
   checkout(id: ID!): CheckoutConnection
+  draftProduct(draftProductId: ID, productId: ID): DraftProductResponse
   draftProductImages(draftProductId: ID!): UploadedImagesResponse
   priceCurrencyCodes: CurrencyCodesResponse
   productsCategories: ProductsCategoriesConnection

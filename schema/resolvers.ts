@@ -525,15 +525,32 @@ const resolvers = {
   UploadedImagesNodes: {
     nodes: async (parent, variables, _ctx, info: GraphQLResolveInfo) => {
       try {
-        const images = await db.excuteQuery({
-          query: `select i.*, i.originalSrc as imgSrc, ip.orderNumber
+        variables = { ...parent, ...variables };
+        const { draftProductId, productId } = variables;
+        let images;
+        if (draftProductId) {
+          images = await db.excuteQuery({
+            query: `select i.*, i.originalSrc as imgSrc, ip.orderNumber
                  from draft_product p
                  Left JOIN draft_image_to_product ip On p.draftProductId=ip.draftProductId
                  Inner JOIN draft_image i On ip.draftImageId=i.draftImageId
             where p.draftProductId=unhex($draftProductId)
             order By ip.orderNumber`,
-          variables: parent,
-        });
+            variables: parent,
+          });
+        } else if (productId) {
+          images = await db.excuteQuery({
+            query: `select i.*, i.originalSrc as imgSrc, ip.orderNumber
+                 from product p
+                 Left JOIN image_to_product ip On p.productId=ip.productId
+                 Inner JOIN image i On ip.imageId=i.imageId
+            where p.productId=$productId
+            order By ip.orderNumber`,
+            variables: parent,
+          });
+        } else {
+          images = [];
+        }
         return images;
       } catch (e: any) {
         console.error(e.stack || e.message);
@@ -588,6 +605,35 @@ const resolvers = {
     ) => {
       try {
         return parent.removedImages;
+      } catch (e: any) {
+        console.error(e.stack || e.message);
+        throw e;
+      }
+    },
+  },
+  DraftProductResponse: {
+    imagesConnection: async (
+      parent,
+      variables,
+      _ctx,
+      info: GraphQLResolveInfo
+    ) => {
+      try {
+        return { ...parent, ...variables };
+      } catch (e: any) {
+        console.error(e.stack || e.message);
+        throw e;
+      }
+    },
+    category: async (parent, variables, _ctx, info: GraphQLResolveInfo) => {
+      try {
+        if (parent.category && parent.category.id) {
+          return parent.category;
+        } else if (parent.product_category_id) {
+          return { id: parent.product_category_id };
+        } else {
+          return { id: null };
+        }
       } catch (e: any) {
         console.error(e.stack || e.message);
         throw e;
@@ -963,6 +1009,37 @@ const resolvers = {
         variables: [handle],
       });
       return products[0];
+    },
+    draftProduct: async (_, variables, _ctx, info: GraphQLResolveInfo) => {
+      try {
+        const { draftProductId, productId } = variables;
+        let products: Array<any> | undefined = undefined;
+        if (draftProductId) {
+          products = await db.excuteQuery({
+            query:
+              "select * from draft_product_view where draftProductId=unhex(?)",
+            variables: [draftProductId],
+          });
+        }
+        if (productId && (!products || !products[0])) {
+          products = await db.excuteQuery({
+            query: "select * from product_view where productId=?",
+            variables: [productId],
+          });
+        }
+        const product = (products && products[0]) || {
+          draftProductId: draftProductId || null,
+        };
+        product.price = {
+          amount: product.amount ?? null,
+          currencyCode: product.currencyCode ?? "RUB",
+          currencyCodeId: product.currencyCodeId ?? "1",
+        };
+        return product;
+      } catch (e: any) {
+        console.error(e.stack || e.message);
+        throw e;
+      }
     },
     products: async (_, variables, _ctx, info: GraphQLResolveInfo) => {
       return { ...variables };
