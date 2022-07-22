@@ -15,7 +15,7 @@
 -- Дамп структуры для таблица github-next-js.product
 CREATE TABLE IF NOT EXISTS `product` (
   `productId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `handle` varchar(1024) NOT NULL,
+  `handle` varchar(1024) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
   `title` text NOT NULL,
   `sku` tinytext DEFAULT NULL,
   `product_category_id` int(10) unsigned DEFAULT NULL,
@@ -26,8 +26,8 @@ CREATE TABLE IF NOT EXISTS `product` (
   `updatedAt` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `publishedAt` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`productId`) USING BTREE,
+  UNIQUE KEY `uniq_handle` (`handle`),
   UNIQUE KEY `uniq_product_name_for_category_id` (`title`(100),`product_category_id`) USING BTREE,
-  UNIQUE KEY `uniq_handle` (`handle`) USING HASH,
   KEY `FK_product_product_category` (`product_category_id`),
   KEY `FK_product_manufacturer` (`manufacturerId`) USING BTREE,
   CONSTRAINT `FK_product_manufacturer` FOREIGN KEY (`manufacturerId`) REFERENCES `manufacturer` (`manufacturerId`),

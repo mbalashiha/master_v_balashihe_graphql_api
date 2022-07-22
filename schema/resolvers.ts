@@ -6,6 +6,7 @@ import { isPositiveInteger } from "@src/utils/type-checkers";
 import { sql } from "./sql-query";
 import { Console } from "console";
 import { normalizePriceCurrency } from "@src/utils/currency/converter";
+import { ProductInput } from "./types/indext";
 
 function onlyUnique(value, index, self) {
   return self.indexOf(value) === index;
@@ -978,6 +979,53 @@ const resolvers = {
         throw e;
       }
     },
+    saveProductDraft: async (
+      parent,
+      variables,
+      _ctx,
+      info: GraphQLResolveInfo
+    ) => {
+      try {
+        const productInput: ProductInput = variables.productInput;
+        console.log();
+        console.log(util.inspect(productInput));
+        console.log();
+        console.log();
+        let result: any = await db.excuteQuery({
+          query: `call draft_save_product(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          variables: [
+            productInput.draftProductId || null,
+            productInput.productId || null,
+            productInput.category.id || null,
+            productInput.title || null,
+            productInput.handle || null,
+            productInput.description || null,
+            productInput.descriptionHtml || null,
+            productInput.manufacturerId || null,
+            productInput.price.amount,
+            productInput.price.currencyCodeId || "1",
+          ],
+        });
+        console.log(result);
+        result = result && result[0] && result[0][0];
+        return { draftProductId: result?.draftProductId };
+      } catch (e: any) {
+        console.error(e.stack || e.message);
+        debugger;
+        throw e;
+      }
+    },
+    saveProduct: async (parent, variables, _ctx, info: GraphQLResolveInfo) => {
+      try {
+        const productInput: ProductInput = variables.productInput;
+        console.log(util.inspect(productInput));
+        debugger;
+        return productInput;
+      } catch (e: any) {
+        console.error(e.stack || e.message);
+        throw e;
+      }
+    },
   },
   Query: {
     hello: () => {
@@ -1030,10 +1078,13 @@ const resolvers = {
         const product = (products && products[0]) || {
           draftProductId: draftProductId || null,
         };
+        if (product && product.id) {
+          product.draftProductId = product.id;
+        }
         product.price = {
-          amount: product.amount ?? null,
+          amount: product.amount,
           currencyCode: product.currencyCode ?? "RUB",
-          currencyCodeId: product.currencyCodeId ?? "1",
+          currencyCodeId: product.currencyCodeId || "1",
         };
         return product;
       } catch (e: any) {

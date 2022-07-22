@@ -13,7 +13,7 @@ const database_env_unavailable_error = {
 };
 interface QueryProps {
   query: string;
-  variables?: undefined | null | Array<any> | { [key: string]: any };
+  variables?: (string | number | null)[] | { [key: string]: any };
 }
 class MysqlDbWrapper {
   public readonly db: mysql.ServerlessMysql;

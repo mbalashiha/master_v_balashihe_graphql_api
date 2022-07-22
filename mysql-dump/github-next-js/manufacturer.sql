@@ -23,7 +23,6 @@ CREATE TABLE IF NOT EXISTS `manufacturer` (
 -- Дамп данных таблицы github-next-js.manufacturer: ~1 rows (приблизительно)
 /*!40000 ALTER TABLE `manufacturer` DISABLE KEYS */;
 INSERT IGNORE INTO `manufacturer` (`manufacturerId`, `manufacturerName`) VALUES
-	(13, 'uu'),
 	(16, 'EincodeTest');
 /*!40000 ALTER TABLE `manufacturer` ENABLE KEYS */;
 

@@ -23,7 +23,6 @@ type PriceRange {
   maxVariantAmount: Int
   currencyCode: String
 }
-
 type Image {
   imageId: ID
   originalSrc: String
@@ -38,13 +37,11 @@ type Option {
   name: String
   values: [String]
 }
-
 type SelectedOption {
   optionId: ID
   optionName: String
   optionValue: String
 }
-
 type ProductVariant {
   variantId: ID
   title: String
@@ -55,13 +52,11 @@ type ProductVariant {
   image: Image
   product: ProductConnection
 }
-
 type Value {
   label: String
   isDefault: Boolean
   hexColors: [String]
 }
-
 type ProductOption {
   optionId: Int
   name: String
@@ -95,7 +90,9 @@ input ProductInput {
   description: String
   descriptionHtml: String
   vendor: String
+  manufacturerId: ID
   price: PriceInput
+  category: ProductCategoryIdInput
 }
 type CheckoutUserError {
   field: String
@@ -225,9 +222,12 @@ type ProductsCategoriesConnection {
 type ProductCategoryId {
   id: ID
 }
+input ProductCategoryIdInput {
+  id: ID
+}
 type DraftProductResponse {
-  draftProductId: String
-  productId: String
+  draftProductId: ID
+  productId: ID
   title: String
   handle: String
   description: String
@@ -239,7 +239,8 @@ type DraftProductResponse {
   imagesConnection: UploadedImagesConnection
 }
 type SaveDraftProductPayload {
-  productDraft: DraftProductResponse
+  userErrors: [UserError]
+  draftProductId: ID!
 }
 type Mutation {
   checkoutLineItemsAdd(input: CheckoutCreateInput): CheckoutResponse
@@ -249,7 +250,8 @@ type Mutation {
   removeProductImage(draftProductId: ID!, images: [ImageInfoInput!]!): RemovedImagesResponse
   createProductCategory(categoryInput: CreateCategoryInput!): ProductsCategoriesResponse
   removeProductCategory(categoryId: ID): ProductsCategoriesResponse
-  saveProductDraft(productInput: ProductInput): SaveDraftProductPayload
+  saveProductDraft(productInput: ProductInput!): SaveDraftProductPayload
+  saveProduct(productInput: ProductInput!): SaveDraftProductPayload
 }
 type Query {
   products(offset: Int, limit: Int): ProductConnection

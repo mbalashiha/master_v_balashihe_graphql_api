@@ -54,8 +54,10 @@ CREATE TABLE IF NOT EXISTS `draft_product_variant` (
   CONSTRAINT `FK_draft_product_variant_product_option_8` FOREIGN KEY (`option_id_8`) REFERENCES `product_option` (`optionId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Дамп данных таблицы github-next-js.draft_product_variant: ~0 rows (приблизительно)
+-- Дамп данных таблицы github-next-js.draft_product_variant: ~1 rows (приблизительно)
 /*!40000 ALTER TABLE `draft_product_variant` DISABLE KEYS */;
+INSERT IGNORE INTO `draft_product_variant` (`draftVariantId`, `draftProductId`, `option_id_1`, `option_id_2`, `option_id_3`, `option_id_4`, `option_id_5`, `option_id_6`, `option_id_7`, `option_id_8`, `price`, `compareAtPrice`, `currencyCodeId`, `createdAt`, `updatedAt`, `imageId`, `sku`) VALUES
+	(_binary 0xF58B660805F511ED869360A44C4F528E, _binary 0xF038DEC8037111ED85C102004C4F4F50, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3.0000, NULL, 2, '2022-07-17 20:29:08', '2022-07-18 01:02:01', NULL, NULL);
 /*!40000 ALTER TABLE `draft_product_variant` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
