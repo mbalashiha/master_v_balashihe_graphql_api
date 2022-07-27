@@ -24,14 +24,14 @@ CREATE TABLE IF NOT EXISTS `product_category` (
   UNIQUE KEY `Индекс 2` (`category_name`(100)),
   KEY `FK_product_category_product_category` (`parent_id`),
   CONSTRAINT `FK_product_category_product_category` FOREIGN KEY (`parent_id`) REFERENCES `product_category` (`product_category_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4;
 
--- Дамп данных таблицы github-next-js.product_category: ~2 rows (приблизительно)
+-- Дамп данных таблицы github-next-js.product_category: ~3 rows (приблизительно)
 /*!40000 ALTER TABLE `product_category` DISABLE KEYS */;
 INSERT IGNORE INTO `product_category` (`product_category_id`, `category_name`, `category_slug`, `parent_id`, `updatedAt`, `createdAt`) VALUES
 	(5, '11', '11', NULL, '2022-07-07 23:15:23', '2022-07-07 23:15:23'),
-	(31, '32234фффффффффффф', '32234ffffffffffff', NULL, '2022-07-18 02:58:12', '2022-07-18 02:58:12'),
-	(32, '222', '222', NULL, '2022-07-18 02:59:01', '2022-07-18 02:59:01');
+	(32, '222', '222', NULL, '2022-07-18 02:59:01', '2022-07-18 02:59:01'),
+	(34, '32234фффффффффффф323232', '32234ffffffffffff323232', NULL, '2022-07-22 21:38:03', '2022-07-22 21:38:03');
 /*!40000 ALTER TABLE `product_category` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

@@ -992,15 +992,13 @@ const resolvers = {
         console.log();
         console.log();
         let result: any = await db.excuteQuery({
-          query: `call draft_save_product(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          query: `call draft_save_product(?, ?, ?, ?, ?, ?, ?, ?)`,
           variables: [
             productInput.draftProductId || null,
             productInput.productId || null,
             productInput.category.id || null,
             productInput.title || null,
             productInput.handle || null,
-            productInput.description || null,
-            productInput.descriptionHtml || null,
             productInput.manufacturerId || null,
             productInput.price.amount,
             productInput.price.currencyCodeId || "1",
@@ -1009,6 +1007,34 @@ const resolvers = {
         console.log(result);
         result = result && result[0] && result[0][0];
         return { draftProductId: result?.draftProductId };
+      } catch (e: any) {
+        console.error(e.stack || e.message);
+        debugger;
+        throw e;
+      }
+    },
+    saveProductDraftDescription: async (
+      parent,
+      variables,
+      _ctx,
+      info: GraphQLResolveInfo
+    ) => {
+      try {
+        const descriptionInput: ProductInput = variables.descriptionInput;
+        let result: any = await db.excuteQuery({
+          query: `call draft_save_product_description(?, ?, ?, ?, ?)`,
+          variables: [
+            descriptionInput.draftProductId || null,
+            descriptionInput.productId || null,
+            descriptionInput.description || null,
+            descriptionInput.descriptionHtml || null,
+            descriptionInput.descriptionRawDraftContentState || null,
+          ],
+        });
+        console.log(result);
+        result = result && result[0] && result[0][0];
+        debugger;
+        return { draftProductId: result?.draftProductId || null };
       } catch (e: any) {
         console.error(e.stack || e.message);
         debugger;
@@ -1081,14 +1107,24 @@ const resolvers = {
         if (product && product.id) {
           product.draftProductId = product.id;
         }
+        if (
+          product.descriptionRawDraftContentState &&
+          typeof product.descriptionRawDraftContentState === "object"
+        ) {
+          product.descriptionRawDraftContentState = JSON.stringify(
+            product.descriptionRawDraftContentState
+          );
+        }
         product.price = {
           amount: product.amount,
           currencyCode: product.currencyCode ?? "RUB",
           currencyCodeId: product.currencyCodeId || "1",
         };
+        debugger;
         return product;
       } catch (e: any) {
         console.error(e.stack || e.message);
+        debugger;
         throw e;
       }
     },

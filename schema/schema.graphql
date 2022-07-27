@@ -74,6 +74,7 @@ type Product {
   handle: String
   description: String
   descriptionHtml: String
+  descriptionRawDraftContentState: String
   vendor: String
   price: Price
   priceRange: PriceRange
@@ -87,12 +88,17 @@ input ProductInput {
   productId: ID
   title: String
   handle: String
-  description: String
-  descriptionHtml: String
   vendor: String
   manufacturerId: ID
   price: PriceInput
   category: ProductCategoryIdInput
+}
+input ProductDescriptionInput {
+  draftProductId: ID!
+  productId: ID
+  description: String!
+  descriptionHtml: String!
+  descriptionRawDraftContentState: String!
 }
 type CheckoutUserError {
   field: String
@@ -232,6 +238,7 @@ type DraftProductResponse {
   handle: String
   description: String
   descriptionHtml: String
+  descriptionRawDraftContentState: String
   vendor: String
   price: Price
   category: ProductCategoryId
@@ -251,6 +258,7 @@ type Mutation {
   createProductCategory(categoryInput: CreateCategoryInput!): ProductsCategoriesResponse
   removeProductCategory(categoryId: ID): ProductsCategoriesResponse
   saveProductDraft(productInput: ProductInput!): SaveDraftProductPayload
+  saveProductDraftDescription(descriptionInput: ProductDescriptionInput!): SaveDraftProductPayload
   saveProduct(productInput: ProductInput!): SaveDraftProductPayload
 }
 type Query {

@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS `draft_image` (
   UNIQUE KEY `uniq_imgSrc` (`originalSrc`(100)) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Дамп данных таблицы github-next-js.draft_image: ~7 rows (приблизительно)
+-- Дамп данных таблицы github-next-js.draft_image: ~8 rows (приблизительно)
 /*!40000 ALTER TABLE `draft_image` DISABLE KEYS */;
 INSERT IGNORE INTO `draft_image` (`draftImageId`, `originalSrc`, `width`, `height`, `altText`, `format`, `createdAt`, `updatedAt`) VALUES
 	(_binary 0x3811ACC8095111ED846D60A44C4F528E, '/uploads/drafts/F1A10725AC9E3847469761D6E058129DC122B2F7327B022884pimgpsh-fullsize-distr-1461589367184-5588046.png', 2560, 1600, NULL, 'png', '2022-07-22 02:59:58', '2022-07-22 02:59:58'),

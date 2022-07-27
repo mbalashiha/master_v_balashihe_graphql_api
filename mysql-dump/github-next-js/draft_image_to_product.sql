@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS `draft_image_to_product` (
   CONSTRAINT `FK_draft_image_to_product_draft_product` FOREIGN KEY (`draftProductId`) REFERENCES `draft_product` (`draftProductId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Дамп данных таблицы github-next-js.draft_image_to_product: ~17 rows (приблизительно)
+-- Дамп данных таблицы github-next-js.draft_image_to_product: ~19 rows (приблизительно)
 /*!40000 ALTER TABLE `draft_image_to_product` DISABLE KEYS */;
 INSERT IGNORE INTO `draft_image_to_product` (`draftProductId`, `draftImageId`, `orderNumber`) VALUES
 	(_binary 0x14BE44EAE8FA11ECB6DE02004C4F4F50, _binary 0x9B64B22BECEC11ECB71202004C4F4F50, 0),

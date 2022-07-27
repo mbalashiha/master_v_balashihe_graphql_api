@@ -20,8 +20,6 @@ CREATE PROCEDURE `draft_save_product`(
 	IN `in_category_id` TINYTEXT,
 	IN `in_title` TEXT,
 	IN `in_handle` TEXT,
-	IN `in_description` LONGTEXT,
-	IN `in_descriptionHtml` LONGTEXT,
 	IN `in_manufacturerId` TINYTEXT,
 	IN `in_price_amount` TINYTEXT,
 	IN `in_price_currencyCodeId` TINYTEXT
@@ -34,8 +32,6 @@ BEGIN
  SET in_productId := IF(in_productId='' OR in_productId='null', NULL, in_productId);
  SET in_title := IF(in_title='' OR in_title='null', NULL, in_title);
  SET in_handle := IF(in_handle='' OR in_handle='null', NULL, in_handle);
- SET in_description := IF(in_description='' OR in_description='null', NULL, in_description);
- SET in_descriptionHtml := IF(in_descriptionHtml='' OR in_descriptionHtml='null', NULL, in_descriptionHtml);
  SET in_manufacturerId := IF(in_manufacturerId='' OR in_manufacturerId='null', NULL, in_manufacturerId);
  SET in_price_amount := IF(in_price_amount='' OR in_price_amount='null', NULL, in_price_amount);
  SET in_price_currencyCodeId := IF(in_price_currencyCodeId='' OR in_price_currencyCodeId='null', NULL, in_price_currencyCodeId);
@@ -47,12 +43,12 @@ BEGIN
  END IF;
  IF stored_draftProductId IS NULL
  Then
- 	INSERT INTO draft_product(productId, handle, title, product_category_id, description, descriptionHtml, manufacturerId)
+ 	INSERT INTO draft_product(productId, handle, title, product_category_id, manufacturerId)
  		VALUES(in_productId, in_handle, in_title, in_category_id, in_description, in_descriptionHtml, in_manufacturerId);
  	SET stored_draftProductId:=@last_draftProductId;
  ELSE 
  	Update draft_product
-	  Set productId=in_productId, handle=in_handle, title=in_title, product_category_id=in_category_id, description=in_description, descriptionHtml=in_descriptionHtml, manufacturerId=in_manufacturerId
+	  Set productId=in_productId, handle=in_handle, title=in_title, product_category_id=in_category_id, manufacturerId=in_manufacturerId
 	  	WHERE draftProductId=stored_draftProductId;
  END IF;
  SELECT Count(*), MIN(v.price) INTO stored_nullOptionsCount, stored_priceAmount FROM draft_product_variant v WHERE v.draftProductId=stored_draftProductId 

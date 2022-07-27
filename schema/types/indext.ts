@@ -10,6 +10,7 @@ export interface ProductInput {
   handle: string | null;
   description: string | null;
   descriptionHtml: string | null;
+  descriptionRawDraftContentState: string | null;
   vendor: string | null;
   manufacturerId: string | null;
   price: PriceInput;
