@@ -133,7 +133,6 @@ const resolvers = {
   },
   ProductConnection: {
     nodes: async (parent, variables, _ctx, info: GraphQLResolveInfo) => {
-      // console.log(variables);
       let offset = parseInt(variables.offset || parent.offset || 0);
       let limit = parseInt(variables.limit || parent.limit || 250);
       const products: any = await db.excuteQuery({
@@ -158,7 +157,6 @@ const resolvers = {
       return products;
     },
     node: async (parent, variables, _ctx, info: GraphQLResolveInfo) => {
-      // console.log(variables);
       variables.productId =
         variables.productId || parent.productId || variables.id;
       const products: any = await db.excuteQuery({
@@ -363,7 +361,6 @@ const resolvers = {
           variables,
         });
         if (checkoutRows.length !== 1) {
-          console.log("variables:", variables);
           console.error(
             "checkout result rows from mysql is not 1: checkoutRows.length: " +
               checkoutRows.length.toString()
@@ -952,8 +949,6 @@ const resolvers = {
             variables: [checkoutId, JSON.stringify(lineItems)],
           });
           checkoutId = checkoutResult[0][0].checkoutId;
-          console.log(checkoutId);
-          console.log();
           return { checkoutId };
         }
       } catch (e: any) {
@@ -987,10 +982,6 @@ const resolvers = {
     ) => {
       try {
         const productInput: ProductInput = variables.productInput;
-        console.log();
-        console.log(util.inspect(productInput));
-        console.log();
-        console.log();
         let result: any = await db.excuteQuery({
           query: `call draft_save_product(?, ?, ?, ?, ?, ?, ?, ?)`,
           variables: [
@@ -1004,7 +995,6 @@ const resolvers = {
             productInput.price.currencyCodeId || "1",
           ],
         });
-        console.log(result);
         result = result && result[0] && result[0][0];
         return { draftProductId: result?.draftProductId };
       } catch (e: any) {
@@ -1031,24 +1021,42 @@ const resolvers = {
             descriptionInput.descriptionRawDraftContentState || null,
           ],
         });
-        console.log(result);
         result = result && result[0] && result[0][0];
-        debugger;
         return { draftProductId: result?.draftProductId || null };
       } catch (e: any) {
         console.error(e.stack || e.message);
-        debugger;
         throw e;
       }
     },
     saveProduct: async (parent, variables, _ctx, info: GraphQLResolveInfo) => {
-      try {
+      try {    
         const productInput: ProductInput = variables.productInput;
         console.log(util.inspect(productInput));
         debugger;
+        let result: any = await db.excuteQuery({
+          query: `call save_product(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          variables: [
+            productInput.draftProductId || null,
+            productInput.productId || null,
+            productInput.category.id || null,
+            productInput.title || null,
+            productInput.handle || null,
+            productInput.manufacturerId || null,
+            productInput.price.amount || null,
+            productInput.price.currencyCodeId || null,
+            productInput.description || null,
+            productInput.descriptionHtml || null,
+            productInput.descriptionRawDraftContentState || null,
+          ],
+        });
+        console.log(result);
+        result = result && result[0] && result[0][0];
+        debugger;
+        return { productId: result?.productId || null };
         return productInput;
       } catch (e: any) {
         console.error(e.stack || e.message);
+        debugger;
         throw e;
       }
     },
@@ -1120,7 +1128,6 @@ const resolvers = {
           currencyCode: product.currencyCode ?? "RUB",
           currencyCodeId: product.currencyCodeId || "1",
         };
-        debugger;
         return product;
       } catch (e: any) {
         console.error(e.stack || e.message);

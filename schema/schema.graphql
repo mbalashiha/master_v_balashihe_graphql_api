@@ -100,6 +100,20 @@ input ProductDescriptionInput {
   descriptionHtml: String!
   descriptionRawDraftContentState: String!
 }
+input FullProductInput {
+  draftProductId: ID!
+  productId: ID
+  title: String
+  handle: String
+  vendor: String
+  manufacturerId: ID
+  price: PriceInput
+  category: ProductCategoryIdInput
+  description: String!
+  descriptionHtml: String!
+  descriptionRawDraftContentState: String!
+  images: [ImageInfoInput]!
+}
 type CheckoutUserError {
   field: String
   message: String
@@ -167,7 +181,7 @@ input ImageInfoInput {
   format: String
   orderNumber: Int
 }
-input ProductCategoryInput {  
+input ProductCategoryInput {
   id: ID
   name: String
   parentId: String
@@ -249,17 +263,31 @@ type SaveDraftProductPayload {
   userErrors: [UserError]
   draftProductId: ID!
 }
+type SavedProductResponse {
+  userErrors: [UserError]
+  productId: ID!
+}
 type Mutation {
   checkoutLineItemsAdd(input: CheckoutCreateInput): CheckoutResponse
   checkoutLineItemsUpdate(input: CheckoutCreateInput): CheckoutResponse
   checkoutLineItemsRemove(checkoutId: ID!, lineItemIds: [ID]): CheckoutResponse
-  productImagesUpdate(draftProductId: ID = null, images: [ImageInfoInput!]!): UploadedImagesResponse
-  removeProductImage(draftProductId: ID!, images: [ImageInfoInput!]!): RemovedImagesResponse
-  createProductCategory(categoryInput: CreateCategoryInput!): ProductsCategoriesResponse
+  productImagesUpdate(
+    draftProductId: ID = null
+    images: [ImageInfoInput!]!
+  ): UploadedImagesResponse
+  removeProductImage(
+    draftProductId: ID!
+    images: [ImageInfoInput!]!
+  ): RemovedImagesResponse
+  createProductCategory(
+    categoryInput: CreateCategoryInput!
+  ): ProductsCategoriesResponse
   removeProductCategory(categoryId: ID): ProductsCategoriesResponse
   saveProductDraft(productInput: ProductInput!): SaveDraftProductPayload
-  saveProductDraftDescription(descriptionInput: ProductDescriptionInput!): SaveDraftProductPayload
-  saveProduct(productInput: ProductInput!): SaveDraftProductPayload
+  saveProductDraftDescription(
+    descriptionInput: ProductDescriptionInput!
+  ): SaveDraftProductPayload
+  saveProduct(productInput: FullProductInput!): SavedProductResponse
 }
 type Query {
   products(offset: Int, limit: Int): ProductConnection
