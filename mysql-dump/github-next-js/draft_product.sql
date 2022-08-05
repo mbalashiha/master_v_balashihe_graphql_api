@@ -28,8 +28,6 @@ CREATE TABLE IF NOT EXISTS `draft_product` (
   `publishedAt` timestamp NULL DEFAULT NULL,
   `descriptionRawDraftContentState` longtext DEFAULT NULL,
   PRIMARY KEY (`draftProductId`),
-  UNIQUE KEY `uniq_handle` (`handle`),
-  UNIQUE KEY `uniq_product_name_for_category_id` (`title`(100),`product_category_id`) USING BTREE,
   KEY `FK_product_product_category` (`product_category_id`),
   KEY `FK_product_manufacturer` (`manufacturerId`) USING BTREE,
   KEY `actual_relation` (`productId`) USING BTREE,
@@ -38,20 +36,6 @@ CREATE TABLE IF NOT EXISTS `draft_product` (
 
 -- Дамп данных таблицы github-next-js.draft_product: ~13 rows (приблизительно)
 /*!40000 ALTER TABLE `draft_product` DISABLE KEYS */;
-INSERT IGNORE INTO `draft_product` (`draftProductId`, `productId`, `handle`, `title`, `sku`, `product_category_id`, `manufacturerId`, `description`, `descriptionHtml`, `createdAt`, `updatedAt`, `publishedAt`, `descriptionRawDraftContentState`) VALUES
-	(_binary 0x14BE44EAE8FA11ECB6DE02004C4F4F50, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2022-06-10 23:15:36', '2022-06-10 23:15:36', NULL, NULL),
-	(_binary 0x64B03930EF4211ECB66302004C4F4F50, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2022-06-18 23:08:21', '2022-06-18 23:08:21', NULL, NULL),
-	(_binary 0x71CE7675EF3F11ECB66302004C4F4F50, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2022-06-18 22:47:14', '2022-06-18 22:47:14', NULL, NULL),
-	(_binary 0xA09E2FFEEF3F11ECB66302004C4F4F50, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2022-06-18 22:48:33', '2022-06-18 22:48:33', NULL, NULL),
-	(_binary 0xA816E6A5EF3E11ECB66302004C4F4F50, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2022-06-18 22:41:36', '2022-06-18 22:41:36', NULL, NULL),
-	(_binary 0xAD0D0A83EF3E11ECB66302004C4F4F50, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2022-06-18 22:41:44', '2022-06-18 22:41:44', NULL, NULL),
-	(_binary 0xB35DA010EF3D11ECB66302004C4F4F50, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2022-06-18 22:34:45', '2022-06-18 22:34:45', NULL, NULL),
-	(_binary 0xB41D0B69EF3E11ECB66302004C4F4F50, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2022-06-18 22:41:56', '2022-06-18 22:41:56', NULL, NULL),
-	(_binary 0xB4722910EF3D11ECB66302004C4F4F50, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2022-06-18 22:34:47', '2022-06-18 22:34:47', NULL, NULL),
-	(_binary 0xB630BDF6EF3E11ECB66302004C4F4F50, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2022-06-18 22:42:00', '2022-06-18 22:42:00', NULL, NULL),
-	(_binary 0xB84AB3F2EF3D11ECB66302004C4F4F50, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2022-06-18 22:34:54', '2022-06-18 22:34:54', NULL, NULL),
-	(_binary 0xBE4735D9EF3D11ECB66302004C4F4F50, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2022-06-18 22:35:04', '2022-06-18 22:35:04', NULL, NULL),
-	(_binary 0xF038DEC8037111ED85C102004C4F4F50, NULL, NULL, 'OPdaaв23', NULL, 34, NULL, '00', '<p>00</p>\n', '2022-07-14 15:39:03', '2022-07-27 22:04:23', NULL, '{"blocks":[{"key":"2ul5g","text":"00","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}');
 /*!40000 ALTER TABLE `draft_product` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

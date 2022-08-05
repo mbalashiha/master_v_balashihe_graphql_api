@@ -24,9 +24,9 @@ CREATE TABLE IF NOT EXISTS `image` (
   `updatedAt` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   PRIMARY KEY (`imageId`) USING BTREE,
   UNIQUE KEY `uniq_imgSrc` (`originalSrc`(100)) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4;
 
--- Дамп данных таблицы github-next-js.image: ~14 rows (приблизительно)
+-- Дамп данных таблицы github-next-js.image: ~23 rows (приблизительно)
 /*!40000 ALTER TABLE `image` DISABLE KEYS */;
 INSERT IGNORE INTO `image` (`imageId`, `originalSrc`, `width`, `height`, `altText`, `format`, `createdAt`, `updatedAt`) VALUES
 	(5, 'Hat-front-black__72990.1603748583.png', 2048, 2048, NULL, NULL, '2022-06-10 22:43:22', '2022-06-10 22:43:42'),
@@ -44,7 +44,14 @@ INSERT IGNORE INTO `image` (`imageId`, `originalSrc`, `width`, `height`, `altTex
 	(17, 'Men-TShirt-Black-Back__57266.1603748348.png', 2048, 2048, NULL, NULL, '2022-06-10 22:43:22', '2022-06-10 22:43:42'),
 	(18, 'Men-TShirt-White-Front__99616.1603284781.png', 2048, 2048, NULL, NULL, '2022-06-10 22:43:22', '2022-06-10 22:43:42'),
 	(19, 'Men-TShirt-White-Left-Side__69000.1603284781.png', 2048, 2048, NULL, NULL, '2022-06-10 22:43:22', '2022-06-10 22:43:42'),
-	(20, 'Men-TShirt-White-Back__33450.1603284781.png', 2048, 2048, NULL, NULL, '2022-06-10 22:43:22', '2022-06-10 22:43:42');
+	(20, 'Men-TShirt-White-Back__33450.1603284781.png', 2048, 2048, NULL, NULL, '2022-06-10 22:43:22', '2022-06-10 22:43:42'),
+	(21, '/uploads/drafts/avatar-nnm-pirate-penguin-1644574095000-71638.jpg', 750, 1000, NULL, 'jpeg', '2022-08-05 20:02:32', '2022-08-05 20:02:32'),
+	(22, '/uploads/drafts/F1A10725AC9E3847469761D6E058129DC122B2F7327B022884pimgpsh-fullsize-distr-1461589367184-5588046.png', 2560, 1600, NULL, 'png', '2022-08-05 20:04:30', '2022-08-05 20:04:30'),
+	(23, '/uploads/drafts/Avatar-kartinka-policejskij-smajlik-1614103989630-7372.jpg', 225, 225, NULL, 'jpeg', '2022-08-05 20:04:30', '2022-08-05 20:04:30'),
+	(24, '/uploads/drafts/gosuslugi-1571928636256-3843558.png', 1250, 1023, NULL, 'png', '2022-08-05 20:04:30', '2022-08-05 20:04:30'),
+	(25, '/uploads/drafts/DSC03438-1611251723520-1684654.jpg', 1900, 1900, NULL, 'jpeg', '2022-08-05 20:04:30', '2022-08-05 20:04:30'),
+	(26, '/uploads/drafts/nnm-avatar-120x120-1644231061776-15135.png', 120, 120, NULL, 'png', '2022-08-05 20:04:30', '2022-08-05 20:04:30'),
+	(27, '/uploads/drafts/nnm-avatar-1644230939702-59712.png', 274, 274, NULL, 'png', '2022-08-05 20:04:30', '2022-08-05 20:04:30');
 /*!40000 ALTER TABLE `image` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

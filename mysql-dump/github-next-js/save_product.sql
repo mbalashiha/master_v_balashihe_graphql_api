@@ -12,9 +12,9 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
--- Дамп структуры для процедура github-next-js.draft_save_product
+-- Дамп структуры для процедура github-next-js.save_product
 DELIMITER //
-CREATE PROCEDURE `draft_save_product`(
+CREATE PROCEDURE `save_product`(
 	IN `in_draftProductId` TINYTEXT,
 	IN `in_productId` TINYTEXT,
 	IN `in_category_id` TINYTEXT,
@@ -22,12 +22,18 @@ CREATE PROCEDURE `draft_save_product`(
 	IN `in_handle` TEXT,
 	IN `in_manufacturerId` TINYTEXT,
 	IN `in_price_amount` TINYTEXT,
-	IN `in_price_currencyCodeId` TINYTEXT
+	IN `in_price_currencyCodeId` TINYTEXT,
+	IN `in_description` LONGTEXT,
+	IN `in_descriptionHtml` LONGTEXT,
+	IN `in_descriptionRawDraftContentState` LONGTEXT,
+	IN `in_images` JSON
 )
 BEGIN
  DECLARE stored_draftProductId BINARY(16) DEFAULT NULL;
  DECLARE stored_priceAmount DECIMAL(16,4) DEFAULT NULL;
  DECLARE stored_nullOptionsCount INT unsigned DEFAULT NULL;
+ DECLARE stored_productId INT unsigned DEFAULT NULL;
+ DECLARE stored_category_slug Text DEFAULT NULL;
  SET in_draftProductId := IF(in_draftProductId='' OR in_draftProductId='null', NULL, in_draftProductId);
  SET in_productId := IF(in_productId='' OR in_productId='null', NULL, in_productId);
  SET in_title := IF(in_title='' OR in_title='null', NULL, in_title);
@@ -36,22 +42,38 @@ BEGIN
  SET in_price_amount := IF(in_price_amount='' OR in_price_amount='null', NULL, in_price_amount);
  SET in_price_currencyCodeId := IF(in_price_currencyCodeId='' OR in_price_currencyCodeId='null', NULL, in_price_currencyCodeId);
  SET in_category_id := IF(in_category_id='' OR in_category_id='null', NULL, in_category_id);
+ SET in_description := IF(in_description='' OR in_description='null', NULL, in_description);
+ SET in_descriptionHtml := IF(in_descriptionHtml='' OR in_descriptionHtml='null', NULL, in_descriptionHtml);
+ SET in_descriptionRawDraftContentState := IF(in_descriptionRawDraftContentState='' OR in_descriptionRawDraftContentState='null', NULL, in_descriptionRawDraftContentState);
  
  IF in_draftProductId IS NOT NULL 
  Then
  	SELECT draftProductId INTO stored_draftProductId FROM draft_product WHERE draftProductId=UNHEX(in_draftProductId);
  END IF;
- IF stored_draftProductId IS NULL
+ IF in_category_id IS NOT Null
  Then
- 	INSERT INTO draft_product(productId, handle, title, product_category_id, manufacturerId)
- 		VALUES(in_productId, in_handle, in_title, in_category_id, in_manufacturerId);
- 	SET stored_draftProductId:=@last_draftProductId;
- ELSE 
- 	Update draft_product
-	  Set productId=in_productId, handle=in_handle, title=in_title, product_category_id=in_category_id, manufacturerId=in_manufacturerId
-	  	WHERE draftProductId=stored_draftProductId;
+ 	SELECT category_slug INTO stored_category_slug FROM product_category pcat WHERE pcat.product_category_id=in_category_id;
  END IF;
- SELECT Count(*), MIN(v.price) INTO stored_nullOptionsCount, stored_priceAmount FROM draft_product_variant v WHERE v.draftProductId=stored_draftProductId 
+ IF stored_category_slug IS NOT NULL
+ Then
+ 	SET in_handle := CONCAT(stored_category_slug, '/', in_handle);
+ END IF;
+ IF in_productId IS NOT NULL 
+ Then
+ 	SELECT productId INTO stored_productId FROM product WHERE productId=in_productId;
+ END IF;
+ IF stored_productId IS NULL
+ Then
+ 	INSERT INTO product(handle, title, product_category_id, manufacturerId, description, descriptionHtml, descriptionRawDraftContentState)
+ 		VALUES(in_handle, in_title, in_category_id, in_manufacturerId, in_description, in_descriptionHtml, in_descriptionRawDraftContentState);
+ 	SET stored_productId:=LAST_INSERT_ID();
+ ELSE 
+ 	Update product
+	  Set handle=in_handle, title=in_title, product_category_id=in_category_id, manufacturerId=in_manufacturerId, 
+	  		description=in_description, descriptionHtml=in_descriptionHtml, descriptionRawDraftContentState=in_descriptionRawDraftContentState
+	  	WHERE productId=stored_productId;
+ END IF;
+ SELECT Count(*), MIN(v.price) INTO stored_nullOptionsCount, stored_priceAmount FROM product_variant v WHERE v.productId=stored_productId 
  	And
  	v.option_id_1 IS NULL And
  	v.option_id_2 IS NULL And
@@ -61,11 +83,11 @@ BEGIN
  	v.option_id_6 IS NULL And
  	v.option_id_7 IS NULL And
  	v.option_id_8 IS NULL
-	 GROUP BY v.draftProductId;
+	 GROUP BY v.productId;
  If stored_nullOptionsCount > 1
  Then
-  DELETE v FROM draft_product_variant v WHERE 
-   v.draftProductId=stored_draftProductId 
+  DELETE v FROM product_variant v WHERE 
+   v.productId=stored_productId 
  	And
  	v.option_id_1 IS NULL And
  	v.option_id_2 IS NULL And
@@ -79,11 +101,11 @@ BEGIN
  END IF;
  IF stored_priceAmount IS Null
  Then 
- 	INSERT INTO draft_product_variant(draftProductId, price, currencyCodeId) VALUES(stored_draftProductId, in_price_amount, in_price_currencyCodeId);
+ 	INSERT INTO product_variant(productId, price, currencyCodeId) VALUES(stored_productId, in_price_amount, in_price_currencyCodeId);
  Else
- 	UPDATE draft_product_variant v 
+ 	UPDATE product_variant v 
 	 SET v.price=in_price_amount, v.currencyCodeId=in_price_currencyCodeId
-	 WHERE v.draftProductId=stored_draftProductId 
+	 WHERE v.productId=stored_productId 
 			 	And
 			 	v.option_id_1 IS NULL And
 			 	v.option_id_2 IS NULL And
@@ -94,7 +116,19 @@ BEGIN
 			 	v.option_id_7 IS NULL And
 			 	v.option_id_8 IS NULL;
  END IF;
- SELECT LCASE(HEX(stored_draftProductId)) AS draftProductId;
+ CALL product_move_draft_images(stored_productId, stored_draftProductId, in_images);
+ IF stored_draftProductId IS NOT NULL
+ Then
+	 DELETE dv FROM draft_product_variant dv WHERE dv.draftProductId=stored_draftProductId;
+	 DELETE dip FROM draft_image_to_product dip WHERE dip.draftProductId=stored_draftProductId;
+	 DELETE dp FROM draft_product dp WHERE dp.draftProductId=stored_draftProductId;
+ END IF;
+ SELECT stored_productId AS productId, JSON_ARRAYAGG(JSON_OBJECT('imgSrc',i.originalSrc, 'imageId', i.imageId)) AS images 
+ 	FROM product p
+ 		LEFT JOIN image_to_product im ON im.productId=p.productId
+ 		LEFT JOIN image i ON i.imageId=im.imageId
+ 	WHERE p.productId=stored_productId
+	 GROUP BY p.productId;
 END//
 DELIMITER ;
 

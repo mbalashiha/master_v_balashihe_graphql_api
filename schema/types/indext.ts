@@ -1,3 +1,10 @@
+export interface ImageInfoInput {
+  imgSrc: string;
+  width: number;
+  height: number;
+  format: string;
+  orderNumber: number;
+}
 export interface PriceInput {
   amount: number;
   currencyCode: string;
@@ -16,7 +23,9 @@ export interface ProductInput {
   price: PriceInput;
   category: ProductCategoryIdInput;
 }
-
 export interface ProductCategoryIdInput {
   id: string;
+}
+export interface FullProductInput extends ProductInput {
+  images: ImageInfoInput[];
 }

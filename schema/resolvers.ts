@@ -6,7 +6,7 @@ import { isPositiveInteger } from "@src/utils/type-checkers";
 import { sql } from "./sql-query";
 import { Console } from "console";
 import { normalizePriceCurrency } from "@src/utils/currency/converter";
-import { ProductInput } from "./types/indext";
+import { FullProductInput, ProductInput } from "./types/indext";
 
 function onlyUnique(value, index, self) {
   return self.indexOf(value) === index;
@@ -1025,16 +1025,20 @@ const resolvers = {
         return { draftProductId: result?.draftProductId || null };
       } catch (e: any) {
         console.error(e.stack || e.message);
+        debugger;
         throw e;
       }
     },
     saveProduct: async (parent, variables, _ctx, info: GraphQLResolveInfo) => {
-      try {    
-        const productInput: ProductInput = variables.productInput;
+      try {
+        const productInput: FullProductInput = variables.productInput;
+        if (!productInput.handle) {
+          throw new Error(`Table Column 'handle' cannot be null`);
+        }
         console.log(util.inspect(productInput));
         debugger;
         let result: any = await db.excuteQuery({
-          query: `call save_product(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          query: `call save_product(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
           variables: [
             productInput.draftProductId || null,
             productInput.productId || null,
@@ -1047,13 +1051,14 @@ const resolvers = {
             productInput.description || null,
             productInput.descriptionHtml || null,
             productInput.descriptionRawDraftContentState || null,
+            JSON.stringify(productInput.images || []),
           ],
         });
         console.log(result);
         result = result && result[0] && result[0][0];
+        console.log(result);
         debugger;
         return { productId: result?.productId || null };
-        return productInput;
       } catch (e: any) {
         console.error(e.stack || e.message);
         debugger;

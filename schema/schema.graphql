@@ -84,7 +84,7 @@ type Product {
   variants(limit: Int): VariantConnection
 }
 input ProductInput {
-  draftProductId: ID!
+  draftProductId: ID
   productId: ID
   title: String
   handle: String
@@ -101,17 +101,17 @@ input ProductDescriptionInput {
   descriptionRawDraftContentState: String!
 }
 input FullProductInput {
-  draftProductId: ID!
+  draftProductId: ID
   productId: ID
-  title: String
-  handle: String
+  title: String!
+  handle: String!
   vendor: String
   manufacturerId: ID
-  price: PriceInput
+  price: PriceInput!
   category: ProductCategoryIdInput
   description: String!
   descriptionHtml: String!
-  descriptionRawDraftContentState: String!
+  descriptionRawDraftContentState: String
   images: [ImageInfoInput]!
 }
 type CheckoutUserError {
@@ -263,9 +263,14 @@ type SaveDraftProductPayload {
   userErrors: [UserError]
   draftProductId: ID!
 }
+type SavedImages {
+  imgSrc: String!
+  imageId: ID!
+}
 type SavedProductResponse {
   userErrors: [UserError]
   productId: ID!
+  images: [SavedImages]
 }
 type Mutation {
   checkoutLineItemsAdd(input: CheckoutCreateInput): CheckoutResponse
