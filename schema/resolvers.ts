@@ -1036,7 +1036,6 @@ const resolvers = {
           throw new Error(`Table Column 'handle' cannot be null`);
         }
         console.log(util.inspect(productInput));
-        debugger;
         let result: any = await db.excuteQuery({
           query: `call save_product(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
           variables: [
@@ -1057,7 +1056,6 @@ const resolvers = {
         console.log(result);
         result = result && result[0] && result[0][0];
         console.log(result);
-        debugger;
         return { productId: result?.productId || null };
       } catch (e: any) {
         console.error(e.stack || e.message);
