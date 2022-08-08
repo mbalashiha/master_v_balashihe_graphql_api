@@ -47,7 +47,8 @@ INSERT IGNORE INTO `image_to_product` (`productId`, `imageId`, `orderNumber`) VA
 	(18, 24, 3),
 	(18, 25, 4),
 	(18, 26, 5),
-	(18, 27, 6);
+	(18, 27, 6),
+	(16, 28, 0);
 /*!40000 ALTER TABLE `image_to_product` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

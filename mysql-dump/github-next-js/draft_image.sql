@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS `draft_image` (
   UNIQUE KEY `uniq_imgSrc` (`originalSrc`(100)) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Дамп данных таблицы github-next-js.draft_image: ~5 rows (приблизительно)
+-- Дамп данных таблицы github-next-js.draft_image: ~0 rows (приблизительно)
 /*!40000 ALTER TABLE `draft_image` DISABLE KEYS */;
 /*!40000 ALTER TABLE `draft_image` ENABLE KEYS */;
 
