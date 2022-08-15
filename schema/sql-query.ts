@@ -13,6 +13,7 @@ export const sql = {
                         IF(image.imageId is not Null, Json_Object(
                         'imageId', image.imageId,
                         'originalSrc', image.originalSrc,
+                        'imgSrc', image.imgSrc,
                         'width', image.width,
                         'height', image.height,
                         'altText', image.altText,
@@ -25,7 +26,7 @@ export const sql = {
     FROM checkout c
         LEFT JOIN checkout_line_item i ON c.checkoutId=i.checkoutId
         LEFT JOIN product_variant v ON v.variantId=i.variantId
-        Left Join image ON image.imageId=v.imageId
+        Left Join product_variant_image image ON image.variantId=v.variantId
         Left Join price_currency_code cc On v.currencyCodeId=cc.currencyCodeId
     Where c.checkoutId=unhex($checkoutId)
 	GROUP BY c.checkoutId`,

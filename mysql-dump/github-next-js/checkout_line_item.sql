@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS `checkout_line_item` (
   CONSTRAINT `FK_checkout_line_items_product_variant` FOREIGN KEY (`variantId`) REFERENCES `product_variant` (`variantId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Дамп данных таблицы github-next-js.checkout_line_item: ~14 rows (приблизительно)
+-- Дамп данных таблицы github-next-js.checkout_line_item: ~20 rows (приблизительно)
 /*!40000 ALTER TABLE `checkout_line_item` DISABLE KEYS */;
 INSERT IGNORE INTO `checkout_line_item` (`checkoutId`, `variantId`, `quantity`) VALUES
 	(_binary 0x25BB06A7D08511ECB6AD02004C4F4F50, 34, 1),
@@ -42,7 +42,9 @@ INSERT IGNORE INTO `checkout_line_item` (`checkoutId`, `variantId`, `quantity`) 
 	(_binary 0x95432998D08511ECB6AD02004C4F4F50, 40, 1),
 	(_binary 0x9BDCA560D06911ECB6AD02004C4F4F50, 35, 1),
 	(_binary 0x9DA3CCB6D06A11ECB6AD02004C4F4F50, 35, 1),
-	(_binary 0xB1C3FB06D08411ECB6AD02004C4F4F50, 35, 1);
+	(_binary 0xB1C3FB06D08411ECB6AD02004C4F4F50, 35, 1),
+	(_binary 0xD40D95291BD111EDB79F60A44C4F528E, 39, 1),
+	(_binary 0xD40D95291BD111EDB79F60A44C4F528E, 42, 1);
 /*!40000 ALTER TABLE `checkout_line_item` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
