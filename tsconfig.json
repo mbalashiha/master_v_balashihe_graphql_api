@@ -17,7 +17,11 @@
       "@src": ["src"],
       "@src/*": ["src/*"],
       "@root": ["."],
-      "@root/*": ["./*"]
+      "@root/*": ["./*"],
+      "@schema": ["schema"],
+      "@schema/*": ["schema/*"],
+      "@modules": ["schema/modules"],
+      "@modules/*": ["schema/modules/*"]
     },
     "noImplicitAny": false,
     "strict": true,
