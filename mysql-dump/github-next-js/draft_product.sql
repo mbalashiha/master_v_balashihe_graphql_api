@@ -15,6 +15,7 @@
 -- Дамп структуры для таблица github-next-js.draft_product
 CREATE TABLE IF NOT EXISTS `draft_product` (
   `draftProductId` binary(16) NOT NULL DEFAULT unhex(replace(uuid(),'-','')),
+  `managerId` int(10) unsigned NOT NULL,
   `productId` int(10) unsigned DEFAULT NULL,
   `handle` varchar(1024) CHARACTER SET latin1 COLLATE latin1_general_ci DEFAULT NULL,
   `title` text DEFAULT NULL,
@@ -31,13 +32,13 @@ CREATE TABLE IF NOT EXISTS `draft_product` (
   KEY `FK_product_product_category` (`product_category_id`),
   KEY `FK_product_manufacturer` (`manufacturerId`) USING BTREE,
   KEY `actual_relation` (`productId`) USING BTREE,
+  KEY `FK_draft_product_managers` (`managerId`),
+  CONSTRAINT `FK_draft_product_managers` FOREIGN KEY (`managerId`) REFERENCES `managers` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_draft_product_product` FOREIGN KEY (`productId`) REFERENCES `product` (`productId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Дамп данных таблицы github-next-js.draft_product: ~0 rows (приблизительно)
 /*!40000 ALTER TABLE `draft_product` DISABLE KEYS */;
-INSERT IGNORE INTO `draft_product` (`draftProductId`, `productId`, `handle`, `title`, `sku`, `product_category_id`, `manufacturerId`, `description`, `descriptionHtml`, `createdAt`, `updatedAt`, `publishedAt`, `descriptionRawDraftContentState`) VALUES
-	(_binary 0xDB2FC985174211EDB8B260A44C4F528E, 16, '34234', '34234', NULL, 34, NULL, NULL, NULL, '2022-08-08 20:52:26', '2022-08-08 20:52:26', NULL, NULL);
 /*!40000 ALTER TABLE `draft_product` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

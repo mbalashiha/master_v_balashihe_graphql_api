@@ -169,6 +169,7 @@ export const baseModule = createModule({
         checkout: Checkout
       }
       type ProductConnection {
+        error: String
         nodes(offset: Int = 0, limit: Int = 250): [Product]
         node(id: ID): Product
       }

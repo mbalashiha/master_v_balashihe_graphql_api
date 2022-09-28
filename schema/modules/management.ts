@@ -4,7 +4,7 @@ import graphqlFields from "graphql-fields";
 import expressJwt from "express-jwt";
 import jwt from "jsonwebtoken";
 import db from "@src/db/execute-query";
-import { GraphQLResolveInfo } from "graphql";
+import { GraphQLError, GraphQLResolveInfo } from "graphql";
 import { isPositiveInteger } from "@src/utils/type-checkers";
 import { sql } from "@schema/sql-query";
 import { Console } from "console";
@@ -49,9 +49,9 @@ export const managementModule = createModule({
   resolvers: {
     Query: {
       draftProduct: async (_, variables, context, info: GraphQLResolveInfo) => {
-        //check if the context.user is null
-        if (!context.user) {
-          throw new Error("Unauthorized");
+        //check if the context.manager is null
+        if (!context.manager || !context.manager.id) {
+          throw new Error("Manager Unauthorized");
         }
         try {
           const { draftProductId, productId } = variables;
@@ -101,8 +101,8 @@ export const managementModule = createModule({
         context,
         info: GraphQLResolveInfo
       ) => {
-        if (!context.user) {
-          throw new Error("Unauthorized");
+        if (!context.manager || !context.manager.id) {
+          throw new GraphQLError("Manager Unauthorized");
         }
         return { ...variables };
       },
@@ -112,8 +112,8 @@ export const managementModule = createModule({
         context,
         info: GraphQLResolveInfo
       ) => {
-        if (!context.user) {
-          throw new Error("Unauthorized");
+        if (!context.manager || !context.manager.id) {
+          throw new GraphQLError("Manager Unauthorized");
         }
         return { ...variables };
       },
@@ -125,8 +125,8 @@ export const managementModule = createModule({
         context,
         info: GraphQLResolveInfo
       ) => {
-        if (!context.user) {
-          throw new Error("Unauthorized");
+        if (!context.manager || !context.manager.id) {
+          throw new GraphQLError("Manager Unauthorized");
         }
         try {
           const {
@@ -226,8 +226,8 @@ export const managementModule = createModule({
         context,
         info: GraphQLResolveInfo
       ) => {
-        if (!context.user) {
-          throw new Error("Unauthorized");
+        if (!context.manager || !context.manager.id) {
+          throw new Error("Manager Unauthorized");
         }
         try {
           variables.draftProductId = variables.draftProductId || null;
@@ -283,8 +283,8 @@ export const managementModule = createModule({
         context,
         info: GraphQLResolveInfo
       ) => {
-        if (!context.user) {
-          throw new Error("Unauthorized");
+        if (!context.manager || !context.manager.id) {
+          throw new Error("Manager Unauthorized");
         }
         try {
           variables.draftProductId = variables.draftProductId || null;
@@ -313,8 +313,8 @@ export const managementModule = createModule({
         context,
         info: GraphQLResolveInfo
       ) => {
-        if (!context.user) {
-          throw new Error("Unauthorized");
+        if (!context.manager || !context.manager.id) {
+          throw new Error("Manager Unauthorized");
         }
         try {
           const deleteResult = await db.excuteQuery({
@@ -334,8 +334,8 @@ export const managementModule = createModule({
         context,
         info: GraphQLResolveInfo
       ) => {
-        if (!context.user) {
-          throw new Error("Unauthorized");
+        if (!context.manager || !context.manager.id) {
+          throw new Error("Manager Unauthorized");
         }
         try {
           const productInput: ProductInput = variables.productInput;
@@ -366,8 +366,8 @@ export const managementModule = createModule({
         context,
         info: GraphQLResolveInfo
       ) => {
-        if (!context.user) {
-          throw new Error("Unauthorized");
+        if (!context.manager || !context.manager.id) {
+          throw new Error("Manager Unauthorized");
         }
         try {
           const descriptionInput: ProductInput = variables.descriptionInput;
@@ -395,8 +395,8 @@ export const managementModule = createModule({
         context,
         info: GraphQLResolveInfo
       ) => {
-        if (!context.user) {
-          throw new Error("Unauthorized");
+        if (!context.manager || !context.manager.id) {
+          throw new Error("Manager Unauthorized");
         }
         try {
           const productInput: FullProductInput = variables.productInput;
