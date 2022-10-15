@@ -35,7 +35,7 @@ const loginMiddleware = async (req: Request, res: Response) => {
           throw { message: "Authentification failed" };
         }
         const token = jwt.sign({ ...values }, process.env["JWT_SECRET"]!);
-        res.cookie("manager", token, {
+        res.cookie("client", token, {
           httpOnly: true,
           maxAge: 90 * 24 * 60 * 60 * 1000,
           // secure: true, //on HTTPS

@@ -20,7 +20,10 @@ if (!process.env["JWT_SECRET"]) {
   throw new Error("No json web-token secret.");
 }
 
-const managementLoginMiddleware = async (req: Request, res: Response) => {
+export const managementLoginMiddleware = async (
+  req: Request,
+  res: Response
+) => {
   try {
     const value = (req as any).rawBody || req.body.toString("utf8");
     const decoded = value && typeof value === "string" && simpleDecrypt(value);
@@ -52,6 +55,18 @@ const managementLoginMiddleware = async (req: Request, res: Response) => {
     console.error(e.stack || e.message);
     return res.json({ success: false, error: e.stack || e.message || e });
   }
+};
+export const managementSignoutMiddleware = async (
+  req: Request,
+  res: Response
+) => {
+  res.cookie("manager", "", {
+    httpOnly: true,
+    maxAge: 0,
+    // secure: true, //on HTTPS
+    // domain: "localhost:4402", //set your domain
+  });
+  return res.status(200).json({ success: true });
 };
 export const verifyManagementLoginMiddleware = async (
   req: Request,
@@ -94,7 +109,7 @@ export const verifyManagementLoginMiddleware = async (
         };
         return res.json({ success: true, manager });
       } else {
-        res.cookie("jwt", "", {
+        res.cookie("manager", "", {
           httpOnly: true,
           maxAge: 0,
           // secure: true, //on HTTPS
@@ -108,7 +123,7 @@ export const verifyManagementLoginMiddleware = async (
       const err = { message: e.message, stack: e.stack, ...e };
       console.error(err.stack || err.message);
       return res
-        .status(500   )
+        .status(500)
         .json({ success: false, error: err.stack || err.message });
     }
   }

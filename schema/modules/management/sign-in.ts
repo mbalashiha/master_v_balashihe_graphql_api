@@ -61,7 +61,7 @@ export const signInModule = createModule({
                 return { error: "Authentification failed" };
               }
               const token = jwt.sign({ ...values }, process.env["JWT_SECRET"]!);
-              res.cookie("jwt", token, {
+              res.cookie("manager", token, {
                 httpOnly: true,
                 maxAge: 90 * 24 * 60 * 60 * 1000,
                 //secure: true, //on HTTPS

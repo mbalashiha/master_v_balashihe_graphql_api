@@ -113,11 +113,16 @@ export const baseModule = createModule({
         category: ProductCategoryIdInput
       }
       input ProductDescriptionInput {
-        draftProductId: ID!
+        draftProductId: ID
         productId: ID
         description: String!
         descriptionHtml: String!
         descriptionRawDraftContentState: String!
+      }
+      input ImagesInfoInput {
+        draftProductId: ID
+        productId: ID
+        images: [ImageInfoInput]!
       }
       input FullProductInput {
         draftProductId: ID
@@ -131,7 +136,7 @@ export const baseModule = createModule({
         description: String!
         descriptionHtml: String!
         descriptionRawDraftContentState: String
-        images: [ImageInfoInput]!
+        imagesInput: ImagesInfoInput!
       }
       type CheckoutUserError {
         field: String
@@ -215,22 +220,6 @@ export const baseModule = createModule({
         parentCategory: ProductCategoryInput
         slugs: [SlugInput!]!
       }
-      type UploadedImagesResponse {
-        userErrors: [UserError]
-        imagesConnection: UploadedImagesConnection
-      }
-      type RemovedImagesResponse {
-        userErrors: [UserError]
-        removedImages: [ImageInfo]
-        imagesConnection: UploadedImagesConnection
-      }
-      type UploadedImagesConnection {
-        draftProductId: ID
-        images: UploadedImagesNodes
-      }
-      type UploadedImagesNodes {
-        nodes: [ImageInfo]
-      }
       type CurrencyCode {
         currencyCodeId: ID!
         currencyCode: String!
@@ -264,20 +253,6 @@ export const baseModule = createModule({
       }
       input ProductCategoryIdInput {
         id: ID
-      }
-      type DraftProductResponse {
-        draftProductId: ID
-        productId: ID
-        title: String
-        handle: String
-        description: String
-        descriptionHtml: String
-        descriptionRawDraftContentState: String
-        vendor: String
-        price: Price
-        category: ProductCategoryId
-        manufacturerId: ID
-        imagesConnection: UploadedImagesConnection
       }
       type SaveDraftProductPayload {
         userErrors: [UserError]
@@ -819,95 +794,6 @@ export const baseModule = createModule({
         }
       },
     },
-    UploadedImagesNodes: {
-      nodes: async (parent, variables, _ctx, info: GraphQLResolveInfo) => {
-        try {
-          variables = { ...parent, ...variables };
-          const { draftProductId, productId } = variables;
-          let images;
-          if (draftProductId) {
-            images = await db.excuteQuery({
-              query: `select i.*, i.originalSrc as imgSrc, ip.orderNumber
-                 from draft_product p
-                 Left JOIN draft_image_to_product ip On p.draftProductId=ip.draftProductId
-                 Inner JOIN draft_image i On ip.draftImageId=i.draftImageId
-            where p.draftProductId=unhex($draftProductId)
-            order By ip.orderNumber`,
-              variables: parent,
-            });
-          } else if (productId) {
-            images = await db.excuteQuery({
-              query: `select i.*, i.originalSrc as imgSrc, ip.orderNumber
-                 from product p
-                 Left JOIN image_to_product ip On p.productId=ip.productId
-                 Inner JOIN image i On ip.imageId=i.imageId
-            where p.productId=$productId
-            order By ip.orderNumber`,
-              variables: parent,
-            });
-          } else {
-            images = [];
-          }
-          return images;
-        } catch (e: any) {
-          console.error(e.stack || e.message);
-          throw e;
-        }
-      },
-    },
-    UploadedImagesConnection: {
-      images: async (parent, variables, _ctx, info: GraphQLResolveInfo) => {
-        try {
-          return { ...parent, ...variables };
-        } catch (e: any) {
-          console.error(e.stack || e.message);
-          throw e;
-        }
-      },
-    },
-    UploadedImagesResponse: {
-      imagesConnection: async (
-        parent,
-        variables,
-        _ctx,
-        info: GraphQLResolveInfo
-      ) => {
-        try {
-          return { ...parent, ...variables };
-        } catch (e: any) {
-          console.error(e.stack || e.message);
-          throw e;
-        }
-      },
-    },
-    RemovedImagesResponse: {
-      imagesConnection: async (
-        parent,
-        variables,
-        _ctx,
-        info: GraphQLResolveInfo
-      ) => {
-        try {
-          return { ...parent, ...variables };
-        } catch (e: any) {
-          console.error(e.stack || e.message);
-          throw e;
-        }
-      },
-      removedImages: async (
-        parent,
-        variables,
-        _ctx,
-        info: GraphQLResolveInfo
-      ) => {
-        try {
-          return parent.removedImages;
-        } catch (e: any) {
-          console.error(e.stack || e.message);
-          throw e;
-        }
-      },
-    },
     ProductCategory: {
       productsCount: async (
         parent,
@@ -974,35 +860,6 @@ export const baseModule = createModule({
             from product_category_breadcrumbs`,
           });
           return nodes;
-        } catch (e: any) {
-          console.error(e.stack || e.message);
-          throw e;
-        }
-      },
-    },
-    DraftProductResponse: {
-      imagesConnection: async (
-        parent,
-        variables,
-        _ctx,
-        info: GraphQLResolveInfo
-      ) => {
-        try {
-          return { ...parent, ...variables };
-        } catch (e: any) {
-          console.error(e.stack || e.message);
-          throw e;
-        }
-      },
-      category: async (parent, variables, _ctx, info: GraphQLResolveInfo) => {
-        try {
-          if (parent.category && parent.category.id) {
-            return parent.category;
-          } else if (parent.product_category_id) {
-            return { id: parent.product_category_id };
-          } else {
-            return { id: null };
-          }
         } catch (e: any) {
           console.error(e.stack || e.message);
           throw e;

@@ -1,4 +1,5 @@
 global.projectRoot = __dirname;
+
 process.on("uncaughtException", function (err) {
   console.error("\n\nUncaught exception: ", err);
 });
@@ -28,7 +29,7 @@ import { managementModule } from "@modules/management";
 import { signInModule } from "@modules/management/sign-in";
 import loginMiddleware from "./login-middleware";
 import { nextTick } from "process";
-import managementLoginMiddleware from "./management-login-middleware";
+import managementLoginMiddleware, { managementSignoutMiddleware } from "./management-login-middleware";
 import { verifyManagementLoginMiddleware } from "./management-login-middleware";
 import { AuthRequest } from "@root/types/express-custom";
 
@@ -94,17 +95,21 @@ const rawBodySaver = (req, res, buf, encoding) => {
     req.rawBody = buf.toString(encoding || "utf8");
   }
 };
-app.post(
-  "/login",
-  bodyParser.raw({ verify: rawBodySaver, type: "*/*" }),
-  loginMiddleware
-);
+// app.post(
+//   "/login",
+//   bodyParser.raw({ verify: rawBodySaver, type: "*/*" }),
+//   loginMiddleware
+// );
 app.post(
   "/management/login",
   bodyParser.raw({ verify: rawBodySaver, type: "*/*" }),
   managementLoginMiddleware
 );
-app.post("/management/verify-login", verifyManagementLoginMiddleware);
+app.get("/management/verify-login", verifyManagementLoginMiddleware);
+app.get(
+  "/management/sign-out",
+  managementSignoutMiddleware
+);
 app.use(
   "/graphql",
   graphqlHTTP((req, res, graphQLParams) => {
