@@ -21,6 +21,8 @@ CREATE PROCEDURE `user_register`(
 BEGIN
 	DECLARE salt TEXT;
 	DECLARE passwordHash TEXT;
+	DECLARE inserted_id INT UNSIGNED DEFAULT NULL;
+	
 	IF new_user_name = '' OR new_user_name='null'
 	Then
 		SET new_user_name := NULL;
@@ -47,8 +49,15 @@ BEGIN
 	END IF;
 	SET salt := Upper(LPAD(CONV(FLOOR(RAND() * 0x100000000), 10, 16), 8, '0'));
 	SET passwordHash := CONCAT(salt, Password(CONCAT(salt, typed_password)));
-	INSERT INTO managers(login, `password`) VALUES(new_user_name, passwordHash);
-	SELECT LAST_INSERT_ID() AS 'id';
+	SELECT id INTO inserted_id FROM managers WHERE login=new_user_name;
+	IF inserted_id IS NOT NULL
+	then
+		UPDATE managers SET PASSWORD=passwordHash WHERE id=inserted_id;
+	ELSE 
+		INSERT INTO managers(login, `password`) VALUES(new_user_name, passwordHash);
+		SET inserted_id := LAST_INSERT_ID();
+	END IF;
+	SELECT inserted_id AS 'id';
 END//
 DELIMITER ;
 

@@ -37,8 +37,11 @@ CREATE TABLE IF NOT EXISTS `draft_product` (
   CONSTRAINT `FK_draft_product_product` FOREIGN KEY (`productId`) REFERENCES `product` (`productId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Дамп данных таблицы github-next-js.draft_product: ~0 rows (приблизительно)
+-- Дамп данных таблицы github-next-js.draft_product: ~2 rows (приблизительно)
 /*!40000 ALTER TABLE `draft_product` DISABLE KEYS */;
+INSERT IGNORE INTO `draft_product` (`draftProductId`, `managerId`, `productId`, `handle`, `title`, `sku`, `product_category_id`, `manufacturerId`, `description`, `descriptionHtml`, `createdAt`, `updatedAt`, `publishedAt`, `descriptionRawDraftContentState`) VALUES
+	(_binary 0x02A8049B4CBF11EDB54B60A44C4F528E, 1, 15, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2022-10-15 22:24:38', '2022-10-15 22:24:38', NULL, '{"blocks":[{"key":"aea6h","text":"","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}'),
+	(_binary 0x73CE86724CC111EDB54B60A44C4F528E, 1, 16, '32234ffffffffffff323232/34234', '34234', NULL, 34, NULL, NULL, NULL, '2022-10-15 22:42:07', '2022-10-15 22:42:07', NULL, NULL);
 /*!40000 ALTER TABLE `draft_product` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

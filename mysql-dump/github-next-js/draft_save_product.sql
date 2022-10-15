@@ -15,7 +15,7 @@
 -- Дамп структуры для процедура github-next-js.draft_save_product
 DELIMITER //
 CREATE PROCEDURE `draft_save_product`(
-	IN `in_draftProductId` TINYTEXT,
+	IN `in_managerId` TINYTEXT,
 	IN `in_productId` TINYTEXT,
 	IN `in_category_id` TINYTEXT,
 	IN `in_title` TEXT,
@@ -25,10 +25,10 @@ CREATE PROCEDURE `draft_save_product`(
 	IN `in_price_currencyCodeId` TINYTEXT
 )
 BEGIN
- DECLARE stored_draftProductId BINARY(16) DEFAULT NULL;
  DECLARE stored_priceAmount DECIMAL(16,4) DEFAULT NULL;
  DECLARE stored_nullOptionsCount INT unsigned DEFAULT NULL;
- SET in_draftProductId := IF(in_draftProductId='' OR in_draftProductId='null', NULL, in_draftProductId);
+ DECLARE stored_draftProductId BINARY(16) DEFAULT NULL;
+ SET in_managerId := IF(in_managerId='' OR in_managerId='null', NULL, in_managerId);
  SET in_productId := IF(in_productId='' OR in_productId='null', NULL, in_productId);
  SET in_title := IF(in_title='' OR in_title='null', NULL, in_title);
  SET in_handle := IF(in_handle='' OR in_handle='null', NULL, in_handle);
@@ -37,14 +37,21 @@ BEGIN
  SET in_price_currencyCodeId := IF(in_price_currencyCodeId='' OR in_price_currencyCodeId='null', NULL, in_price_currencyCodeId);
  SET in_category_id := IF(in_category_id='' OR in_category_id='null', NULL, in_category_id);
  
- IF in_draftProductId IS NOT NULL 
+ IF in_productId IS Null
  Then
- 	SELECT draftProductId INTO stored_draftProductId FROM draft_product WHERE draftProductId=UNHEX(in_draftProductId);
+	 SELECT draftProductId INTO stored_draftProductId FROM draft_product d 
+	 	WHERE d.managerId=in_managerId AND d.productId IS NULL
+		ORDER BY d.updatedAt DESC LIMIT 1;
+ Else
+ 	 SELECT draftProductId INTO stored_draftProductId FROM draft_product d 
+	 	WHERE d.managerId=in_managerId AND d.productId=in_productId
+		ORDER BY d.updatedAt DESC LIMIT 1;
  END IF;
+ 
  IF stored_draftProductId IS NULL
  Then
- 	INSERT INTO draft_product(productId, handle, title, product_category_id, manufacturerId)
- 		VALUES(in_productId, in_handle, in_title, in_category_id, in_manufacturerId);
+ 	INSERT INTO draft_product(managerId, productId, handle, title, product_category_id, manufacturerId)
+ 		VALUES(in_managerId, in_productId, in_handle, in_title, in_category_id, in_manufacturerId);
  	SET stored_draftProductId:=@last_draftProductId;
  ELSE 
  	Update draft_product

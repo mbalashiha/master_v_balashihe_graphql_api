@@ -15,8 +15,8 @@
 -- Дамп структуры для процедура github-next-js.product_Images_Update
 DELIMITER //
 CREATE PROCEDURE `product_Images_Update`(
-	IN `in_draftProductId` TINYTEXT,
-	IN `in_images` LONGTEXT
+	IN `in_managerId` INT,
+	IN `in_images` TINYTEXT
 )
 BEGIN
 	DECLARE inserted_draftProductId BINARY(16) DEFAULT NULL;
@@ -34,14 +34,14 @@ BEGIN
 	DECLARE loop_orderNumber TINYTEXT DEFAULT NULL;
 	DECLARE try_id INT UNSIGNED DEFAULT NULL;
 	DECLARE next_id INT UNSIGNED DEFAULT NULL;
-	IF in_draftProductId IS NOT NULL AND in_draftProductId != '' AND in_draftProductId != 'null'
-	Then
-		SET in_binary_draftProductId := unhex(Trim(in_draftProductId));
-		SELECT draftProductId INTO inserted_draftProductId FROM draft_product WHERE draftProductId=in_binary_draftProductId;
-	END IF;
+	
+ SELECT d.draftProductId INTO inserted_draftProductId FROM draft_product d 
+ 	WHERE d.managerId=in_managerId AND d.updatedAt IN (SELECT MAX(updatedAt) FROM draft_product WHERE managerId=in_managerId GROUP BY updatedAt)
+	ORDER BY d.updatedAt DESC LIMIT 1;
+	
 	If inserted_draftProductId IS Null
 	Then
-		INSERT INTO draft_product() VALUES();
+		INSERT INTO draft_product(managerId) VALUES(in_managerId);
 		SET inserted_draftProductId := @last_draftProductId;
 	END IF;
 	Set i := 0;

@@ -15,7 +15,7 @@
 -- Дамп структуры для процедура github-next-js.save_product
 DELIMITER //
 CREATE PROCEDURE `save_product`(
-	IN `in_draftProductId` TINYTEXT,
+	IN `in_managerId` TINYTEXT,
 	IN `in_productId` TINYTEXT,
 	IN `in_category_id` TINYTEXT,
 	IN `in_title` TEXT,
@@ -34,7 +34,7 @@ BEGIN
  DECLARE stored_nullOptionsCount INT unsigned DEFAULT NULL;
  DECLARE stored_productId INT unsigned DEFAULT NULL;
  DECLARE stored_category_slug Text DEFAULT NULL;
- SET in_draftProductId := IF(in_draftProductId='' OR in_draftProductId='null', NULL, in_draftProductId);
+ SET in_managerId := IF(in_managerId='' OR in_managerId='null', NULL, in_managerId);
  SET in_productId := IF(in_productId='' OR in_productId='null', NULL, in_productId);
  SET in_title := IF(in_title='' OR in_title='null', NULL, in_title);
  SET in_handle := IF(in_handle='' OR in_handle='null', NULL, in_handle);
@@ -46,10 +46,10 @@ BEGIN
  SET in_descriptionHtml := IF(in_descriptionHtml='' OR in_descriptionHtml='null', NULL, in_descriptionHtml);
  SET in_descriptionRawDraftContentState := IF(in_descriptionRawDraftContentState='' OR in_descriptionRawDraftContentState='null', NULL, in_descriptionRawDraftContentState);
  
- IF in_draftProductId IS NOT NULL 
- Then
- 	SELECT draftProductId INTO stored_draftProductId FROM draft_product WHERE draftProductId=UNHEX(in_draftProductId);
- END IF;
+ SELECT d.draftProductId INTO stored_draftProductId FROM draft_product d 
+ 	WHERE d.managerId=in_managerId AND d.updatedAt IN (SELECT MAX(updatedAt) FROM draft_product WHERE managerId=in_managerId GROUP BY updatedAt)
+	ORDER BY d.updatedAt DESC LIMIT 1;
+	
  IF in_category_id IS NOT Null
  Then
  	SELECT category_slug INTO stored_category_slug FROM product_category pcat WHERE pcat.product_category_id=in_category_id;
