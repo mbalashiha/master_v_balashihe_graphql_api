@@ -24,9 +24,9 @@ CREATE TABLE IF NOT EXISTS `image` (
   `updatedAt` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   PRIMARY KEY (`imageId`) USING BTREE,
   UNIQUE KEY `uniq_imgSrc` (`originalSrc`(100)) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8mb4;
 
--- Дамп данных таблицы github-next-js.image: ~24 rows (приблизительно)
+-- Дамп данных таблицы github-next-js.image: ~37 rows (приблизительно)
 /*!40000 ALTER TABLE `image` DISABLE KEYS */;
 INSERT IGNORE INTO `image` (`imageId`, `originalSrc`, `width`, `height`, `altText`, `format`, `createdAt`, `updatedAt`) VALUES
 	(5, '/images/Hat-front-black__72990.1603748583.png', 2048, 2048, NULL, NULL, '2022-06-10 22:43:22', '2022-08-14 18:20:49'),
@@ -52,7 +52,20 @@ INSERT IGNORE INTO `image` (`imageId`, `originalSrc`, `width`, `height`, `altTex
 	(25, '/uploads/drafts/DSC03438-1611251723520-1684654.jpg', 1900, 1900, NULL, 'jpeg', '2022-08-05 20:04:30', '2022-08-05 20:04:30'),
 	(26, '/uploads/drafts/nnm-avatar-120x120-1644231061776-15135.png', 120, 120, NULL, 'png', '2022-08-05 20:04:30', '2022-08-05 20:04:30'),
 	(27, '/uploads/drafts/nnm-avatar-1644230939702-59712.png', 274, 274, NULL, 'png', '2022-08-05 20:04:30', '2022-08-05 20:04:30'),
-	(28, '/uploads/drafts/dollardollar-clipart-freebsd-freebsd-devil-1585413601569-373803.png', 920, 1113, NULL, 'png', '2022-08-08 20:52:20', '2022-08-08 20:52:20');
+	(28, '/uploads/drafts/dollardollar-clipart-freebsd-freebsd-devil-1585413601569-373803.png', 920, 1113, NULL, 'png', '2022-08-08 20:52:20', '2022-08-08 20:52:20'),
+	(29, '/uploads/drafts/20190122-183922-1548255657355-2821872.jpg', 3264, 2448, NULL, 'jpeg', '2022-10-21 19:12:58', '2022-10-21 19:12:58'),
+	(30, '/uploads/drafts/20190109-155341-1547137177679-2779201.jpg', 3264, 2448, NULL, 'jpeg', '2022-10-21 19:12:58', '2022-10-21 19:12:58'),
+	(31, '/uploads/drafts/20190122-183919-1548255647195-2788447.jpg', 3264, 2448, NULL, 'jpeg', '2022-10-21 19:12:58', '2022-10-21 19:12:58'),
+	(32, '/uploads/drafts/20190122-183436-1548255561758-2914105.jpg', 2448, 3264, NULL, 'jpeg', '2022-10-21 19:39:20', '2022-10-21 19:39:20'),
+	(33, '/uploads/drafts/20180802-164540-1533226123288-698292.jpg', 3264, 2448, NULL, 'jpeg', '2022-10-21 19:39:20', '2022-10-21 19:39:20'),
+	(34, '/uploads/drafts/20190122-183821-1548255782314-2720820.jpg', 3264, 2448, NULL, 'jpeg', '2022-10-21 19:39:20', '2022-10-21 19:39:20'),
+	(35, '/uploads/drafts/20180802-164558-1533226412229-719093.jpg', 3264, 2448, NULL, 'jpeg', '2022-10-21 21:43:20', '2022-10-21 21:43:20'),
+	(36, '/uploads/drafts/20190109-124249-1547137265575-2378789.jpg', 2448, 3264, NULL, 'jpeg', '2022-10-21 21:43:20', '2022-10-21 21:43:20'),
+	(37, '/uploads/drafts/20190109-124304-1547137252170-2419720.jpg', 3264, 2448, NULL, 'jpeg', '2022-10-21 21:43:20', '2022-10-21 21:43:20'),
+	(38, '/uploads/drafts/20190109-155332-1547137192237-2742885.jpg', 3264, 2448, NULL, 'jpeg', '2022-10-21 21:43:20', '2022-10-21 21:43:20'),
+	(39, '/uploads/drafts/20190109-155325-1547137204917-2851322.jpg', 3264, 2448, NULL, 'jpeg', '2022-10-21 21:43:20', '2022-10-21 21:43:20'),
+	(40, '/uploads/drafts/20190122-183315-1548255518626-2543805.jpg', 2448, 3264, NULL, 'jpeg', '2022-10-23 20:57:00', '2022-10-23 20:57:00'),
+	(41, '/uploads/drafts/120180802-162215-1533224898490-2695602.jpg', 2448, 3264, NULL, 'jpeg', '2022-10-23 20:57:00', '2022-10-23 20:57:00');
 /*!40000 ALTER TABLE `image` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

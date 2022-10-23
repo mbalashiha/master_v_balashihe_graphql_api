@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS `checkout` (
   UNIQUE KEY `Индекс 2` (`checkoutName`(100))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Дамп данных таблицы github-next-js.checkout: ~11 rows (приблизительно)
+-- Дамп данных таблицы github-next-js.checkout: ~9 rows (приблизительно)
 /*!40000 ALTER TABLE `checkout` DISABLE KEYS */;
 INSERT IGNORE INTO `checkout` (`checkoutId`, `checkoutName`, `taxesIncluded`, `completedAt`, `createdAt`, `updatedAt`) VALUES
 	(_binary 0x25BB06A7D08511ECB6AD02004C4F4F50, NULL, NULL, NULL, '2022-05-10 20:18:05', '2022-05-10 20:18:05'),

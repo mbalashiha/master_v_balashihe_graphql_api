@@ -15,6 +15,7 @@
 -- Дамп структуры для процедура github-next-js.product_move_draft_images
 DELIMITER //
 CREATE PROCEDURE `product_move_draft_images`(
+	IN `in_managerId` INT,
 	IN `in_insertedProductId` INT,
 	IN `in_draftProductId` BINARY(16),
 	IN `in_images` JSON
@@ -30,6 +31,8 @@ BEGIN
 	DECLARE loop_format TINYTEXT DEFAULT NULL;
 	DECLARE loop_orderNumber TINYTEXT DEFAULT NULL;
 	DECLARE loop_draftImageId TINYTEXT DEFAULT NULL;
+	DECLARE imageId_set Text DEFAULT NULL;
+	SET imageId_set := '';
 	Set i := 0;
 	SELECT JSON_EXTRACT(in_images, CONCAT('$[',i,']')) INTO loop_image;	
 	WHILE JSON_LENGTH(loop_image)		
@@ -60,9 +63,11 @@ BEGIN
 				SET loop_imageId := LAST_INSERT_ID();
 			END if;
 			
-			IF loop_orderNumber IS NULL
+			SET imageId_set := CONCAT_WS(',',imageId_set,loop_imageId);
+			
+			IF loop_orderNumber IS NULL OR CAST(loop_orderNumber AS UNSIGNED) <= 0
 			Then
-			   SET loop_orderNumber := i;
+			   SET loop_orderNumber := i+1;
 			END IF;
 		
 			if NOT EXISTS(SELECT 1 FROM image_to_product d WHERE d.productId=in_insertedProductId AND d.imageId=loop_imageId)
@@ -82,6 +87,7 @@ BEGIN
 		Set i := i + 1;
 	SELECT JSON_EXTRACT(in_images, CONCAT('$[',i,']')) INTO loop_image;
 	END WHILE;
+	DELETE ip FROM image_to_product ip WHERE ip.productId=in_insertedProductId And FIND_IN_SET(ip.imageId, imageId_set) <= 0;
 END//
 DELIMITER ;
 

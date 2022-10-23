@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS `managers` (
   UNIQUE KEY `Индекс 2` (`login`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 
--- Дамп данных таблицы github-next-js.managers: ~1 rows (приблизительно)
+-- Дамп данных таблицы github-next-js.managers: ~0 rows (приблизительно)
 /*!40000 ALTER TABLE `managers` DISABLE KEYS */;
 INSERT IGNORE INTO `managers` (`id`, `login`, `password`, `is_admin`, `friendly_name`, `email`, `created`, `updated`) VALUES
 	(1, 'me-mini', 'E1DE22AF*0418E2FF14E66CEDE31A798F905EBEB06133C2D4', NULL, 'Владелец', NULL, '2022-09-28 17:36:45', '2022-10-09 17:25:30');

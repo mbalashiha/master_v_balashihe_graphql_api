@@ -50,7 +50,6 @@ export const baseModule = createModule({
         width: Int
         products: [Product]
       }
-
       type Option {
         optionId: ID
         name: String
@@ -136,7 +135,7 @@ export const baseModule = createModule({
         description: String!
         descriptionHtml: String!
         descriptionRawDraftContentState: String
-        imagesInput: ImagesInfoInput!
+        images: [ImageInfoInput]!
       }
       type CheckoutUserError {
         field: String
@@ -225,13 +224,17 @@ export const baseModule = createModule({
         currencyCode: String!
         symbolCode: String
       }
+      type Breadcrumb {
+        name: String!
+        handle: String!
+      }
       type ProductCategory {
         id: ID!
         name: String!
         slug: String
         parentId: String
         productsCount: Int
-        breadcrumbs: [String]
+        breadcrumbs: [Breadcrumb]
       }
       type CurrencyCodesResponse {
         nodes: [CurrencyCode!]!
@@ -815,7 +818,21 @@ export const baseModule = createModule({
         info: GraphQLResolveInfo
       ) => {
         try {
-          return (parent.breadcrumbs || "").split("/");
+          const names = (parent.breadcrumbs || "").split("/");
+          const handles = (parent.uri_pathes || "").split(";");
+          const breadcrumbs: Array<{ name: string; handle: string }> = [];
+          for (let i = 0; i < names.length; i++) {
+            if (!names[i] || !handles[i]) {
+              throw new Error(
+                "Incorrect breadcrumbs with names[i]: " +
+                  typeof names[i] +
+                  " and handles[i]: " +
+                  typeof handles[i]
+              );   
+            }
+            breadcrumbs.push({ name: names[i], handle: handles[i] });
+          }
+          return breadcrumbs;
         } catch (e: any) {
           console.error(e.stack || e.message);
           throw e;

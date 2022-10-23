@@ -15,8 +15,10 @@
 -- Дамп структуры для процедура github-next-js.product_Images_Update
 DELIMITER //
 CREATE PROCEDURE `product_Images_Update`(
+	IN `in_draftProductId` TINYTEXT,
 	IN `in_managerId` INT,
-	IN `in_images` TINYTEXT
+	IN `in_productId` TINYTEXT,
+	IN `in_images` JSON
 )
 BEGIN
 	DECLARE inserted_draftProductId BINARY(16) DEFAULT NULL;
@@ -35,13 +37,12 @@ BEGIN
 	DECLARE try_id INT UNSIGNED DEFAULT NULL;
 	DECLARE next_id INT UNSIGNED DEFAULT NULL;
 	
- SELECT d.draftProductId INTO inserted_draftProductId FROM draft_product d 
- 	WHERE d.managerId=in_managerId AND d.updatedAt IN (SELECT MAX(updatedAt) FROM draft_product WHERE managerId=in_managerId GROUP BY updatedAt)
-	ORDER BY d.updatedAt DESC LIMIT 1;
+	SELECT d.draftProductId INTO inserted_draftProductId FROM draft_product d 
+	 	WHERE d.managerId=in_managerId AND d.draftProductId=UNHEX(in_draftProductId);
 	
 	If inserted_draftProductId IS Null
 	Then
-		INSERT INTO draft_product(managerId) VALUES(in_managerId);
+		INSERT INTO draft_product(managerId, productId) VALUES(in_managerId, in_productId);
 		SET inserted_draftProductId := @last_draftProductId;
 	END IF;
 	Set i := 0;
@@ -60,26 +61,33 @@ BEGIN
 		SET loop_format := Json_unquote(JSON_extract(loop_image, "$.format"));
 		SET loop_format := IF(loop_format = '' OR loop_format = 'null', NULL, loop_format);	
 				
-		SET loop_orderNumber := Json_unquote(JSON_extract(loop_orderNumber, "$.orderNumber"));
-		SET loop_orderNumber := IF(loop_orderNumber = '' OR loop_orderNumber = 'null', NULL, loop_orderNumber);	
 		
 		SET test_imgSrc := NULL;
 		SET test_draftProductId := NULL;
 		SET loop_draftImageId := NULL;
 		IF loop_imgSrc IS NOT NULL
-		Then
+		Then		
+			SET loop_orderNumber := Json_unquote(JSON_extract(loop_orderNumber, "$.orderNumber"));
+			SET loop_orderNumber := IF(loop_orderNumber = '' OR loop_orderNumber = 'null', NULL, loop_orderNumber);	
+			IF loop_orderNumber IS NULL OR Cast(loop_orderNumber AS UNSIGNED) <= 0 OR loop_orderNumber = '0'
+			Then				
+			   SET loop_orderNumber := i+1;
+			END IF;
 			SELECT draftImageId INTO loop_draftImageId FROM draft_image WHERE originalSrc=loop_imgSrc;
+			IF EXISTS (SELECT 1 FROM draft_product p
+				INNER JOIN draft_image_to_product ip ON p.draftProductId=ip.draftProductId AND ip.orderNumber=loop_orderNumber
+				INNER JOIN draft_image im ON im.originalSrc != loop_imgSrc AND ip.draftImageId=im.draftImageId
+				WHERE p.draftProductId=inserted_draftProductId)
+			Then
+				Select Max(ip.orderNumber)+1 INTO loop_orderNumber FROM draft_product p
+					INNER JOIN draft_image_to_product ip ON p.draftProductId=ip.draftProductId
+					WHERE p.draftProductId=inserted_draftProductId GROUP BY p.draftProductId;
+			END IF;
 			if loop_draftImageId IS NULL 
 			Then
 				INSERT INTO draft_image(originalSrc, width, height, FORMAT) VALUES(loop_imgSrc, loop_width, loop_height,loop_format);
 				SET loop_draftImageId := @last_draftImageId;
-			END if;
-			
-			IF loop_orderNumber IS NULL
-			Then
-			   SET loop_orderNumber := i;
-			END IF;
-		
+			END if;		
 			if NOT EXISTS(SELECT 1 FROM draft_image_to_product d WHERE d.draftProductId=inserted_draftProductId AND d.draftImageId=loop_draftImageId)
 			Then
 				INSERT INTO draft_image_to_product(draftProductId, draftImageId, orderNumber) VALUES(inserted_draftProductId, loop_draftImageId, loop_orderNumber);

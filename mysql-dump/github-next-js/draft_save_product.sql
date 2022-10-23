@@ -15,6 +15,7 @@
 -- Дамп структуры для процедура github-next-js.draft_save_product
 DELIMITER //
 CREATE PROCEDURE `draft_save_product`(
+	IN `in_draftProductId` TINYTEXT,
 	IN `in_managerId` TINYTEXT,
 	IN `in_productId` TINYTEXT,
 	IN `in_category_id` TINYTEXT,
@@ -37,16 +38,9 @@ BEGIN
  SET in_price_currencyCodeId := IF(in_price_currencyCodeId='' OR in_price_currencyCodeId='null', NULL, in_price_currencyCodeId);
  SET in_category_id := IF(in_category_id='' OR in_category_id='null', NULL, in_category_id);
  
- IF in_productId IS Null
- Then
-	 SELECT draftProductId INTO stored_draftProductId FROM draft_product d 
-	 	WHERE d.managerId=in_managerId AND d.productId IS NULL
+ SELECT draftProductId INTO stored_draftProductId FROM draft_product d 
+	 	WHERE d.draftProductId=unhex(in_draftProductId) AND d.managerId=in_managerId
 		ORDER BY d.updatedAt DESC LIMIT 1;
- Else
- 	 SELECT draftProductId INTO stored_draftProductId FROM draft_product d 
-	 	WHERE d.managerId=in_managerId AND d.productId=in_productId
-		ORDER BY d.updatedAt DESC LIMIT 1;
- END IF;
  
  IF stored_draftProductId IS NULL
  Then
@@ -101,6 +95,12 @@ BEGIN
 			 	v.option_id_7 IS NULL And
 			 	v.option_id_8 IS NULL;
  END IF;
+ 
+ DELETE dv, dip, p FROM draft_product_variant dv
+ 	JOIN draft_product p ON dv.draftProductId=p.draftProductId
+ 	JOIN draft_image_to_product dip ON p.draftProductId=dip.draftProductId
+	  WHERE p.draftProductId != stored_draftProductId And p.managerId=in_managerId AND ((in_productId IS NULL AND p.productId IS NULL) OR (in_productId IS NOT NULL AND p.productId=in_productId));
+
  SELECT LCASE(HEX(stored_draftProductId)) AS draftProductId;
 END//
 DELIMITER ;

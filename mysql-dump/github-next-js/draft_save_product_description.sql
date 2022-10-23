@@ -15,6 +15,7 @@
 -- Дамп структуры для процедура github-next-js.draft_save_product_description
 DELIMITER //
 CREATE PROCEDURE `draft_save_product_description`(
+	IN `in_draftProductId` TINYTEXT,
 	IN `in_managerId` TINYTEXT,
 	IN `in_productId` TINYTEXT,
 	IN `in_description` LONGTEXT,
@@ -29,17 +30,10 @@ BEGIN
  SET in_descriptionHtml := IF(in_descriptionHtml='' OR in_descriptionHtml='null', NULL, in_descriptionHtml);
  SET in_descriptionRawDraftContentState := IF(in_descriptionRawDraftContentState='' OR in_descriptionRawDraftContentState='null', NULL, in_descriptionRawDraftContentState);
  
- IF in_productId IS Null
- Then
-	 SELECT draftProductId INTO stored_draftProductId FROM draft_product d 
-	 	WHERE d.managerId=in_managerId AND d.productId IS NULL
+ SELECT draftProductId INTO stored_draftProductId FROM draft_product d 
+	 	WHERE d.draftProductId=unhex(in_draftProductId)
 		ORDER BY d.updatedAt DESC LIMIT 1;
- Else
- 	 SELECT draftProductId INTO stored_draftProductId FROM draft_product d 
-	 	WHERE d.managerId=in_managerId AND d.productId=in_productId
-		ORDER BY d.updatedAt DESC LIMIT 1;
- END IF;
-  
+ 
  IF stored_draftProductId IS NULL
  Then
  	INSERT INTO draft_product(managerId, productId, description, descriptionHtml, descriptionRawDraftContentState)

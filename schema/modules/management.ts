@@ -11,6 +11,50 @@ import { Console } from "console";
 import { normalizePriceCurrency } from "@src/utils/currency/converter";
 import { FullProductInput, ProductInput } from "@schema/types/indext";
 
+const getMysqlProcedureLastSelectedRow = (dbResult: any) => {
+  return (
+    (dbResult &&
+      dbResult[dbResult.length - 2] &&
+      dbResult[dbResult.length - 2][0]) ||
+    {}
+  );
+};
+
+const getExistingOrNewProductDraft = async (
+  in_managerId: string | number,
+  in_productId: string | number | null
+): Promise<{ draftProductId: string }> => {
+  let draftProductId: string = "";
+  let lastError: any;
+  if (!in_managerId) {
+    throw new Error(
+      "Manager database id should be presented for product draft."
+    );
+  }
+  for (let i = 0; i < 3 && !draftProductId; i++) {
+    try {
+      const dbResult = await db.excuteQuery({
+        query: "call existing_or_new_product_draft(?, ?);",
+        variables: [in_managerId || null, in_productId || null],
+      });
+      draftProductId =
+        getMysqlProcedureLastSelectedRow(dbResult).draftProductId;
+      if (!draftProductId || typeof draftProductId !== "string") {
+        throw new Error("No draftProductId string variable");
+      } else {
+        break;
+      }
+    } catch (e: any) {
+      console.error((e && (e.stack || e.message)) || e);
+      lastError = e;
+      debugger;
+    }
+  }
+  if (lastError) {
+    throw lastError;
+  }
+  return { draftProductId };
+};
 function onlyUnique(value, index, self) {
   return self.indexOf(value) === index;
 }
@@ -21,7 +65,6 @@ export const managementModule = createModule({
   typeDefs: [
     gql`
       type UploadedImagesConnection {
-        draftProductId: ID
         images: UploadedImagesNodes
       }
       type UploadedImagesResponse {
@@ -37,7 +80,6 @@ export const managementModule = createModule({
         nodes: [ImageInfo]
       }
       type DraftProductResponse {
-        draftProductId: ID
         productId: ID
         title: String
         handle: String
@@ -84,65 +126,32 @@ export const managementModule = createModule({
             managerId: context.manager.id,
             ...variables,
           };
-          const { draftProductId, productId } = variables;
-          let images;
-          if (draftProductId && productId) {
-            images = await db.excuteQuery({
-              query: `select i.*, i.originalSrc as imgSrc, ip.orderNumber
+          const { productId } = variables;
+          if (!variables.draftProductId) {
+            const { productId } = variables;
+            const { draftProductId } = await getExistingOrNewProductDraft(
+              context.manager.id,
+              productId
+            );
+            variables.draftProductId = draftProductId;
+          }
+          if (!variables.draftProductId) {
+            throw new Error(
+              "resolvers: UploadedImagesNodes: No variables.draftProductId parameter!"
+            );
+          }
+          const images = await db.excuteQuery({
+            query: `select i.*, i.originalSrc as imgSrc, ip.orderNumber
                  from draft_product p
-                 Left JOIN draft_image_to_product ip On p.draftProductId=ip.draftProductId
-                 Left JOIN draft_image i On ip.draftImageId=i.draftImageId
-            where p.managerId=$managerId And p.productId=$productId And p.draftProductId=unhex($draftProductId)
-            order By ip.orderNumber`,
-              variables,
-            });
-          } else if (draftProductId) {
-            debugger;
-            images = await db.excuteQuery({
-              query: `select i.*, i.originalSrc as imgSrc, ip.orderNumber
-                 from draft_product p
-                 Left JOIN draft_image_to_product ip On p.draftProductId=ip.draftProductId
-                 Left JOIN draft_image i On ip.draftImageId=i.draftImageId
+                 JOIN draft_image_to_product ip On p.draftProductId=ip.draftProductId
+                 JOIN draft_image i On ip.draftImageId=i.draftImageId
             where p.managerId=$managerId And p.draftProductId=unhex($draftProductId)
             order By ip.orderNumber`,
-              variables,
-            });
-          } else if (productId) {
-            images = await db.excuteQuery({
-              query: `select i.*, i.originalSrc as imgSrc, ip.orderNumber
-                 from draft_product p
-                 Left JOIN draft_image_to_product ip On p.draftProductId=ip.draftProductId
-                 Left JOIN draft_image i On ip.draftImageId=i.draftImageId
-            where p.managerId=$managerId And p.productId=$productId 
-                And p.updatedAt in (select Max(updatedAt) from draft_product Where managerId=$managerId And productId=$productId)
-            order By ip.orderNumber`,
-              variables,
-            });
-            if (!images[0]) {
-              images = await db.excuteQuery({
-                query: `select i.*, i.originalSrc as imgSrc, ip.orderNumber
-                 from product p
-                 Left JOIN image_to_product ip On p.productId=ip.productId
-                 Left JOIN image i On ip.imageId=i.imageId
-            where p.productId=$productId
-            order By ip.orderNumber`,
-                variables,
-              });
-            }
-          } else {
-            images = await db.excuteQuery({
-              query: `select i.*, i.originalSrc as imgSrc, ip.orderNumber
-                 from draft_product p
-                 Left JOIN draft_image_to_product ip On p.draftProductId=ip.draftProductId
-                 Left JOIN draft_image i On ip.draftImageId=i.draftImageId
-            where p.managerId=$managerId 
-                And p.productId is Null 
-                And p.updatedAt in (select Max(updatedAt) from draft_product Where managerId=$managerId And productId is Null)
-            order By ip.orderNumber`,
-              variables,
-            });
-          }
-          return images.filter((elem) => !!elem.imgSrc);
+            variables,
+          });
+          return (Array.isArray(images) ? images : []).filter(
+            (elem) => !!elem.imgSrc
+          );
         } catch (e: any) {
           console.error(e.stack || e.message);
           debugger;
@@ -164,11 +173,19 @@ export const managementModule = createModule({
       imagesConnection: async (
         parent,
         variables,
-        _ctx,
+        context,
         info: GraphQLResolveInfo
       ) => {
+        if (!context.manager || !context.manager.id) {
+          throw new Error("Manager Unauthorized");
+        }
         try {
-          return { ...parent, ...variables };
+          variables = {
+            ...parent,
+            ...variables,
+            managerId: context.manager.id,
+          };
+          return variables;
         } catch (e: any) {
           console.error(e.stack || e.message);
           throw e;
@@ -239,21 +256,17 @@ export const managementModule = createModule({
           throw new Error("Manager Unauthorized");
         }
         try {
-          const { draftProductId, productId } = variables;
+          const { productId } = variables;
+          const { draftProductId } = await getExistingOrNewProductDraft(
+            context.manager.id,
+            productId
+          );
           let products: Array<any> | undefined = undefined;
-          if (productId) {
-            products = await db.excuteQuery({
-              query:
-                "select * from draft_product_view where managerId=? and productId=? Order By updatedAt Desc Limit 1",
-              variables: [context.manager.id, productId],
-            });
-          } else {
-            products = await db.excuteQuery({
-              query:
-                "select * from draft_product_view where managerId=? Order By updatedAt Desc Limit 1",
-              variables: [context.manager.id],
-            });
-          }
+          products = await db.excuteQuery({
+            query:
+              "select * from draft_product_view where managerId=? and draftProductId=?",
+            variables: [context.manager.id, draftProductId],
+          });
           if (productId && (!products || !products[0])) {
             products = await db.excuteQuery({
               query: "select * from product_view where productId=?",
@@ -261,11 +274,8 @@ export const managementModule = createModule({
             });
           }
           const product = (products && products[0]) || {
-            draftProductId: draftProductId || null,
+            productId: productId || null,
           };
-          if (product && product.id) {
-            product.draftProductId = product.id;
-          }
           if (
             product.descriptionRawDraftContentState &&
             typeof product.descriptionRawDraftContentState === "object"
@@ -275,11 +285,11 @@ export const managementModule = createModule({
             );
           }
           product.price = {
-            amount: product.amount,
+            amount: product.amount || null,
             currencyCode: product.currencyCode ?? "RUB",
             currencyCodeId: product.currencyCodeId || "1",
           };
-          return product;
+          return { draftProductId, ...product };
         } catch (e: any) {
           console.error(e.stack || e.message);
           debugger;
@@ -306,7 +316,12 @@ export const managementModule = createModule({
         if (!context.manager || !context.manager.id) {
           throw new GraphQLError("Manager Unauthorized");
         }
-        return variables;
+        const { productId } = variables;
+        const { draftProductId } = await getExistingOrNewProductDraft(
+          context.manager.id,
+          productId
+        );
+        return { ...variables, draftProductId };
       },
     },
     Mutation: {
@@ -421,34 +436,35 @@ export const managementModule = createModule({
           throw new Error("Manager Unauthorized");
         }
         try {
-          variables.draftProductId = variables.draftProductId || null;
-          if (
-            !Array.isArray(variables.images) ||
-            variables.images.length <= 0
-          ) {
+          let {
+            imagesInput: { productId, images },
+          } = variables;
+          if (!Array.isArray(images) || images.length <= 0) {
             throw new Error(
               "No variable images! Should be array of images input."
             );
           }
-          if (!variables.draftProductId) {
-            throw new Error(
-              "No variable draftProductId! Should be string for ID."
-            );
-          }
+          const { draftProductId } = await getExistingOrNewProductDraft(
+            context.manager.id,
+            productId
+          );
           const removedImages: any[] = [];
-          for (const image of variables.images) {
-            image.draftProductId = variables.draftProductId;
+          for (const image of images) {
             const res1 = await db.excuteQuery({
               query: `
             delete draft_image_to_product from draft_image_to_product 
               Inner Join draft_product dp On 
-                  draft_product.draftProductId=draft_image_to_product.draftProductId And draft_product.managerId=$managerId
+                  dp.draftProductId=draft_image_to_product.draftProductId And dp.managerId=$managerId
               INNER JOIN draft_image ON 
                   draft_image.originalSrc=$imgSrc And 
                   draft_image.draftImageId=draft_image_to_product.draftImageId
               Where draft_image.originalSrc=$imgSrc And draft_image_to_product.draftProductId=unhex($draftProductId)
           `,
-              variables: { ...image, managerId: context.manager.id },
+              variables: {
+                ...image,
+                managerId: context.manager.id,
+                draftProductId,
+              },
             });
             const res2: Array<any> = await db.excuteQuery({
               query: `
@@ -457,13 +473,16 @@ export const managementModule = createModule({
                   draft_image.originalSrc=$imgSrc And
                   draft_image.draftImageId Not IN (select draftImageId from draft_image_to_product)
           `,
-              variables: image,
+              variables: {
+                ...image,
+                managerId: context.manager.id,
+              },
             });
             if (res2[0] && res2[0].affectedRows) {
               removedImages.push(image);
             }
           }
-          return { removedImages, draftProductId: variables.draftProductId };
+          return { draftProductId, removedImages };
         } catch (e: any) {
           console.error(e.stack || e.message);
           debugger;
@@ -480,23 +499,31 @@ export const managementModule = createModule({
           throw new Error("Manager Unauthorized");
         }
         try {
-          variables.draftProductId = variables.draftProductId || null;
-          if (
-            !Array.isArray(variables.images) ||
-            variables.images.length <= 0
-          ) {
+          const {
+            imagesInput: { productId, images },
+          } = variables;
+          if (!Array.isArray(images) || images.length <= 0) {
             throw new Error(
               "No variable images! Should be array of images input."
             );
           }
-          variables.images = JSON.stringify(variables.images);
+          const { draftProductId } = await getExistingOrNewProductDraft(
+            context.manager.id,
+            productId
+          );
           const res = await db.excuteQuery({
-            query: "call product_Images_Update($managerId, $images);",
-            variables: { ...variables, managerId: context.manager.id },
+            query: "call product_Images_Update(?, ?, ?, ?);",
+            variables: [
+              draftProductId,
+              context.manager.id,
+              productId || null,
+              JSON.stringify(images),
+            ],
           });
-          return { draftProductId: res[0][0].draftProductId };
+          return { draftProductId, productId };
         } catch (e: any) {
           console.error(e.stack || e.message);
+          debugger;
           throw e;
         }
       },
@@ -532,21 +559,27 @@ export const managementModule = createModule({
         }
         try {
           const productInput: ProductInput = variables.productInput;
+          const { productId } = productInput;
+          const { draftProductId } = await getExistingOrNewProductDraft(
+            context.manager.id,
+            productId
+          );
           let result: any = await db.excuteQuery({
-            query: `call draft_save_product(?, ?, ?, ?, ?, ?, ?, ?)`,
+            query: `call draft_save_product(?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             variables: [
+              draftProductId,
               context.manager.id || null,
               productInput.productId || null,
               productInput.category.id || null,
               productInput.title || null,
               productInput.handle || null,
               productInput.manufacturerId || null,
-              productInput.price.amount,
-              productInput.price.currencyCodeId || "1",
-            ],
+              productInput.price?.amount || null,
+              productInput.price?.currencyCodeId || "1",
+            ],  
           });
           result = result && result[0] && result[0][0];
-          return { draftProductId: result?.draftProductId };
+          return { draftProductId, productId };
         } catch (e: any) {
           console.error(e.stack || e.message);
           debugger;
@@ -564,9 +597,15 @@ export const managementModule = createModule({
         }
         try {
           const descriptionInput: ProductInput = variables.descriptionInput;
+          const { productId } = descriptionInput;
+          const { draftProductId } = await getExistingOrNewProductDraft(
+            context.manager.id,
+            productId
+          );
           let result: any = await db.excuteQuery({
-            query: `call draft_save_product_description(?, ?, ?, ?, ?)`,
+            query: `call draft_save_product_description(?, ?, ?, ?, ?, ?)`,
             variables: [
+              draftProductId,
               context.manager.id || null,
               descriptionInput.productId || null,
               descriptionInput.description || null,
@@ -575,7 +614,7 @@ export const managementModule = createModule({
             ],
           });
           result = result && result[0] && result[0][0];
-          return { draftProductId: result?.draftProductId || null };
+          return { draftProductId, result };
         } catch (e: any) {
           console.error(e.stack || e.message);
           debugger;
@@ -596,10 +635,16 @@ export const managementModule = createModule({
           if (!productInput.handle) {
             throw new Error(`Table Column 'handle' cannot be null`);
           }
-          console.log(util.inspect(productInput));
+          const { productId } = productInput;
+          const { draftProductId } = await getExistingOrNewProductDraft(
+            context.manager.id,
+            productId
+          );
+          // console.log(util.inspect(productInput));
           let result: any = await db.excuteQuery({
-            query: `call save_product(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            query: `call save_product(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             variables: [
+              draftProductId,
               context.manager.id || null,
               productInput.productId || null,
               productInput.category.id || null,
@@ -617,7 +662,7 @@ export const managementModule = createModule({
           console.log(result);
           result = result && result[0] && result[0][0];
           console.log(result);
-          return { productId: result?.productId || null };
+          return { draftProductId, productId: result?.productId || null };
         } catch (e: any) {
           console.error(e.stack || e.message);
           debugger;

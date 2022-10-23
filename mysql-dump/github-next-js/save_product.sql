@@ -15,6 +15,7 @@
 -- Дамп структуры для процедура github-next-js.save_product
 DELIMITER //
 CREATE PROCEDURE `save_product`(
+	IN `in_draftProductId` TINYTEXT,
 	IN `in_managerId` TINYTEXT,
 	IN `in_productId` TINYTEXT,
 	IN `in_category_id` TINYTEXT,
@@ -33,7 +34,7 @@ BEGIN
  DECLARE stored_priceAmount DECIMAL(16,4) DEFAULT NULL;
  DECLARE stored_nullOptionsCount INT unsigned DEFAULT NULL;
  DECLARE stored_productId INT unsigned DEFAULT NULL;
- DECLARE stored_category_slug Text DEFAULT NULL;
+ DECLARE stored_handle Text DEFAULT NULL;
  SET in_managerId := IF(in_managerId='' OR in_managerId='null', NULL, in_managerId);
  SET in_productId := IF(in_productId='' OR in_productId='null', NULL, in_productId);
  SET in_title := IF(in_title='' OR in_title='null', NULL, in_title);
@@ -47,16 +48,15 @@ BEGIN
  SET in_descriptionRawDraftContentState := IF(in_descriptionRawDraftContentState='' OR in_descriptionRawDraftContentState='null', NULL, in_descriptionRawDraftContentState);
  
  SELECT d.draftProductId INTO stored_draftProductId FROM draft_product d 
- 	WHERE d.managerId=in_managerId AND d.updatedAt IN (SELECT MAX(updatedAt) FROM draft_product WHERE managerId=in_managerId GROUP BY updatedAt)
-	ORDER BY d.updatedAt DESC LIMIT 1;
-	
+	 	WHERE d.managerId=in_managerId AND d.draftProductId=UNHEX(in_draftProductId);
+
  IF in_category_id IS NOT Null
  Then
- 	SELECT category_slug INTO stored_category_slug FROM product_category pcat WHERE pcat.product_category_id=in_category_id;
+ 	SELECT handle INTO stored_handle FROM product_category pcat WHERE pcat.product_category_id=in_category_id;
  END IF;
- IF stored_category_slug IS NOT NULL
+ IF stored_handle IS NOT NULL
  Then
- 	SET in_handle := CONCAT(stored_category_slug, '/', in_handle);
+ 	SET in_handle := CONCAT(stored_handle, '/', in_handle);
  END IF;
  IF in_productId IS NOT NULL 
  Then
@@ -116,13 +116,19 @@ BEGIN
 			 	v.option_id_7 IS NULL And
 			 	v.option_id_8 IS NULL;
  END IF;
- CALL product_move_draft_images(stored_productId, stored_draftProductId, in_images);
+ CALL product_move_draft_images(in_managerId, stored_productId, stored_draftProductId, in_images);
  IF stored_draftProductId IS NOT NULL
  Then
 	 DELETE dv FROM draft_product_variant dv WHERE dv.draftProductId=stored_draftProductId;
 	 DELETE dip FROM draft_image_to_product dip WHERE dip.draftProductId=stored_draftProductId;
 	 DELETE dp FROM draft_product dp WHERE dp.draftProductId=stored_draftProductId;
  END IF;
+ 
+ #DELETE dv, dip, p FROM draft_product_variant dv
+ #	JOIN draft_product p ON dv.draftProductId=p.draftProductId
+ #	JOIN draft_image_to_product dip ON p.draftProductId=dip.draftProductId
+ #	  WHERE p.managerId=in_managerId AND ((in_productId IS NULL AND p.productId IS NULL) OR (in_productId IS NOT NULL AND p.productId=in_productId));
+	 
  SELECT stored_productId AS productId, JSON_ARRAYAGG(JSON_OBJECT('imgSrc',i.originalSrc, 'imageId', i.imageId)) AS images 
  	FROM product p
  		LEFT JOIN image_to_product im ON im.productId=p.productId

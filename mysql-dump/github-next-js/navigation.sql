@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS `navigation` (
   PRIMARY KEY (`page_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 
--- Дамп данных таблицы github-next-js.navigation: ~2 rows (приблизительно)
+-- Дамп данных таблицы github-next-js.navigation: ~0 rows (приблизительно)
 /*!40000 ALTER TABLE `navigation` DISABLE KEYS */;
 INSERT IGNORE INTO `navigation` (`page_id`, `parent_page_id`, `page_name`, `page_path`, `page_type`, `show_in_menu`, `menu_index`) VALUES
 	(1, 1, 'Главная', '/', NULL, NULL, NULL),
