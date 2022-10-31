@@ -187,14 +187,17 @@ BEGIN
 			`height`,
 			`altText`,
 			`format`,
-			`createdAt`)
+			`createdAt`,
+			existingImageId
+			)
 		SELECT 
 		   im.originalSrc,
 			im.`width`,
 			im.`height`,
 			im.`altText`,
 			im.`format`,
-			im.createdAt
+			im.createdAt,
+			im.imageId
 		FROM product p
 		   Inner JOIN image_to_product ipr ON ipr.productId=p.productId
 		   Inner JOIN image im ON ipr.imageId=im.imageId

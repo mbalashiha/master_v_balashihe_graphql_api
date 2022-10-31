@@ -80,6 +80,7 @@ export const managementModule = createModule({
         nodes: [ImageInfo]
       }
       type DraftProductResponse {
+        draftProductId: ID
         productId: ID
         title: String
         handle: String
@@ -89,8 +90,21 @@ export const managementModule = createModule({
         vendor: String
         price: Price
         category: ProductCategoryId
+        published: Boolean
         manufacturerId: ID
         imagesConnection: UploadedImagesConnection
+        existingProduct: DraftProductResponse
+      }
+      type ExistingProductConnection {
+        userErrors: [UserError]
+        response: DraftProductResponse
+      }
+      type DraftProductConnection {
+        userErrors: [UserError]
+        response: DraftProductResponse
+      }
+      type HandleExistsResponse {
+        exists: Boolean
       }
       type Mutation {
         productImagesUpdate(
@@ -105,16 +119,134 @@ export const managementModule = createModule({
         saveProductDraftDescription(
           descriptionInput: ProductDescriptionInput!
         ): SaveDraftProductPayload
-        saveProduct(productInput: FullProductInput!): SavedProductResponse
+        saveProduct(productInput: FullProductInput!): ExistingProductConnection
       }
       type Query {
+        productHandleExists(
+          handle: String!
+          productId: ID
+        ): HandleExistsResponse
         managementProducts(offset: Int, limit: Int): ProductConnection
-        draftProduct(productId: ID): DraftProductResponse
+        draftProduct(productId: ID): DraftProductConnection
         draftProductImages(productId: ID): UploadedImagesResponse
       }
     `,
   ],
   resolvers: {
+    ExistingProductConnection: {
+      response: async (
+        parent,
+        variables,
+        context,
+        info: GraphQLResolveInfo
+      ) => {
+        variables = { ...parent, ...variables };
+        try {
+          const { productId } = variables;
+          let products: Array<any> | undefined = undefined;
+          if (productId) {
+            products = await db.excuteQuery({
+              query: "select * from product_view where productId=?",
+              variables: [productId],
+            });
+          }
+          const product = (products && products[0]) || {
+            productId: productId || null,
+          };
+          if (
+            product.descriptionRawDraftContentState &&
+            typeof product.descriptionRawDraftContentState === "object"
+          ) {
+            product.descriptionRawDraftContentState = JSON.stringify(
+              product.descriptionRawDraftContentState
+            );
+          }
+          product.price = {
+            amount: product.amount || null,
+            currencyCode: product.currencyCode ?? "RUB",
+            currencyCodeId: product.currencyCodeId || "1",
+          };
+          product.draftProductId = null;
+          if (
+            product &&
+            product.descriptionRawDraftContentState &&
+            typeof product.descriptionRawDraftContentState === "object"
+          ) {
+            product.descriptionRawDraftContentState = JSON.stringify(
+              product.descriptionRawDraftContentState
+            );
+          }
+          return product;
+        } catch (e: any) {
+          console.error(e.stack || e.message);
+          debugger;
+          throw e;
+        }
+      },
+    },
+    DraftProductConnection: {
+      response: async (
+        parent,
+        variables,
+        context,
+        info: GraphQLResolveInfo
+      ) => {
+        variables = { ...parent, ...variables };
+        if (!context.manager || !context.manager.id) {
+          debugger;
+          throw new Error("Manager Unauthorized");
+        }
+        try {
+          const { productId } = variables;
+          const { draftProductId } = await getExistingOrNewProductDraft(
+            context.manager.id,
+            productId
+          );
+          let products: Array<any> | undefined = undefined;
+          products = await db.excuteQuery({
+            query:
+              "select * from draft_product_view where managerId=? and draftProductId=?",
+            variables: [context.manager.id, draftProductId],
+          });
+          if (productId && (!products || !products[0])) {
+            products = await db.excuteQuery({
+              query: "select * from product_view where productId=?",
+              variables: [productId],
+            });
+          }
+          const product = (products && products[0]) || {
+            productId: productId || null,
+          };
+          if (
+            product.descriptionRawDraftContentState &&
+            typeof product.descriptionRawDraftContentState === "object"
+          ) {
+            product.descriptionRawDraftContentState = JSON.stringify(
+              product.descriptionRawDraftContentState
+            );
+          }
+          product.price = {
+            amount: product.amount || null,
+            currencyCode: product.currencyCode ?? "RUB",
+            currencyCodeId: product.currencyCodeId || "1",
+          };
+          if (
+            product &&
+            product.descriptionRawDraftContentState &&
+            typeof product.descriptionRawDraftContentState === "object"
+          ) {
+            product.descriptionRawDraftContentState = JSON.stringify(
+              product.descriptionRawDraftContentState
+            );
+          }
+          return { draftProductId, ...product };
+        } catch (e: any) {
+          console.error(e.stack || e.message);
+          debugger;
+          throw e;
+        }
+      },
+    },
     UploadedImagesNodes: {
       nodes: async (parent, variables, context, info: GraphQLResolveInfo) => {
         if (!context.manager || !context.manager.id) {
@@ -126,29 +258,29 @@ export const managementModule = createModule({
             managerId: context.manager.id,
             ...variables,
           };
-          const { productId } = variables;
-          if (!variables.draftProductId) {
-            const { productId } = variables;
-            const { draftProductId } = await getExistingOrNewProductDraft(
-              context.manager.id,
-              productId
-            );
-            variables.draftProductId = draftProductId;
-          }
-          if (!variables.draftProductId) {
-            throw new Error(
-              "resolvers: UploadedImagesNodes: No variables.draftProductId parameter!"
-            );
-          }
-          const images = await db.excuteQuery({
-            query: `select i.*, i.originalSrc as imgSrc, ip.orderNumber
+          const { productId, draftProductId } = variables;
+          let images;
+          if (draftProductId) {
+            images = await db.excuteQuery({
+              query: `select i.*, i.originalSrc as imgSrc, i.existingImageId as imageId, ip.orderNumber
                  from draft_product p
                  JOIN draft_image_to_product ip On p.draftProductId=ip.draftProductId
                  JOIN draft_image i On ip.draftImageId=i.draftImageId
             where p.managerId=$managerId And p.draftProductId=unhex($draftProductId)
             order By ip.orderNumber`,
-            variables,
-          });
+              variables,
+            });
+          } else if (productId) {
+            images = await db.excuteQuery({
+              query: `select i.*, i.originalSrc as imgSrc, i.imageId, i.imageId as existingImageId, ip.orderNumber
+                 from product p
+                 JOIN image_to_product ip On p.productId=ip.productId
+                 JOIN image i On ip.imageId=i.imageId
+            where p.productId=$productId
+            order By ip.orderNumber`,
+              variables,
+            });
+          }
           return (Array.isArray(images) ? images : []).filter(
             (elem) => !!elem.imgSrc
           );
@@ -176,9 +308,6 @@ export const managementModule = createModule({
         context,
         info: GraphQLResolveInfo
       ) => {
-        if (!context.manager || !context.manager.id) {
-          throw new Error("Manager Unauthorized");
-        }
         try {
           variables = {
             ...parent,
@@ -221,6 +350,40 @@ export const managementModule = createModule({
       },
     },
     DraftProductResponse: {
+      existingProduct: async (
+        parent,
+        variables,
+        _ctx,
+        info: GraphQLResolveInfo
+      ) => {
+        try {
+          variables = { ...parent, ...variables };
+          const { productId } = variables;
+          let products: Array<any> | null = null;
+          if (productId) {
+            products = await db.excuteQuery({
+              query: "select * from product_view where productId=?",
+              variables: [productId],
+            });
+          }
+          const product = (products && products[0]) || null;
+          if (
+            product &&
+            product.descriptionRawDraftContentState &&
+            typeof product.descriptionRawDraftContentState === "object"
+          ) {
+            product.descriptionRawDraftContentState = JSON.stringify(
+              product.descriptionRawDraftContentState
+            );
+          }
+          product.draftProductId = null;
+          return product;
+        } catch (e: any) {
+          console.error(e.stack || e.message);
+          debugger;
+          throw e;
+        }
+      },
       imagesConnection: async (
         parent,
         variables,
@@ -250,51 +413,48 @@ export const managementModule = createModule({
       },
     },
     Query: {
-      draftProduct: async (_, variables, context, info: GraphQLResolveInfo) => {
-        //check if the context.manager is null
-        if (!context.manager || !context.manager.id) {
-          throw new Error("Manager Unauthorized");
+      productHandleExists: async (
+        parent,
+        variables,
+        context,
+        info: GraphQLResolveInfo
+      ) => {
+        const { productId, handle } = variables;
+        if (!handle) {
+          throw new Error("No handle to check.");
         }
-        try {
-          const { productId } = variables;
-          const { draftProductId } = await getExistingOrNewProductDraft(
-            context.manager.id,
-            productId
-          );
-          let products: Array<any> | undefined = undefined;
-          products = await db.excuteQuery({
-            query:
-              "select * from draft_product_view where managerId=? and draftProductId=?",
-            variables: [context.manager.id, draftProductId],
+        let rows;
+        let exists = false;
+        if (productId) {
+          rows = await db.excuteQuery({
+            query: `select 1 from product where productId != $productId and handle=$handle`,
+            variables,
           });
-          if (productId && (!products || !products[0])) {
-            products = await db.excuteQuery({
-              query: "select * from product_view where productId=?",
-              variables: [productId],
-            });
-          }
-          const product = (products && products[0]) || {
-            productId: productId || null,
-          };
-          if (
-            product.descriptionRawDraftContentState &&
-            typeof product.descriptionRawDraftContentState === "object"
-          ) {
-            product.descriptionRawDraftContentState = JSON.stringify(
-              product.descriptionRawDraftContentState
-            );
-          }
-          product.price = {
-            amount: product.amount || null,
-            currencyCode: product.currencyCode ?? "RUB",
-            currencyCodeId: product.currencyCodeId || "1",
-          };
-          return { draftProductId, ...product };
-        } catch (e: any) {
-          console.error(e.stack || e.message);
-          debugger;
-          throw e;
+        } else {
+          rows = await db.excuteQuery({
+            query: `select 1 from product where handle=$handle`,
+            variables,
+          });
         }
+        exists = !!(rows && rows.length);
+        return { exists };
+      },
+      draftProduct: async (
+        parent,
+        variables,
+        context,
+        info: GraphQLResolveInfo
+      ) => {
+        if (!context.manager || !context.manager.id) {
+          throw new GraphQLError("Manager Unauthorized");
+        }
+        const { productId } = variables;
+        const { draftProductId } = await getExistingOrNewProductDraft(
+          context.manager.id,
+          productId
+        );
+        //check if the context.manager is null
+        return { ...parent, ...variables, draftProductId };
       },
       managementProducts: async (
         _,
@@ -555,17 +715,18 @@ export const managementModule = createModule({
         info: GraphQLResolveInfo
       ) => {
         if (!context.manager || !context.manager.id) {
+          debugger;
           throw new Error("Manager Unauthorized");
         }
         try {
           const productInput: ProductInput = variables.productInput;
-          const { productId } = productInput;
+          const { productId, published } = productInput;
           const { draftProductId } = await getExistingOrNewProductDraft(
             context.manager.id,
             productId
           );
           let result: any = await db.excuteQuery({
-            query: `call draft_save_product(?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            query: `call draft_save_product(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             variables: [
               draftProductId,
               context.manager.id || null,
@@ -576,7 +737,8 @@ export const managementModule = createModule({
               productInput.manufacturerId || null,
               productInput.price?.amount || null,
               productInput.price?.currencyCodeId || "1",
-            ],  
+              published ? 1 : null,
+            ],
           });
           result = result && result[0] && result[0][0];
           return { draftProductId, productId };
@@ -659,7 +821,6 @@ export const managementModule = createModule({
               JSON.stringify(productInput.images || []),
             ],
           });
-          console.log(result);
           result = result && result[0] && result[0][0];
           console.log(result);
           return { draftProductId, productId: result?.productId || null };

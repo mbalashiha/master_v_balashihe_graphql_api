@@ -22,10 +22,14 @@ CREATE TABLE IF NOT EXISTS `image_to_product` (
   CONSTRAINT `FK_image_to_product_product` FOREIGN KEY (`productId`) REFERENCES `product` (`productId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Дамп данных таблицы github-next-js.image_to_product: ~1 rows (приблизительно)
+-- Дамп данных таблицы github-next-js.image_to_product: ~4 rows (приблизительно)
 /*!40000 ALTER TABLE `image_to_product` DISABLE KEYS */;
 INSERT IGNORE INTO `image_to_product` (`productId`, `imageId`, `orderNumber`) VALUES
-	(14, 38, 0);
+	(14, 38, 1),
+	(21, 38, 1),
+	(22, 38, 1),
+	(25, 38, 1),
+	(26, 38, 1);
 /*!40000 ALTER TABLE `image_to_product` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

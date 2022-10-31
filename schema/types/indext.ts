@@ -11,7 +11,6 @@ export interface PriceInput {
   currencyCodeId: string;
 }
 export interface ProductInput {
-  draftProductId: string | null;
   productId: string | null;
   title: string | null;
   handle: string | null;
@@ -21,6 +20,7 @@ export interface ProductInput {
   vendor: string | null;
   manufacturerId: string | null;
   price: PriceInput;
+  published: Boolean;
   category: ProductCategoryIdInput;
 }
 export interface ProductCategoryIdInput {

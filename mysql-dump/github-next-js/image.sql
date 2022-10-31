@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS `image` (
   UNIQUE KEY `uniq_imgSrc` (`originalSrc`(100)) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8mb4;
 
--- Дамп данных таблицы github-next-js.image: ~37 rows (приблизительно)
+-- Дамп данных таблицы github-next-js.image: ~35 rows (приблизительно)
 /*!40000 ALTER TABLE `image` DISABLE KEYS */;
 INSERT IGNORE INTO `image` (`imageId`, `originalSrc`, `width`, `height`, `altText`, `format`, `createdAt`, `updatedAt`) VALUES
 	(5, '/images/Hat-front-black__72990.1603748583.png', 2048, 2048, NULL, NULL, '2022-06-10 22:43:22', '2022-08-14 18:20:49'),

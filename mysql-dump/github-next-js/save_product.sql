@@ -62,6 +62,7 @@ BEGIN
  Then
  	SELECT productId INTO stored_productId FROM product WHERE productId=in_productId;
  END IF;
+ ##SELECT stored_productId;
  IF stored_productId IS NULL
  Then
  	INSERT INTO product(handle, title, product_category_id, manufacturerId, description, descriptionHtml, descriptionRawDraftContentState)
@@ -101,6 +102,7 @@ BEGIN
  END IF;
  IF stored_priceAmount IS Null
  Then 
+   ##SELECT 'product_variant';
  	INSERT INTO product_variant(productId, price, currencyCodeId) VALUES(stored_productId, in_price_amount, in_price_currencyCodeId);
  Else
  	UPDATE product_variant v 

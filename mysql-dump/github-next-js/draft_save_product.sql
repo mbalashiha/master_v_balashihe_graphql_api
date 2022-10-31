@@ -23,7 +23,8 @@ CREATE PROCEDURE `draft_save_product`(
 	IN `in_handle` TEXT,
 	IN `in_manufacturerId` TINYTEXT,
 	IN `in_price_amount` TINYTEXT,
-	IN `in_price_currencyCodeId` TINYTEXT
+	IN `in_price_currencyCodeId` TINYTEXT,
+	IN `in_published` TINYINT
 )
 BEGIN
  DECLARE stored_priceAmount DECIMAL(16,4) DEFAULT NULL;
@@ -44,12 +45,14 @@ BEGIN
  
  IF stored_draftProductId IS NULL
  Then
- 	INSERT INTO draft_product(managerId, productId, handle, title, product_category_id, manufacturerId)
- 		VALUES(in_managerId, in_productId, in_handle, in_title, in_category_id, in_manufacturerId);
+ 	INSERT INTO draft_product(managerId, productId, handle, title, product_category_id, manufacturerId, published)
+ 		VALUES(in_managerId, in_productId, in_handle, in_title, in_category_id, in_manufacturerId, in_published);
  	SET stored_draftProductId:=@last_draftProductId;
  ELSE 
  	Update draft_product
-	  Set productId=in_productId, handle=in_handle, title=in_title, product_category_id=in_category_id, manufacturerId=in_manufacturerId
+	  Set productId=in_productId, handle=in_handle, title=in_title, product_category_id=in_category_id, 
+	  			manufacturerId=in_manufacturerId,
+	  			published=in_published
 	  	WHERE draftProductId=stored_draftProductId;
  END IF;
  SELECT Count(*), MIN(v.price) INTO stored_nullOptionsCount, stored_priceAmount FROM draft_product_variant v WHERE v.draftProductId=stored_draftProductId 

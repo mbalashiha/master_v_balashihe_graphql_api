@@ -54,9 +54,9 @@ CREATE TABLE IF NOT EXISTS `product_variant` (
   CONSTRAINT `FK_product_variant_product_option_6` FOREIGN KEY (`option_id_6`) REFERENCES `product_option` (`optionId`),
   CONSTRAINT `FK_product_variant_product_option_7` FOREIGN KEY (`option_id_7`) REFERENCES `product_option` (`optionId`),
   CONSTRAINT `FK_product_variant_product_option_8` FOREIGN KEY (`option_id_8`) REFERENCES `product_option` (`optionId`)
-) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=utf8mb4;
 
--- Дамп данных таблицы github-next-js.product_variant: ~15 rows (приблизительно)
+-- Дамп данных таблицы github-next-js.product_variant: ~22 rows (приблизительно)
 /*!40000 ALTER TABLE `product_variant` DISABLE KEYS */;
 INSERT IGNORE INTO `product_variant` (`variantId`, `productId`, `option_id_1`, `option_id_2`, `option_id_3`, `option_id_4`, `option_id_5`, `option_id_6`, `option_id_7`, `option_id_8`, `price`, `compareAtPrice`, `currencyCodeId`, `createdAt`, `updatedAt`, `imageId`, `sku`) VALUES
 	(27, 13, 3, 4, NULL, NULL, NULL, NULL, NULL, NULL, 20.0000, 30.0000, 3, '2022-03-26 19:22:02', '2022-03-26 19:22:02', 5, NULL),
@@ -77,7 +77,11 @@ INSERT IGNORE INTO `product_variant` (`variantId`, `productId`, `option_id_1`, `
 	(42, 18, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3.0000, NULL, 1, '2022-08-05 20:04:30', '2022-08-05 20:04:30', NULL, NULL),
 	(43, 19, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3.0000, NULL, 1, '2022-08-07 21:34:49', '2022-08-07 21:34:49', NULL, NULL),
 	(44, 20, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3.0000, NULL, 1, '2022-08-07 21:53:14', '2022-08-07 21:53:14', NULL, NULL),
-	(45, 14, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 99.0000, NULL, 3, '2022-10-23 20:58:18', '2022-10-23 21:11:31', NULL, NULL);
+	(45, 14, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2.0000, NULL, 3, '2022-10-23 20:58:18', '2022-10-29 23:51:17', NULL, NULL),
+	(46, 21, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1.0000, NULL, 1, '2022-10-25 18:56:56', '2022-10-25 18:56:56', NULL, NULL),
+	(47, 22, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1.0000, NULL, 1, '2022-10-25 18:57:00', '2022-10-25 18:57:00', NULL, NULL),
+	(48, 25, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1.0000, NULL, 1, '2022-10-25 18:57:45', '2022-10-25 18:57:45', NULL, NULL),
+	(49, 26, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1.0000, NULL, 1, '2022-10-28 20:16:09', '2022-10-28 20:16:09', NULL, NULL);
 /*!40000 ALTER TABLE `product_variant` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

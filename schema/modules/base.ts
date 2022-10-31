@@ -102,17 +102,16 @@ export const baseModule = createModule({
         variants(limit: Int): VariantConnection
       }
       input ProductInput {
-        draftProductId: ID
         productId: ID
         title: String
         handle: String
         vendor: String
         manufacturerId: ID
         price: PriceInput
+        published: Boolean
         category: ProductCategoryIdInput
       }
       input ProductDescriptionInput {
-        draftProductId: ID
         productId: ID
         description: String!
         descriptionHtml: String!
@@ -124,7 +123,6 @@ export const baseModule = createModule({
         images: [ImageInfoInput]!
       }
       input FullProductInput {
-        draftProductId: ID
         productId: ID
         title: String!
         handle: String!
@@ -136,6 +134,7 @@ export const baseModule = createModule({
         descriptionHtml: String!
         descriptionRawDraftContentState: String
         images: [ImageInfoInput]!
+        published: Boolean
       }
       type CheckoutUserError {
         field: String
@@ -190,6 +189,7 @@ export const baseModule = createModule({
         checkoutConnection: CheckoutConnection
       }
       type ImageInfo {
+        imageId: ID
         imgSrc: String
         width: Int!
         height: Int!
@@ -828,7 +828,7 @@ export const baseModule = createModule({
                   typeof names[i] +
                   " and handles[i]: " +
                   typeof handles[i]
-              );   
+              );
             }
             breadcrumbs.push({ name: names[i], handle: handles[i] });
           }

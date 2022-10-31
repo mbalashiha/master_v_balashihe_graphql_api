@@ -49,8 +49,6 @@ BEGIN
 		SET loop_format := Json_unquote(JSON_extract(loop_image, "$.format"));
 		SET loop_format := IF(loop_format = '' OR loop_format = 'null', NULL, loop_format);	
 				
-		SET loop_orderNumber := Json_unquote(JSON_extract(loop_orderNumber, "$.orderNumber"));
-		SET loop_orderNumber := IF(loop_orderNumber = '' OR loop_orderNumber = 'null', NULL, loop_orderNumber);	
 		
 		SET test_imgSrc := NULL;
 		SET loop_imageId := NULL;
@@ -63,10 +61,12 @@ BEGIN
 				SET loop_imageId := LAST_INSERT_ID();
 			END if;
 			
-			SET imageId_set := CONCAT_WS(',',imageId_set,loop_imageId);
-			
-			IF loop_orderNumber IS NULL OR CAST(loop_orderNumber AS UNSIGNED) <= 0
-			Then
+			SET imageId_set := CONCAT_WS(',',imageId_set,loop_imageId);			
+				
+			SET loop_orderNumber := Json_unquote(JSON_extract(loop_orderNumber, "$.orderNumber"));
+			SET loop_orderNumber := IF(loop_orderNumber = '' OR loop_orderNumber = 'null', NULL, loop_orderNumber);	
+			IF loop_orderNumber IS NULL OR Cast(loop_orderNumber AS UNSIGNED) <= 0 OR loop_orderNumber = '0'
+			Then				
 			   SET loop_orderNumber := i+1;
 			END IF;
 		

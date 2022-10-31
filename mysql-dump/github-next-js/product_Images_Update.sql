@@ -74,15 +74,6 @@ BEGIN
 			   SET loop_orderNumber := i+1;
 			END IF;
 			SELECT draftImageId INTO loop_draftImageId FROM draft_image WHERE originalSrc=loop_imgSrc;
-			IF EXISTS (SELECT 1 FROM draft_product p
-				INNER JOIN draft_image_to_product ip ON p.draftProductId=ip.draftProductId AND ip.orderNumber=loop_orderNumber
-				INNER JOIN draft_image im ON im.originalSrc != loop_imgSrc AND ip.draftImageId=im.draftImageId
-				WHERE p.draftProductId=inserted_draftProductId)
-			Then
-				Select Max(ip.orderNumber)+1 INTO loop_orderNumber FROM draft_product p
-					INNER JOIN draft_image_to_product ip ON p.draftProductId=ip.draftProductId
-					WHERE p.draftProductId=inserted_draftProductId GROUP BY p.draftProductId;
-			END IF;
 			if loop_draftImageId IS NULL 
 			Then
 				INSERT INTO draft_image(originalSrc, width, height, FORMAT) VALUES(loop_imgSrc, loop_width, loop_height,loop_format);
