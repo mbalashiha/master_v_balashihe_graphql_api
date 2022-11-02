@@ -35,7 +35,10 @@ const getExistingOrNewProductDraft = async (
     try {
       const dbResult = await db.excuteQuery({
         query: "call existing_or_new_product_draft(?, ?);",
-        variables: [in_managerId || null, in_productId || null],
+        variables: [
+          (in_managerId && parseInt(in_managerId as any)) || null,
+          (in_productId && parseInt(in_productId as any)) || null,
+        ],
       });
       draftProductId =
         getMysqlProcedureLastSelectedRow(dbResult).draftProductId;
@@ -367,17 +370,19 @@ export const managementModule = createModule({
             });
           }
           const product = (products && products[0]) || null;
-          if (
-            product &&
-            product.descriptionRawDraftContentState &&
-            typeof product.descriptionRawDraftContentState === "object"
-          ) {
-            product.descriptionRawDraftContentState = JSON.stringify(
-              product.descriptionRawDraftContentState
-            );
-          }
-          product.draftProductId = null;
-          return product;
+          if (product) {
+            if (
+              product &&
+              product.descriptionRawDraftContentState &&
+              typeof product.descriptionRawDraftContentState === "object"
+            ) {
+              product.descriptionRawDraftContentState = JSON.stringify(
+                product.descriptionRawDraftContentState
+              );
+            }
+            product.draftProductId = null;
+            return product;
+          } else return null;
         } catch (e: any) {
           console.error(e.stack || e.message);
           debugger;
@@ -730,14 +735,14 @@ export const managementModule = createModule({
             variables: [
               draftProductId,
               context.manager.id || null,
-              productInput.productId || null,
+              (productId && parseInt(productId)) || null,
               productInput.category.id || null,
-              productInput.title || null,
-              productInput.handle || null,
+              productInput.title || "",
+              productInput.handle || "",
               productInput.manufacturerId || null,
               productInput.price?.amount || null,
               productInput.price?.currencyCodeId || "1",
-              published ? 1 : null,
+              published ? 1 : 0,
             ],
           });
           result = result && result[0] && result[0][0];
@@ -769,9 +774,9 @@ export const managementModule = createModule({
             variables: [
               draftProductId,
               context.manager.id || null,
-              descriptionInput.productId || null,
-              descriptionInput.description || null,
-              descriptionInput.descriptionHtml || null,
+              (productId && parseInt(productId)) || null,
+              descriptionInput.description || "",
+              descriptionInput.descriptionHtml || "",
               descriptionInput.descriptionRawDraftContentState || null,
             ],
           });
@@ -797,6 +802,9 @@ export const managementModule = createModule({
           if (!productInput.handle) {
             throw new Error(`Table Column 'handle' cannot be null`);
           }
+          if (!productInput.title) {
+            throw new Error(`Table Column 'title' cannot be null`);
+          }
           const { productId } = productInput;
           const { draftProductId } = await getExistingOrNewProductDraft(
             context.manager.id,
@@ -804,21 +812,22 @@ export const managementModule = createModule({
           );
           // console.log(util.inspect(productInput));
           let result: any = await db.excuteQuery({
-            query: `call save_product(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            query: `call save_product(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             variables: [
               draftProductId,
               context.manager.id || null,
-              productInput.productId || null,
+              (productId && parseInt(productId)) || null,
               productInput.category.id || null,
-              productInput.title || null,
-              productInput.handle || null,
+              productInput.title || "",
+              productInput.handle || "",
               productInput.manufacturerId || null,
               productInput.price.amount || null,
               productInput.price.currencyCodeId || null,
-              productInput.description || null,
-              productInput.descriptionHtml || null,
+              productInput.description || "",
+              productInput.descriptionHtml || "",
               productInput.descriptionRawDraftContentState || null,
               JSON.stringify(productInput.images || []),
+              productInput.published ? 1 : 0,
             ],
           });
           result = result && result[0] && result[0][0];
@@ -826,7 +835,6 @@ export const managementModule = createModule({
           return { draftProductId, productId: result?.productId || null };
         } catch (e: any) {
           console.error(e.stack || e.message);
-          debugger;
           throw e;
         }
       },

@@ -15,7 +15,7 @@
 -- Дамп структуры для процедура github-next-js.product_Images_Update
 DELIMITER //
 CREATE PROCEDURE `product_Images_Update`(
-	IN `in_draftProductId` TINYTEXT,
+	IN `in_draftProductId` TEXT,
 	IN `in_managerId` INT,
 	IN `in_productId` TINYTEXT,
 	IN `in_images` JSON
@@ -42,8 +42,7 @@ BEGIN
 	
 	If inserted_draftProductId IS Null
 	Then
-		INSERT INTO draft_product(managerId, productId) VALUES(in_managerId, in_productId);
-		SET inserted_draftProductId := @last_draftProductId;
+		SELECT 1;
 	END IF;
 	Set i := 0;
 	SELECT JSON_EXTRACT(in_images, CONCAT('$[',i,']')) INTO loop_image;	

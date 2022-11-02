@@ -15,8 +15,8 @@
 -- Дамп структуры для процедура github-next-js.existing_or_new_product_draft
 DELIMITER //
 CREATE PROCEDURE `existing_or_new_product_draft`(
-	IN `in_managerId` TINYTEXT,
-	IN `in_productId` TINYTEXT
+	IN `in_managerId` TEXT,
+	IN `in_productId` TEXT
 )
 BEGIN	
  DECLARE inserted_draftProductId BINARY(16) DEFAULT NULL;
@@ -38,14 +38,16 @@ BEGIN
 			`manufacturerId`,
 			`description`,
 			`descriptionHtml`,
-			`descriptionRawDraftContentState`)
+			`descriptionRawDraftContentState`,
+			published)
 		SELECT 
-		   in_managerId as managerId, Null as productId, Null as handle, NULL as title,
-			NULL AS `product_category_id`,
+		   in_managerId as managerId, Null as productId, '' as handle, '' as title,
+			Null as `product_category_id`,
 			NULL AS `manufacturerId`,
-			NULL AS `description`,
-			NULL AS `descriptionHtml`,
-			NULL AS `descriptionRawDraftContentState`;
+			'' as `description`,
+			'' as `descriptionHtml`,
+			NULL AS `descriptionRawDraftContentState`,
+			1 AS published;
 			
 		   Set inserted_draftProductId := @last_draftProductId;
 		   			   
@@ -63,7 +65,8 @@ BEGIN
 			`compareAtPrice`,
 			`currencyCodeId`,
 			`imageId`,
-			`sku`)   
+			`sku`
+			)   
 		   SELECT inserted_draftProductId AS draftProductId,
 			NULL AS `option_id_1`,
 			NULL AS `option_id_2`,
@@ -106,14 +109,16 @@ BEGIN
 		`manufacturerId`,
 		`description`,
 		`descriptionHtml`,
-		`descriptionRawDraftContentState`)
+		`descriptionRawDraftContentState`,
+		published)
 		SELECT 
-		   in_managerId as managerId, productId, handle, title,
-			`product_category_id`,
-			`manufacturerId`,
-			`description`,
-			`descriptionHtml`,
-			`descriptionRawDraftContentState`
+		   in_managerId as managerId, p.productId, p.handle, p.title,
+			p.`product_category_id`,
+			p.`manufacturerId`,
+			p.`description`,
+			p.`descriptionHtml`,
+			p.`descriptionRawDraftContentState`,
+			p.published
 		FROM 
 		   product p
 		WHERE

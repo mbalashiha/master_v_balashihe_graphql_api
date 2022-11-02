@@ -15,9 +15,9 @@
 -- Дамп структуры для процедура github-next-js.draft_save_product_description
 DELIMITER //
 CREATE PROCEDURE `draft_save_product_description`(
-	IN `in_draftProductId` TINYTEXT,
-	IN `in_managerId` TINYTEXT,
-	IN `in_productId` TINYTEXT,
+	IN `in_draftProductId` TEXT,
+	IN `in_managerId` TEXT,
+	IN `in_productId` TEXT,
 	IN `in_description` LONGTEXT,
 	IN `in_descriptionHtml` LONGTEXT,
 	IN `in_descriptionRawDraftContentState` LONGTEXT
@@ -36,9 +36,7 @@ BEGIN
  
  IF stored_draftProductId IS NULL
  Then
- 	INSERT INTO draft_product(managerId, productId, description, descriptionHtml, descriptionRawDraftContentState)
- 		VALUES(in_managerId, in_productId, in_description, in_descriptionHtml, in_descriptionRawDraftContentState);
- 	SET stored_draftProductId:=@last_draftProductId;
+ 	signal sqlstate '45000' set message_text = 'My Error Message';
  ELSE 
  	Update draft_product
 	  Set productId=in_productId, description=in_description, descriptionHtml=in_descriptionHtml, descriptionRawDraftContentState=in_descriptionRawDraftContentState
