@@ -94,6 +94,7 @@ export const managementModule = createModule({
         price: Price
         category: ProductCategoryId
         published: Boolean
+        orderNumber: Int
         manufacturerId: ID
         imagesConnection: UploadedImagesConnection
         existingProduct: DraftProductResponse
@@ -725,13 +726,13 @@ export const managementModule = createModule({
         }
         try {
           const productInput: ProductInput = variables.productInput;
-          const { productId, published } = productInput;
+          const { productId, published, orderNumber } = productInput;
           const { draftProductId } = await getExistingOrNewProductDraft(
             context.manager.id,
             productId
           );
           let result: any = await db.excuteQuery({
-            query: `call draft_save_product(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            query: `call draft_save_product(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             variables: [
               draftProductId,
               context.manager.id || null,
@@ -743,6 +744,7 @@ export const managementModule = createModule({
               productInput.price?.amount || null,
               productInput.price?.currencyCodeId || "1",
               published ? 1 : 0,
+              orderNumber || null,
             ],
           });
           result = result && result[0] && result[0][0];
@@ -805,14 +807,14 @@ export const managementModule = createModule({
           if (!productInput.title) {
             throw new Error(`Table Column 'title' cannot be null`);
           }
-          const { productId } = productInput;
+          const { productId, orderNumber } = productInput;
           const { draftProductId } = await getExistingOrNewProductDraft(
             context.manager.id,
             productId
           );
           // console.log(util.inspect(productInput));
           let result: any = await db.excuteQuery({
-            query: `call save_product(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            query: `call save_product(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             variables: [
               draftProductId,
               context.manager.id || null,
@@ -828,6 +830,7 @@ export const managementModule = createModule({
               productInput.descriptionRawDraftContentState || null,
               JSON.stringify(productInput.images || []),
               productInput.published ? 1 : 0,
+              orderNumber || null,
             ],
           });
           result = result && result[0] && result[0][0];

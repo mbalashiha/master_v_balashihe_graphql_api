@@ -14,15 +14,16 @@
 
 -- Дамп структуры для таблица github-next-js.product_option_name_value
 CREATE TABLE IF NOT EXISTS `product_option_name_value` (
-  `valueId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `valueId` int(12) unsigned NOT NULL AUTO_INCREMENT,
   `value` varchar(512) NOT NULL,
   PRIMARY KEY (`valueId`),
-  UNIQUE KEY `Индекс 2` (`value`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4;
+  UNIQUE KEY `uniq_value_string` (`value`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4;
 
--- Дамп данных таблицы github-next-js.product_option_name_value: ~5 rows (приблизительно)
+-- Дамп данных таблицы github-next-js.product_option_name_value: ~6 rows (приблизительно)
 /*!40000 ALTER TABLE `product_option_name_value` DISABLE KEYS */;
 INSERT IGNORE INTO `product_option_name_value` (`valueId`, `value`) VALUES
+	(8, ''),
 	(4, '#000000'),
 	(5, '#ffffff'),
 	(6, 'l'),

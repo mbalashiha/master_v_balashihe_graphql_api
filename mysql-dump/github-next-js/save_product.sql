@@ -28,7 +28,8 @@ CREATE PROCEDURE `save_product`(
 	IN `in_descriptionHtml` LONGTEXT,
 	IN `in_descriptionRawDraftContentState` LONGTEXT,
 	IN `in_images` JSON,
-	IN `in_published` TINYINT
+	IN `in_published` TINYINT,
+	IN `in_orderNumber` INT
 )
 BEGIN
  DECLARE stored_draftProductId BINARY(16) DEFAULT NULL;
@@ -47,6 +48,11 @@ BEGIN
  SET in_descriptionHtml := IF(in_descriptionHtml='' OR in_descriptionHtml='null', NULL, in_descriptionHtml);
  SET in_descriptionRawDraftContentState := IF(in_descriptionRawDraftContentState='' OR in_descriptionRawDraftContentState='null', NULL, in_descriptionRawDraftContentState);
  
+ If in_orderNumber IS NULL
+ Then
+   SELECT MAX(Coalesce(orderNumber,productId))+1 INTO in_orderNumber FROM product;
+ END If;
+ 
  if in_draftProductId IS NULL OR in_draftProductId = ''
  then
  	signal sqlstate '45000' set message_text = 'No in_draftProductId';
@@ -56,39 +62,24 @@ BEGIN
  
  IF in_productId IS NULL
  Then
- 	INSERT INTO product(published, handle, title, product_category_id, manufacturerId, description, descriptionHtml, descriptionRawDraftContentState)
- 		VALUES(in_published, in_handle, in_title, in_category_id, in_manufacturerId, in_description, in_descriptionHtml, in_descriptionRawDraftContentState);
+ 	INSERT INTO product(handle, title, product_category_id, manufacturerId, description, descriptionHtml, descriptionRawDraftContentState, 
+	 		published, orderNumber)
+ 		VALUES(in_handle, in_title, in_category_id, in_manufacturerId, in_description, in_descriptionHtml, in_descriptionRawDraftContentState,
+		 	in_published, in_orderNumber);
  	SET in_productId:=LAST_INSERT_ID();
  ELSE 
  	Update product
-	  SET published=in_published, handle=in_handle, title=in_title, product_category_id=in_category_id, manufacturerId=in_manufacturerId, 
-	  		description=in_description, descriptionHtml=in_descriptionHtml, descriptionRawDraftContentState=in_descriptionRawDraftContentState
+	  SET handle=in_handle, title=in_title, product_category_id=in_category_id, manufacturerId=in_manufacturerId, 
+	  		description=in_description, descriptionHtml=in_descriptionHtml, descriptionRawDraftContentState=in_descriptionRawDraftContentState,
+	  		published=in_published, orderNumber=in_orderNumber
 	  	WHERE productId=in_productId;
  END IF;
  SELECT Count(*), MIN(v.price) INTO stored_nullOptionsCount, stored_priceAmount FROM product_variant v WHERE v.productId=in_productId 
- 	And
- 	v.option_id_1 IS NULL And
- 	v.option_id_2 IS NULL And
- 	v.option_id_3 IS NULL And
- 	v.option_id_4 IS NULL And
- 	v.option_id_5 IS NULL And
- 	v.option_id_6 IS NULL And
- 	v.option_id_7 IS NULL And
- 	v.option_id_8 IS NULL
 	 GROUP BY v.productId;
  If stored_nullOptionsCount > 1
  Then
   DELETE v FROM product_variant v WHERE 
-   v.productId=in_productId 
- 	And
- 	v.option_id_1 IS NULL And
- 	v.option_id_2 IS NULL And
- 	v.option_id_3 IS NULL And
- 	v.option_id_4 IS NULL And
- 	v.option_id_5 IS NULL And
- 	v.option_id_6 IS NULL And
- 	v.option_id_7 IS NULL And
- 	v.option_id_8 IS NULL;
+   v.productId=in_productId;
  	SET stored_priceAmount := NULL;
  END IF;
  IF stored_priceAmount IS Null
@@ -98,16 +89,7 @@ BEGIN
  Else
  	UPDATE product_variant v 
 	 SET v.price=in_price_amount, v.currencyCodeId=in_price_currencyCodeId
-	 WHERE v.productId=in_productId 
-			 	And
-			 	v.option_id_1 IS NULL And
-			 	v.option_id_2 IS NULL And
-			 	v.option_id_3 IS NULL And
-			 	v.option_id_4 IS NULL And
-			 	v.option_id_5 IS NULL And
-			 	v.option_id_6 IS NULL And
-			 	v.option_id_7 IS NULL And
-			 	v.option_id_8 IS NULL;
+	 WHERE v.productId=in_productId;
  END IF;
  CALL product_move_draft_images(in_managerId, in_productId, stored_draftProductId, in_images);
  IF stored_draftProductId IS NOT NULL
@@ -127,7 +109,7 @@ BEGIN
  		LEFT JOIN image_to_product im ON im.productId=p.productId
  		LEFT JOIN image i ON i.imageId=im.imageId
  	WHERE p.productId=in_productId
-	 GROUP BY p.productId; 
+	 GROUP BY p.productId;
  
  If in_productId IS NULL
  Then 

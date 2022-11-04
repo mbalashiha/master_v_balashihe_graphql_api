@@ -8,7 +8,7 @@
     {
       "name": "Graphql Express Server: debug server-side",
       "type": "node",
-      "request": "attach", 
+      "request": "attach",
       "outFiles": ["${workspaceFolder}/build/**/*.js"],
       "sourceMaps": true,
       "smartStep": true,
@@ -20,7 +20,8 @@
       "internalConsoleOptions": "openOnSessionStart",
       "sourceMapPathOverrides": {
         "webpack:///./*": "${workspaceFolder}/*"
-      }
+      },
+      "skipFiles": ["${workspaceRoot}/node_modules/**/*.js"]
     }
   ]
 }

@@ -24,12 +24,13 @@ CREATE TABLE IF NOT EXISTS `draft_product` (
   `manufacturerId` int(10) unsigned DEFAULT NULL,
   `description` longtext DEFAULT NULL,
   `descriptionHtml` longtext DEFAULT NULL,
+  `descriptionRawDraftContentState` longtext DEFAULT NULL,
   `createdAt` timestamp NOT NULL DEFAULT current_timestamp(),
   `updatedAt` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `publishedAt` timestamp NULL DEFAULT NULL,
-  `descriptionRawDraftContentState` longtext DEFAULT NULL,
   `images_has_been_copied` tinyint(1) unsigned DEFAULT NULL,
   `published` tinyint(1) unsigned DEFAULT 1,
+  `orderNumber` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`draftProductId`),
   UNIQUE KEY `uniq_manager_product_id` (`managerId`,`productId`),
   KEY `FK_product_product_category` (`product_category_id`),
@@ -39,12 +40,10 @@ CREATE TABLE IF NOT EXISTS `draft_product` (
   CONSTRAINT `FK_draft_product_product` FOREIGN KEY (`productId`) REFERENCES `product` (`productId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Дамп данных таблицы github-next-js.draft_product: ~25 rows (приблизительно)
+-- Дамп данных таблицы github-next-js.draft_product: ~1 rows (приблизительно)
 /*!40000 ALTER TABLE `draft_product` DISABLE KEYS */;
-INSERT IGNORE INTO `draft_product` (`draftProductId`, `managerId`, `productId`, `handle`, `title`, `sku`, `product_category_id`, `manufacturerId`, `description`, `descriptionHtml`, `createdAt`, `updatedAt`, `publishedAt`, `descriptionRawDraftContentState`, `images_has_been_copied`, `published`) VALUES
-	(_binary 0x680197935AE711EDB47F60A44C4F528E, 1, NULL, NULL, NULL, NULL, NULL, NULL, '', '', '2022-11-02 22:49:07', '2022-11-02 22:49:25', NULL, NULL, NULL, 0),
-	(_binary 0xAAEBA5AB5AD711EDB47F60A44C4F528E, 1, 13, 'cool-hat', 'Cool Hat', NULL, NULL, 16, 'The Next.js beanie has arrived! This embroidered beauty has a snug fit that ensures you\'re going to feel cozy and warm whatever you\'re doing. • 60% cotton, 40% acrylic• Breathable cotton blend• Form-fitting shape• One size fits most', '<meta charset="utf-8">\n<p data-mce-fragment="1">The Next.js beanie has arrived! This embroidered beauty has a snug fit that ensures you\'re going to feel cozy and warm whatever you\'re doing.</p>\n<p data-mce-fragment="1">• 60% cotton, 40% acrylic<br data-mce-fragment="1">• Breathable cotton blend<br data-mce-fragment="1">• Form-fitting shape<br data-mce-fragment="1">• One size fits most</p>\n<meta charset="utf-8">', '2022-11-02 20:56:27', '2022-11-02 20:56:27', NULL, NULL, 1, NULL),
-	(_binary 0xCF224FD55AD611EDB47F60A44C4F528E, 1, 14, '111199333434', '99888434334', NULL, 34, NULL, NULL, NULL, '2022-11-02 20:50:19', '2022-11-02 20:50:19', NULL, '{"blocks":[{"key":"fshhl","text":"","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}', 1, 1);
+INSERT IGNORE INTO `draft_product` (`draftProductId`, `managerId`, `productId`, `handle`, `title`, `sku`, `product_category_id`, `manufacturerId`, `description`, `descriptionHtml`, `descriptionRawDraftContentState`, `createdAt`, `updatedAt`, `publishedAt`, `images_has_been_copied`, `published`, `orderNumber`) VALUES
+	(_binary 0x3099AA6F5C8111EDB4CE60A44C4F528E, 1, 21, '32234ffffffffffff323232/99', '99', NULL, 34, NULL, NULL, NULL, '{"blocks":[{"key":"93fvt","text":"","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}', '2022-11-04 23:42:31', '2022-11-04 23:42:31', NULL, 1, 1, 5);
 /*!40000 ALTER TABLE `draft_product` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

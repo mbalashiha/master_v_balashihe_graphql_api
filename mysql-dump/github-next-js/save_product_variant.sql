@@ -47,6 +47,31 @@ DECLARE priceV2_currencyCode TEXT DEFAULT NULL;
 DECLARE q_currencyCodeId TEXT DEFAULT NULL;
 
 DECLARE test_variantId INT Unsigned DEFAULT NULL;
+ DECLARE defaultOptionNameId INT UNSIGNED DEFAULT NULL;
+ DECLARE defaultOptionValueId INT UNSIGNED DEFAULT NULL;
+ DECLARE defaultOptionId INT UNSIGNED DEFAULT NULL;
+ 
+ SELECT v.valueId INTO defaultOptionValueId FROM product_option_name_value v WHERE v.value='';
+ IF defaultOptionValueId IS NULL
+ Then
+ 	INSERT INTO product_option_name_value(`value`) VALUES('');
+ 	SET defaultOptionValueId := LAST_INSERT_ID();
+ END IF;
+ 
+ SELECT n.nameId INTO defaultOptionNameId FROM product_option_name n WHERE n.name='default';
+ IF defaultOptionNameId IS NULL
+ Then
+ 	INSERT INTO product_option_name(`name`) VALUES('default');
+ 	SET defaultOptionNameId := LAST_INSERT_ID();
+ END IF;
+ 
+ SELECT o.optionId INTO defaultOptionId FROM product_option o WHERE o.nameId=defaultOptionNameId AND o.valueId=defaultOptionValueId;
+ IF defaultOptionId IS NULL
+ Then
+ 	INSERT INTO product_option(nameId, valueID) VALUES(defaultOptionNameId, defaultOptionValueId);
+ 	SET defaultOptionId := LAST_INSERT_ID();
+ END IF;
+ 
 
 SET priceV2_json := Json_unquote(JSON_extract(product_variant_json, "$.priceV2"));
 SET compareAtPriceV2_json := Json_unquote(JSON_extract(product_variant_json, "$.compareAtPriceV2"));

@@ -21,6 +21,23 @@ CREATE PROCEDURE `existing_or_new_product_draft`(
 BEGIN	
  DECLARE inserted_draftProductId BINARY(16) DEFAULT NULL;
  DECLARE stored_images_has_been_copied TinyInt Unsigned DEFAULT NULL;
+ DECLARE defaultOptionNameId INT UNSIGNED DEFAULT NULL;
+ DECLARE defaultOptionValueId INT UNSIGNED DEFAULT NULL;
+ 
+ SELECT v.valueId INTO defaultOptionValueId FROM product_option_name_value v WHERE v.value='';
+ IF defaultOptionValueId IS NULL
+ Then
+ 	INSERT INTO product_option_name_value(`value`) VALUES('');
+ 	SET defaultOptionValueId := LAST_INSERT_ID();
+ END IF;
+ 
+ SELECT n.nameId INTO defaultOptionNameId FROM product_option_name n WHERE n.name='default';
+ IF defaultOptionNameId IS NULL
+ Then
+ 	INSERT INTO product_option_name(`name`) VALUES('default');
+ 	SET defaultOptionNameId := LAST_INSERT_ID();
+ END IF;
+ 
  IF in_productId IS NULL
  Then
    SELECT pd.draftProductId INTO inserted_draftProductId FROM draft_product pd
@@ -39,7 +56,8 @@ BEGIN
 			`description`,
 			`descriptionHtml`,
 			`descriptionRawDraftContentState`,
-			published)
+			published,
+			orderNumber)
 		SELECT 
 		   in_managerId as managerId, Null as productId, '' as handle, '' as title,
 			Null as `product_category_id`,
@@ -47,20 +65,13 @@ BEGIN
 			'' as `description`,
 			'' as `descriptionHtml`,
 			NULL AS `descriptionRawDraftContentState`,
-			1 AS published;
+			1 AS published,
+			(SELECT MAX(Coalesce(orderNumber, productId))+1 FROM product) AS orderNumber;
 			
 		   Set inserted_draftProductId := @last_draftProductId;
 		   			   
 		   INSERT INTO draft_product_Variant(
 		   draftProductId,
-			`option_id_1`,
-			`option_id_2`,
-			`option_id_3`,
-			`option_id_4`,
-			`option_id_5`,
-			`option_id_6`,
-			`option_id_7`,
-			`option_id_8`,
 			`price`,
 			`compareAtPrice`,
 			`currencyCodeId`,
@@ -68,14 +79,6 @@ BEGIN
 			`sku`
 			)   
 		   SELECT inserted_draftProductId AS draftProductId,
-			NULL AS `option_id_1`,
-			NULL AS `option_id_2`,
-			NULL AS `option_id_3`,
-	      NULL AS `option_id_4`,
-			NULL AS `option_id_5`,
-			NULL AS `option_id_6`,
-			NULL AS `option_id_7`,
-			NULL AS `option_id_8`,
 			0 AS `price`,
 			0 AS `compareAtPrice`,
 			1 AS `currencyCodeId`,
@@ -84,23 +87,12 @@ BEGIN
 			
 		   SELECT pd.draftProductId INTO inserted_draftProductId FROM draft_product pd
 		    		WHERE pd.managerId=in_managerId AND pd.productId IS NULL
-		    			ORDER BY pd.updatedAt DESC LIMIT 1; 
-		    			
-				 SELECT * FROM draft_product pd
-    		WHERE pd.managerId=in_managerId AND pd.productId IS NULL
-    			ORDER BY pd.updatedAt DESC;
-    			
+		    			ORDER BY pd.updatedAt DESC LIMIT 1;
 	 END IF;
  Else
- SELECT 1;
    SELECT pd.draftProductId, pd.images_has_been_copied INTO inserted_draftProductId, stored_images_has_been_copied FROM draft_product pd
     		WHERE pd.managerId=in_managerId AND pd.productId=in_productId
     			ORDER BY pd.updatedAt DESC LIMIT 1;
-    			
-   SELECT * FROM draft_product pd
-    		WHERE pd.managerId=in_managerId AND pd.productId=in_productId
-    			ORDER BY pd.updatedAt DESC;
-    			
    IF inserted_draftProductId IS NULL
    Then
       SELECT 'IF inserted_draftProductId IS NULL';
@@ -110,7 +102,8 @@ BEGIN
 		`description`,
 		`descriptionHtml`,
 		`descriptionRawDraftContentState`,
-		published)
+		published,
+		orderNumber)
 		SELECT 
 		   in_managerId as managerId, p.productId, p.handle, p.title,
 			p.`product_category_id`,
@@ -118,7 +111,8 @@ BEGIN
 			p.`description`,
 			p.`descriptionHtml`,
 			p.`descriptionRawDraftContentState`,
-			p.published
+			p.published,
+			p.orderNumber
 		FROM 
 		   product p
 		WHERE
@@ -128,14 +122,6 @@ BEGIN
 		
 	   INSERT INTO draft_product_Variant(
 	   draftProductId,
-		`option_id_1`,
-		`option_id_2`,
-		`option_id_3`,
-		`option_id_4`,
-		`option_id_5`,
-		`option_id_6`,
-		`option_id_7`,
-		`option_id_8`,
 		`price`,
 		`compareAtPrice`,
 		`currencyCodeId`,
@@ -144,14 +130,6 @@ BEGIN
 		`imageId`,
 		`sku`)   
 	   SELECT inserted_draftProductId AS draftProductId,
-			`option_id_1`,
-			`option_id_2`,
-			`option_id_3`,
-			`option_id_4`,
-			`option_id_5`,
-			`option_id_6`,
-			`option_id_7`,
-			`option_id_8`,
 			`price`,
 			`compareAtPrice`,
 			`currencyCodeId`,

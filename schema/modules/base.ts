@@ -109,6 +109,7 @@ export const baseModule = createModule({
         manufacturerId: ID
         price: PriceInput
         published: Boolean
+        orderNumber: Int
         category: ProductCategoryIdInput
       }
       input ProductDescriptionInput {
@@ -135,6 +136,7 @@ export const baseModule = createModule({
         descriptionRawDraftContentState: String
         images: [ImageInfoInput]!
         published: Boolean
+        orderNumber: Int
       }
       type CheckoutUserError {
         field: String

@@ -22,6 +22,7 @@ export interface ProductInput {
   price: PriceInput;
   published: Boolean;
   category: ProductCategoryIdInput;
+  orderNumber: number;
 }
 export interface ProductCategoryIdInput {
   id: string;
