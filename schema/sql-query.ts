@@ -1,4 +1,3 @@
-
 export const sql = {
   cart: {
     getCheckoutQuery: `
@@ -12,7 +11,7 @@ export const sql = {
                     'image',
                         IF(image.imageId is not Null, Json_Object(
                         'imageId', image.imageId,
-                        'originalSrc', image.originalSrc,
+                        'imgSrc', image.imgSrc,
                         'imgSrc', image.imgSrc,
                         'width', image.width,
                         'height', image.height,

@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS `product_option_name` (
   UNIQUE KEY `name_unique` (`name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4;
 
--- Дамп данных таблицы github-next-js.product_option_name: ~3 rows (приблизительно)
+-- Дамп данных таблицы github-next-js.product_option_name: ~2 rows (приблизительно)
 /*!40000 ALTER TABLE `product_option_name` DISABLE KEYS */;
 INSERT IGNORE INTO `product_option_name` (`nameId`, `name`) VALUES
 	(5, 'Color'),

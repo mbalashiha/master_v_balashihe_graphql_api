@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS `product_option_name_value` (
   UNIQUE KEY `uniq_value_string` (`value`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4;
 
--- Дамп данных таблицы github-next-js.product_option_name_value: ~6 rows (приблизительно)
+-- Дамп данных таблицы github-next-js.product_option_name_value: ~5 rows (приблизительно)
 /*!40000 ALTER TABLE `product_option_name_value` DISABLE KEYS */;
 INSERT IGNORE INTO `product_option_name_value` (`valueId`, `value`) VALUES
 	(8, ''),

@@ -54,10 +54,10 @@ BEGIN
 		SET loop_imageId := NULL;
 		IF loop_imgSrc IS NOT NULL
 		Then
-			SELECT imageId INTO loop_imageId FROM image WHERE originalSrc=loop_imgSrc;
+			SELECT imageId INTO loop_imageId FROM image WHERE imgSrc=loop_imgSrc;
 			if loop_imageId IS NULL 
 			Then
-				INSERT INTO image(originalSrc, width, height, `FORMAT`) VALUES(loop_imgSrc, loop_width, loop_height,loop_format);
+				INSERT INTO image(imgSrc, width, height, `format`) VALUES(loop_imgSrc, loop_width, loop_height,loop_format);
 				SET loop_imageId := LAST_INSERT_ID();
 			END if;
 			
@@ -80,7 +80,7 @@ BEGIN
 			Then
 				DELETE dip, i
 					FROM draft_image_to_product dip
-					INNER JOIN draft_image i ON dip.draftImageId=i.draftImageId AND i.originalSrc=loop_imgSrc
+					INNER JOIN draft_image i ON dip.draftImageId=i.draftImageId AND i.imgSrc=loop_imgSrc
 					WHERE dip.draftProductId=in_draftProductId;
 			END IF;
 		END If;

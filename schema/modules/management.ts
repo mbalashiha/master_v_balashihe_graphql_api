@@ -67,6 +67,10 @@ export const managementModule = createModule({
   dirname: __dirname,
   typeDefs: [
     gql`
+      type ManagementProductConnection {
+        userErrors: [UserError]
+        nodes(offset: Int = 0, limit: Int = 250): [Product]
+      }
       type UploadedImagesConnection {
         images: UploadedImagesNodes
       }
@@ -110,7 +114,13 @@ export const managementModule = createModule({
       type HandleExistsResponse {
         exists: Boolean
       }
+      input ProductIdListInput {
+        idList: [ID!]!
+      }
       type Mutation {
+        deleteProducts(
+          productIdList: ProductIdListInput!
+        ): ManagementProductConnection
         productImagesUpdate(
           imagesInput: ImagesInfoInput!
         ): UploadedImagesResponse
@@ -130,13 +140,30 @@ export const managementModule = createModule({
           handle: String!
           productId: ID
         ): HandleExistsResponse
-        managementProducts(offset: Int, limit: Int): ProductConnection
+        managementProducts(offset: Int, limit: Int): ManagementProductConnection
         draftProduct(productId: ID): DraftProductConnection
         draftProductImages(productId: ID): UploadedImagesResponse
       }
     `,
   ],
   resolvers: {
+    ManagementProductConnection: {
+      nodes: async (parent, variables, _ctx, info: GraphQLResolveInfo) => {
+        try {
+          let offset = parseInt(variables.offset || parent.offset || 0);
+          let limit = parseInt(variables.limit || parent.limit || 250);
+          const products: any = await db.excuteQuery({
+            query: "select * from product Limit ?,?",
+            variables: [offset, limit],
+          });
+          return products;
+        } catch (e: any) {
+          console.error(e.stack || e.message || e);
+          debugger;
+          throw e;
+        }
+      },
+    },
     ExistingProductConnection: {
       response: async (
         parent,
@@ -266,7 +293,7 @@ export const managementModule = createModule({
           let images;
           if (draftProductId) {
             images = await db.excuteQuery({
-              query: `select i.*, i.originalSrc as imgSrc, i.existingImageId as imageId, ip.orderNumber
+              query: `select i.*, i.imgSrc as imgSrc, i.existingImageId as imageId, ip.orderNumber
                  from draft_product p
                  JOIN draft_image_to_product ip On p.draftProductId=ip.draftProductId
                  JOIN draft_image i On ip.draftImageId=i.draftImageId
@@ -276,7 +303,7 @@ export const managementModule = createModule({
             });
           } else if (productId) {
             images = await db.excuteQuery({
-              query: `select i.*, i.originalSrc as imgSrc, i.imageId, i.imageId as existingImageId, ip.orderNumber
+              query: `select i.*, i.imgSrc as imgSrc, i.imageId, i.imageId as existingImageId, ip.orderNumber
                  from product p
                  JOIN image_to_product ip On p.productId=ip.productId
                  JOIN image i On ip.imageId=i.imageId
@@ -400,6 +427,7 @@ export const managementModule = createModule({
           return { ...parent, ...variables };
         } catch (e: any) {
           console.error(e.stack || e.message);
+          debugger;
           throw e;
         }
       },
@@ -454,13 +482,19 @@ export const managementModule = createModule({
         if (!context.manager || !context.manager.id) {
           throw new GraphQLError("Manager Unauthorized");
         }
-        const { productId } = variables;
-        const { draftProductId } = await getExistingOrNewProductDraft(
-          context.manager.id,
-          productId
-        );
-        //check if the context.manager is null
-        return { ...parent, ...variables, draftProductId };
+        try {
+          const { productId } = variables;
+          const { draftProductId } = await getExistingOrNewProductDraft(
+            context.manager.id,
+            productId
+          );
+          //check if the context.manager is null
+          return { ...parent, ...variables, draftProductId };
+        } catch (e: any) {
+          console.error(e.stack || e.message || e);
+          debugger;
+          throw e;
+        }
       },
       managementProducts: async (
         _,
@@ -491,6 +525,39 @@ export const managementModule = createModule({
       },
     },
     Mutation: {
+      deleteProducts: async (
+        parent,
+        variables,
+        context,
+        info: GraphQLResolveInfo
+      ) => {
+        if (!context.manager || !context.manager.id) {
+          throw new Error("Manager Unauthorized");
+        }
+        try {
+          const { productIdList } = variables;
+          const idList: Array<string> = productIdList.idList;
+          if (!Array.isArray(idList)) {
+            throw new Error(
+              "id list argument should be an array of products id strings."
+            );
+          }
+          for (const productId of idList) {
+            if (productId) {
+              debugger;
+              await db.excuteQuery({
+                query: `call delete_product_with_backup(?)`,
+                variables: [productId],
+              });
+            }
+          }
+          return { ...variables };
+        } catch (e: any) {
+          console.error(e.stack || e.message);
+          debugger;
+          throw e;
+        }
+      },
       createProductCategory: async (
         parent,
         variables,
@@ -622,9 +689,9 @@ export const managementModule = createModule({
               Inner Join draft_product dp On 
                   dp.draftProductId=draft_image_to_product.draftProductId And dp.managerId=$managerId
               INNER JOIN draft_image ON 
-                  draft_image.originalSrc=$imgSrc And 
+                  draft_image.imgSrc=$imgSrc And 
                   draft_image.draftImageId=draft_image_to_product.draftImageId
-              Where draft_image.originalSrc=$imgSrc And draft_image_to_product.draftProductId=unhex($draftProductId)
+              Where draft_image.imgSrc=$imgSrc And draft_image_to_product.draftProductId=unhex($draftProductId)
           `,
               variables: {
                 ...image,
@@ -636,7 +703,7 @@ export const managementModule = createModule({
               query: `
             delete draft_image from draft_image 
               Where 
-                  draft_image.originalSrc=$imgSrc And
+                  draft_image.imgSrc=$imgSrc And
                   draft_image.draftImageId Not IN (select draftImageId from draft_image_to_product)
           `,
               variables: {

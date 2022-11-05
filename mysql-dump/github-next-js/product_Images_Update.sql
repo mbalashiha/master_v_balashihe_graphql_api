@@ -72,10 +72,10 @@ BEGIN
 			Then				
 			   SET loop_orderNumber := i+1;
 			END IF;
-			SELECT draftImageId INTO loop_draftImageId FROM draft_image WHERE originalSrc=loop_imgSrc;
+			SELECT draftImageId INTO loop_draftImageId FROM draft_image WHERE imgSrc=loop_imgSrc;
 			if loop_draftImageId IS NULL 
 			Then
-				INSERT INTO draft_image(originalSrc, width, height, FORMAT) VALUES(loop_imgSrc, loop_width, loop_height,loop_format);
+				INSERT INTO draft_image(imgSrc, width, height, FORMAT) VALUES(loop_imgSrc, loop_width, loop_height,loop_format);
 				SET loop_draftImageId := @last_draftImageId;
 			END if;		
 			if NOT EXISTS(SELECT 1 FROM draft_image_to_product d WHERE d.draftProductId=inserted_draftProductId AND d.draftImageId=loop_draftImageId)

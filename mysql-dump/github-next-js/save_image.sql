@@ -19,13 +19,13 @@ CREATE PROCEDURE `save_image`(
 	OUT `out_imageId` INT
 )
 BEGIN
-	DECLARE in_originalSrc TEXT;
+	DECLARE in_imgSrc TEXT;
 	DECLARE altText TEXT;
 	DECLARE width TEXT;
 	DECLARE height TEXT;
 	SET out_imageId := NULL;
-	SET in_originalSrc := JSON_UNQUOTE(JSON_EXTRACT(image_in_json, '$.originalSrc'));
-	SET in_originalSrc := If(in_originalSrc='' OR in_originalSrc='null', NULL, in_originalSrc);
+	SET in_imgSrc := JSON_UNQUOTE(JSON_EXTRACT(image_in_json, '$.imgSrc'));
+	SET in_imgSrc := If(in_imgSrc='' OR in_imgSrc='null', NULL, in_imgSrc);
 	
 	SET altText := JSON_UNQUOTE(JSON_EXTRACT(image_in_json, '$.altText'));
 	SET altText := If(altText='' OR altText='null', NULL, altText);
@@ -36,12 +36,12 @@ BEGIN
 	SET height := JSON_UNQUOTE(JSON_EXTRACT(image_in_json, '$.height'));
 	SET height := If(height='' OR height='null', NULL, height);
 	
-	If in_originalSrc IS NOT NULL
+	If in_imgSrc IS NOT NULL
 	Then
-		SELECT `imageId` INTO out_imageId FROM image WHERE `originalSrc`=in_originalSrc;
+		SELECT `imageId` INTO out_imageId FROM image WHERE `imgSrc`=in_imgSrc;
 		If out_imageId IS Null
 		Then
-			INSERT INTO image(originalSrc, altText, width, height) VALUES(in_originalSrc, altText, width, height);
+			INSERT INTO image(imgSrc, altText, width, height) VALUES(in_imgSrc, altText, width, height);
 			SET out_imageId := LAST_INSERT_ID();
 		END IF;
 	END If;

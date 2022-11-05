@@ -40,10 +40,11 @@ CREATE TABLE IF NOT EXISTS `draft_product` (
   CONSTRAINT `FK_draft_product_product` FOREIGN KEY (`productId`) REFERENCES `product` (`productId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Дамп данных таблицы github-next-js.draft_product: ~1 rows (приблизительно)
+-- Дамп данных таблицы github-next-js.draft_product: ~2 rows (приблизительно)
 /*!40000 ALTER TABLE `draft_product` DISABLE KEYS */;
 INSERT IGNORE INTO `draft_product` (`draftProductId`, `managerId`, `productId`, `handle`, `title`, `sku`, `product_category_id`, `manufacturerId`, `description`, `descriptionHtml`, `descriptionRawDraftContentState`, `createdAt`, `updatedAt`, `publishedAt`, `images_has_been_copied`, `published`, `orderNumber`) VALUES
-	(_binary 0x3099AA6F5C8111EDB4CE60A44C4F528E, 1, 21, '32234ffffffffffff323232/99', '99', NULL, 34, NULL, NULL, NULL, '{"blocks":[{"key":"93fvt","text":"","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}', '2022-11-04 23:42:31', '2022-11-04 23:42:31', NULL, 1, 1, 5);
+	(_binary 0x3099AA6F5C8111EDB4CE60A44C4F528E, 1, 21, '32234ffffffffffff323232/99', '99', NULL, 34, NULL, NULL, NULL, '{"blocks":[{"key":"93fvt","text":"","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}', '2022-11-04 23:42:31', '2022-11-04 23:42:31', NULL, 1, 1, 5),
+	(_binary 0x6B97E61E5D4811EDB3BA60A44C4F528E, 1, 15, 't-shirt', 'T-Shirt', NULL, 5, 16, NULL, NULL, '{"blocks":[{"key":"4uhlq","text":"","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}', '2022-11-05 23:28:36', '2022-11-05 23:28:36', NULL, NULL, 0, 1);
 /*!40000 ALTER TABLE `draft_product` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

@@ -17,6 +17,7 @@ export const baseModule = createModule({
   dirname: __dirname,
   typeDefs: [
     gql`
+      scalar Date
       type PageInfo {
         hasNextPage: Boolean
         hasPreviousPage: Boolean
@@ -44,10 +45,14 @@ export const baseModule = createModule({
       }
       type Image {
         imageId: ID
-        originalSrc: String
+        imgSrc: String
         altText: String
+        format: String
         height: Int
         width: Int
+        originalHeight: Int
+        originalWidth: Int
+        orderNumber: Int
         products: [Product]
       }
       type Option {
@@ -93,13 +98,19 @@ export const baseModule = createModule({
         description: String
         descriptionHtml: String
         descriptionRawDraftContentState: String
+        published: Boolean
+        orderNumber: Int
         vendor: String
         price: Price
         priceRange: PriceRange
         options: [ProductOption]
+        category: ProductCategoryId
         image: Image
         images(limit: Int): ImageConnection
         variants(limit: Int): VariantConnection
+        createdAt: Date
+        updatedAt: Date
+        publishedAt: Date
       }
       input ProductInput {
         productId: ID
@@ -415,7 +426,7 @@ export const baseModule = createModule({
         let offset = parseInt(variables.offset || parent.offset || 0);
         let limit = parseInt(variables.limit || parent.limit || 250);
         const products: any = await db.excuteQuery({
-          query: "select * from product Limit ?,?",
+          query: "select * from product Where published=1 Limit ?,?",
           variables: [offset, limit],
         });
         let pageInfo = {};
@@ -439,7 +450,8 @@ export const baseModule = createModule({
         variables.productId =
           variables.productId || parent.productId || variables.id;
         const products: any = await db.excuteQuery({
-          query: "select * from product Where productId=$productId",
+          query:
+            "select * from product Where published=1 And productId=$productId",
           variables,
         });
         return products[0];
@@ -470,7 +482,7 @@ export const baseModule = createModule({
           parent.imagesLimit = (variables && variables.limit) || 250;
           const nodes = await db.excuteQuery({
             query: `
-      select i2p.productId, i.imageId, i.originalSrc, i.width, i.height, i.altText, i.format 
+      select i2p.productId, i.imageId, i.imgSrc as imgSrc, i.width, i.height, i.altText, i.format 
         from image_to_product i2p 
           inner join image i on i.imageId=i2p.imageId
           where i2p.productId=$[productId]
@@ -490,7 +502,7 @@ export const baseModule = createModule({
           parent.imagesLimit = (variables && variables.limit) || 250;
           const nodes = await db.excuteQuery({
             query: `
-      select i2p.productId, i.imageId, i.originalSrc, i.width, i.height, i.altText, i.format 
+      select i2p.productId, i.imageId, i.imgSrc as imgSrc, i.width, i.height, i.altText, i.format 
         from image_to_product i2p 
           inner join image i on i.imageId=i2p.imageId
           where i2p.productId=$[productId]
@@ -563,7 +575,7 @@ export const baseModule = createModule({
             i.imageId as imageId,
             IF(i.imageId is not Null, Json_Object(
               'imageId', i.imageId,
-              'originalSrc', i.originalSrc,
+              'imgSrc', i.imgSrc,
               'width', i.width,
               'height', i.height,
               'altText', i.altText,

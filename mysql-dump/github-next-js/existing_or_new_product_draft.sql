@@ -154,7 +154,7 @@ BEGIN
 	 Then
 	 	
 		   SELECT 
-		   im.originalSrc,
+		   im.imgSrc,
 			im.`width`,
 			im.`height`,
 			im.`altText`,
@@ -165,7 +165,7 @@ BEGIN
 		   Inner JOIN image im ON ipr.imageId=im.imageId
 		   WHERE p.productId=in_productId;
 		   
-		INSERT INTO draft_image(originalSrc,
+		INSERT INTO draft_image(imgSrc,
 			`width`,
 			`height`,
 			`altText`,
@@ -174,7 +174,7 @@ BEGIN
 			existingImageId
 			)
 		SELECT 
-		   im.originalSrc,
+		   im.imgSrc,
 			im.`width`,
 			im.`height`,
 			im.`altText`,
