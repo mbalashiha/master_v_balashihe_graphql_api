@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS `deleted_product` (
   CONSTRAINT `FK_deleted_product_product_category` FOREIGN KEY (`product_category_id`) REFERENCES `product_category` (`product_category_id`) ON DELETE SET NULL ON UPDATE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Дамп данных таблицы github-next-js.deleted_product: ~27 rows (приблизительно)
+-- Дамп данных таблицы github-next-js.deleted_product: ~25 rows (приблизительно)
 /*!40000 ALTER TABLE `deleted_product` DISABLE KEYS */;
 INSERT IGNORE INTO `deleted_product` (`productId`, `handle`, `title`, `sku`, `product_category_id`, `manufacturerId`, `description`, `descriptionHtml`, `descriptionRawDraftContentState`, `createdAt`, `updatedAt`, `publishedAt`, `published`, `orderNumber`) VALUES
 	(13, 'cool-hat', 'Cool Hat', NULL, NULL, 16, 'The Next.js beanie has arrived! This embroidered beauty has a snug fit that ensures you\'re going to feel cozy and warm whatever you\'re doing. • 60% cotton, 40% acrylic• Breathable cotton blend• Form-fitting shape• One size fits most', '<meta charset="utf-8">\n<p data-mce-fragment="1">The Next.js beanie has arrived! This embroidered beauty has a snug fit that ensures you\'re going to feel cozy and warm whatever you\'re doing.</p>\n<p data-mce-fragment="1">• 60% cotton, 40% acrylic<br data-mce-fragment="1">• Breathable cotton blend<br data-mce-fragment="1">• Form-fitting shape<br data-mce-fragment="1">• One size fits most</p>\n<meta charset="utf-8">', NULL, '2022-03-26 19:02:09', '2022-03-26 19:02:09', NULL, NULL, NULL),

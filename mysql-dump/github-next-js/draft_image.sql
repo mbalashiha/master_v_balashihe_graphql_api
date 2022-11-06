@@ -31,10 +31,9 @@ CREATE TABLE IF NOT EXISTS `draft_image` (
   CONSTRAINT `FK_draft_image_image` FOREIGN KEY (`existingImageId`) REFERENCES `image` (`imageId`) ON DELETE SET NULL ON UPDATE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Дамп данных таблицы github-next-js.draft_image: ~3 rows (приблизительно)
+-- Дамп данных таблицы github-next-js.draft_image: ~2 rows (приблизительно)
 /*!40000 ALTER TABLE `draft_image` DISABLE KEYS */;
 INSERT IGNORE INTO `draft_image` (`draftImageId`, `imgSrc`, `width`, `height`, `altText`, `format`, `createdAt`, `updatedAt`, `existingImageId`, `originalWidth`, `originalHeight`) VALUES
-	(_binary 0x309B7ACE5C8111EDB4CE60A44C4F528E, '/uploads/drafts/20190122-183922-1548255657355-2821872.jpg', 3264, 2448, NULL, 'jpeg', '2022-10-21 19:12:58', '2022-11-04 23:42:31', 29, NULL, NULL),
 	(_binary 0x9B00EDFC53D711EDB34C60A44C4F528E, '/uploads/drafts/20190109-155341-1547137177679-2779201.jpg', 3264, 2448, NULL, 'jpeg', '2022-10-24 23:08:20', '2022-10-24 23:08:20', NULL, NULL, NULL),
 	(_binary 0xCF252D835AD611EDB47F60A44C4F528E, '/uploads/drafts/20190109-155332-1547137192237-2742885.jpg', 3264, 2448, NULL, 'jpeg', '2022-10-21 21:43:20', '2022-11-02 20:50:19', 38, NULL, NULL);
 /*!40000 ALTER TABLE `draft_image` ENABLE KEYS */;

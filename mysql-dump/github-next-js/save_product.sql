@@ -104,7 +104,7 @@ BEGIN
  #	JOIN draft_image_to_product dip ON p.draftProductId=dip.draftProductId
  #	  WHERE p.managerId=in_managerId AND ((in_productId IS NULL AND p.productId IS NULL) OR (in_productId IS NOT NULL AND p.productId=in_productId));
 	 
- SELECT p.productId AS productId, JSON_ARRAYAGG(JSON_OBJECT('imgSrc',i.originalSrc, 'imageId', i.imageId)) AS images 
+ SELECT p.productId AS productId, JSON_ARRAYAGG(JSON_OBJECT('imgSrc',i.imgSrc, 'imageId', i.imageId)) AS images 
  	FROM product p
  		LEFT JOIN image_to_product im ON im.productId=p.productId
  		LEFT JOIN image i ON i.imageId=im.imageId

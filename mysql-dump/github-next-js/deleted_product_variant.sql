@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `deleted_product_variant` (
   CONSTRAINT `FK_deleted_product_variant_deleted_product` FOREIGN KEY (`productId`) REFERENCES `deleted_product` (`productId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Дамп данных таблицы github-next-js.deleted_product_variant: ~38 rows (приблизительно)
+-- Дамп данных таблицы github-next-js.deleted_product_variant: ~36 rows (приблизительно)
 /*!40000 ALTER TABLE `deleted_product_variant` DISABLE KEYS */;
 INSERT IGNORE INTO `deleted_product_variant` (`variantId`, `productId`, `price`, `compareAtPrice`, `currencyCodeId`, `createdAt`, `updatedAt`, `imageId`, `sku`) VALUES
 	(27, 13, 20.0000, 30.0000, 3, '2022-03-26 19:22:02', '2022-03-26 19:22:02', 5, NULL),

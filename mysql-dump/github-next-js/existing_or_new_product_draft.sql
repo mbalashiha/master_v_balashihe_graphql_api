@@ -152,26 +152,15 @@ BEGIN
 	 
 	 IF stored_images_has_been_copied Is NULL And inserted_draftProductId IS NOT NULL
 	 Then
-	 	
-		   SELECT 
-		   im.imgSrc,
-			im.`width`,
-			im.`height`,
-			im.`altText`,
-			im.`format`,
-			im.createdAt
-		FROM product p
-		   Inner JOIN image_to_product ipr ON ipr.productId=p.productId
-		   Inner JOIN image im ON ipr.imageId=im.imageId
-		   WHERE p.productId=in_productId;
-		   
 		INSERT INTO draft_image(imgSrc,
 			`width`,
 			`height`,
 			`altText`,
 			`format`,
 			`createdAt`,
-			existingImageId
+			existingImageId,
+			originalWidth,
+			originalHeight
 			)
 		SELECT 
 		   im.imgSrc,
@@ -180,11 +169,13 @@ BEGIN
 			im.`altText`,
 			im.`format`,
 			im.createdAt,
-			im.imageId
+			im.imageId,
+			im.originalWidth,
+			im.originalHeight
 		FROM product p
 		   Inner JOIN image_to_product ipr ON ipr.productId=p.productId
 		   Inner JOIN image im ON ipr.imageId=im.imageId
-		   WHERE p.productId=in_productId AND im.originalSrc NOT IN (SELECT originalSrc FROM draft_image);
+		   WHERE p.productId=in_productId AND im.imgSrc NOT IN (SELECT imgSrc FROM draft_image);
 	   
 		INSERT INTO draft_image_to_product(draftImageId, draftProductId, orderNumber)
 		SELECT 
@@ -194,7 +185,7 @@ BEGIN
 		FROM product p
 		   Inner JOIN image_to_product ipr ON ipr.productId=p.productId
 			Inner JOIN image im On ipr.imageId=im.imageId
-		   Inner JOIN draft_image drim ON im.originalSrc=drim.originalSrc
+		   Inner JOIN draft_image drim ON im.imgSrc=drim.imgSrc
 		   WHERE p.productId=in_productId;
 	   UPDATE draft_product dp SET dp.images_has_been_copied=1 WHERE dp.draftProductId=inserted_draftProductId;
 	 END IF;
