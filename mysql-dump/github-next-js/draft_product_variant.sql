@@ -29,9 +29,11 @@ CREATE TABLE IF NOT EXISTS `draft_product_variant` (
   CONSTRAINT `FK_draft_product_variant_draft_product` FOREIGN KEY (`draftProductId`) REFERENCES `draft_product` (`draftProductId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Дамп данных таблицы github-next-js.draft_product_variant: ~1 rows (приблизительно)
+-- Дамп данных таблицы github-next-js.draft_product_variant: ~3 rows (приблизительно)
 /*!40000 ALTER TABLE `draft_product_variant` DISABLE KEYS */;
 INSERT IGNORE INTO `draft_product_variant` (`draftVariantId`, `draftProductId`, `price`, `compareAtPrice`, `currencyCodeId`, `createdAt`, `updatedAt`, `imageId`, `sku`) VALUES
+	(_binary 0x2F8B16345F8811EDBD1B60A44C4F528E, _binary 0x2F8ABE5F5F8811EDBD1B60A44C4F528E, 4.0000, NULL, 1, '2022-10-25 18:56:56', '2022-11-04 23:30:37', NULL, NULL),
+	(_binary 0x44D145215E7A11EDB3E860A44C4F528E, _binary 0x44D090D05E7A11EDB3E860A44C4F528E, 10.0000, NULL, 1, '2022-11-01 23:33:29', '2022-11-01 23:33:29', NULL, NULL),
 	(_binary 0x6B98577E5D4811EDB3BA60A44C4F528E, _binary 0x6B97E61E5D4811EDB3BA60A44C4F528E, 50.0000, NULL, 3, '2022-11-05 23:28:36', '2022-11-05 23:28:36', NULL, NULL);
 /*!40000 ALTER TABLE `draft_product_variant` ENABLE KEYS */;
 

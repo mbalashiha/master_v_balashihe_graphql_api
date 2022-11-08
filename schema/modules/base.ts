@@ -47,12 +47,14 @@ export const baseModule = createModule({
         imageId: ID
         imgSrc: String
         altText: String
-        format: String
         height: Int
         width: Int
-        originalHeight: Int
-        originalWidth: Int
         orderNumber: Int
+        originalWidth: Int
+        originalHeight: Int
+        pathOfOriginal: String
+        createdAt: String
+        updatedAt: String
         products: [Product]
       }
       type Option {
@@ -132,7 +134,7 @@ export const baseModule = createModule({
       input ImagesInfoInput {
         draftProductId: ID
         productId: ID
-        images: [ImageInfoInput]!
+        images: [ImageInput]!
       }
       input FullProductInput {
         productId: ID
@@ -145,7 +147,7 @@ export const baseModule = createModule({
         description: String!
         descriptionHtml: String!
         descriptionRawDraftContentState: String
-        images: [ImageInfoInput]!
+        images: [ImageInput]!
         published: Boolean
         orderNumber: Int
       }
@@ -201,22 +203,16 @@ export const baseModule = createModule({
         checkoutUserErrors: [CheckoutUserError]
         checkoutConnection: CheckoutConnection
       }
-      type ImageInfo {
-        imageId: ID
-        imgSrc: String
-        width: Int!
-        height: Int!
-        format: String
-        orderNumber: Int!
-        createdAt: String
-        updatedAt: String
-      }
-      input ImageInfoInput {
+      input ImageInput {
         imgSrc: String
         width: Int
         height: Int
         format: String
         orderNumber: Int
+        originalWidth: Int
+        originalHeight: Int
+        pathOfOriginal: String
+        altText: String
       }
       input ProductCategoryInput {
         id: ID

@@ -25,10 +25,13 @@ BEGIN
 	DECLARE test_imgSrc Text DEFAULT NULL;
 	DECLARE i INT UNSIGNED DEFAULT 0;
 	DECLARE loop_image JSON DEFAULT NULL;
-	DECLARE loop_imgSrc TINYTEXT DEFAULT NULL;
+	DECLARE loop_imgSrc MEDIUMTEXT DEFAULT NULL;
+	DECLARE loop_pathOfOriginal MEDIUMTEXT DEFAULT NULL;
 	DECLARE loop_width TINYTEXT DEFAULT NULL;
 	DECLARE loop_height TINYTEXT DEFAULT NULL;
 	DECLARE loop_format TINYTEXT DEFAULT NULL;
+	DECLARE loop_originalHeight TINYTEXT DEFAULT NULL;
+	DECLARE loop_originalWidth TINYTEXT DEFAULT NULL;
 	DECLARE loop_orderNumber TINYTEXT DEFAULT NULL;
 	DECLARE loop_draftImageId TINYTEXT DEFAULT NULL;
 	DECLARE imageId_set Text DEFAULT NULL;
@@ -40,12 +43,19 @@ BEGIN
 		SET loop_imgSrc := Json_unquote(JSON_extract(loop_image, "$.imgSrc"));
 		SET loop_imgSrc := IF(loop_imgSrc = '' OR loop_imgSrc = 'null', NULL, loop_imgSrc);	
 		
-		SET loop_width := Json_unquote(JSON_extract(loop_image, "$.width"));
-		SET loop_width := IF(loop_width = '' OR loop_width = 'null', NULL, loop_width);	
+		SET loop_pathOfOriginal := Json_unquote(JSON_extract(loop_image, "$.pathOfOriginal"));
+		SET loop_pathOfOriginal := IF(loop_pathOfOriginal = '' OR loop_pathOfOriginal = 'null', NULL, loop_pathOfOriginal);	
 		
+		SET loop_width := Json_unquote(JSON_extract(loop_image, "$.width"));
+		SET loop_width := IF(loop_width = '' OR loop_width = 'null', NULL, loop_width);		
 		SET loop_height := Json_unquote(JSON_extract(loop_image, "$.height"));
 		SET loop_height := IF(loop_height = '' OR loop_height = 'null', NULL, loop_height);	
-			
+		
+		SET loop_originalWidth := Json_unquote(JSON_extract(loop_image, "$.originalWidth"));
+		SET loop_originalWidth := IF(loop_originalWidth = '' OR loop_originalWidth = 'null', NULL, loop_originalWidth);		
+		SET loop_originalHeight := Json_unquote(JSON_extract(loop_image, "$.originalHeight"));
+		SET loop_originalHeight := IF(loop_originalHeight = '' OR loop_originalHeight = 'null', NULL, loop_originalHeight);	
+				
 		SET loop_format := Json_unquote(JSON_extract(loop_image, "$.format"));
 		SET loop_format := IF(loop_format = '' OR loop_format = 'null', NULL, loop_format);	
 				
@@ -57,7 +67,8 @@ BEGIN
 			SELECT imageId INTO loop_imageId FROM image WHERE imgSrc=loop_imgSrc;
 			if loop_imageId IS NULL 
 			Then
-				INSERT INTO image(imgSrc, width, height, `format`) VALUES(loop_imgSrc, loop_width, loop_height,loop_format);
+				INSERT INTO image(imgSrc, width, height, `format`, originalWidth, originalHeight, pathOfOriginal)
+					 VALUES(loop_imgSrc, loop_width, loop_height,loop_format, loop_originalWidth, loop_originalHeight, loop_pathOfOriginal);
 				SET loop_imageId := LAST_INSERT_ID();
 			END if;
 			
@@ -76,6 +87,10 @@ BEGIN
 			Else
 				UPDATE image_to_product d SET d.orderNumber=loop_orderNumber WHERE d.productId=in_insertedProductId AND d.imageId=loop_imageId;
 			END IF;
+			UPDATE image_to_product i2p
+							INNER JOIN image dim ON dim.imageId=i2p.imageId And dim.imgSrc != loop_imgSrc
+								SET i2p.orderNumber=loop_orderNumber+1
+								WHERE i2p.productId=in_insertedProductId And i2p.orderNumber=loop_orderNumber;
 			IF in_draftProductId IS NOT NULL
 			Then
 				DELETE dip, i

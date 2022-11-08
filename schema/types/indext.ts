@@ -1,4 +1,4 @@
-export interface ImageInfoInput {
+export interface ImageInput {
   imgSrc: string;
   width: number;
   height: number;
@@ -28,5 +28,5 @@ export interface ProductCategoryIdInput {
   id: string;
 }
 export interface FullProductInput extends ProductInput {
-  images: ImageInfoInput[];
+  images: ImageInput[];
 }

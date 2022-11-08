@@ -80,11 +80,11 @@ export const managementModule = createModule({
       }
       type RemovedImagesResponse {
         userErrors: [UserError]
-        removedImages: [ImageInfo]
+        removedImages: [Image]
         imagesConnection: UploadedImagesConnection
       }
       type UploadedImagesNodes {
-        nodes: [ImageInfo]
+        nodes: [Image]
       }
       type DraftProductResponse {
         draftProductId: ID

@@ -160,7 +160,8 @@ BEGIN
 			`createdAt`,
 			existingImageId,
 			originalWidth,
-			originalHeight
+			originalHeight,
+			pathOfOriginal
 			)
 		SELECT 
 		   im.imgSrc,
@@ -171,7 +172,8 @@ BEGIN
 			im.createdAt,
 			im.imageId,
 			im.originalWidth,
-			im.originalHeight
+			im.originalHeight,
+			im.pathOfOriginal
 		FROM product p
 		   Inner JOIN image_to_product ipr ON ipr.productId=p.productId
 		   Inner JOIN image im ON ipr.imageId=im.imageId

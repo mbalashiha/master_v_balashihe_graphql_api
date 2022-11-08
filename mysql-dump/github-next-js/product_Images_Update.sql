@@ -28,10 +28,13 @@ BEGIN
 	DECLARE test_draftProductId INT UNSIGNED DEFAULT NULL;
 	DECLARE test_quantity INT UNSIGNED DEFAULT NULL;
 	DECLARE i INT UNSIGNED DEFAULT 0;
+	DECLARE loop_imgSrc MEDIUMTEXT DEFAULT NULL;
 	DECLARE loop_image JSON DEFAULT NULL;
-	DECLARE loop_imgSrc TINYTEXT DEFAULT NULL;
+	DECLARE loop_pathOfOriginal MEDIUMTEXT DEFAULT NULL;
 	DECLARE loop_width TINYTEXT DEFAULT NULL;
 	DECLARE loop_height TINYTEXT DEFAULT NULL;
+	DECLARE loop_originalHeight TINYTEXT DEFAULT NULL;
+	DECLARE loop_originalWidth TINYTEXT DEFAULT NULL;
 	DECLARE loop_format TINYTEXT DEFAULT NULL;
 	DECLARE loop_orderNumber TINYTEXT DEFAULT NULL;
 	DECLARE try_id INT UNSIGNED DEFAULT NULL;
@@ -45,21 +48,27 @@ BEGIN
 		SELECT 1;
 	END IF;
 	Set i := 0;
-	SELECT JSON_EXTRACT(in_images, CONCAT('$[',i,']')) INTO loop_image;	
+	SELECT JSON_EXTRACT(in_images, CONCAT('$[',i,']')) INTO loop_image;
 	WHILE JSON_LENGTH(loop_image)		
 	DO
 		SET loop_imgSrc := Json_unquote(JSON_extract(loop_image, "$.imgSrc"));
 		SET loop_imgSrc := IF(loop_imgSrc = '' OR loop_imgSrc = 'null', NULL, loop_imgSrc);	
 		
-		SET loop_width := Json_unquote(JSON_extract(loop_image, "$.width"));
-		SET loop_width := IF(loop_width = '' OR loop_width = 'null', NULL, loop_width);	
+		SET loop_pathOfOriginal := Json_unquote(JSON_extract(loop_image, "$.pathOfOriginal"));
+		SET loop_pathOfOriginal := IF(loop_pathOfOriginal = '' OR loop_pathOfOriginal = 'null', NULL, loop_pathOfOriginal);	
 		
+		SET loop_width := Json_unquote(JSON_extract(loop_image, "$.width"));
+		SET loop_width := IF(loop_width = '' OR loop_width = 'null', NULL, loop_width);		
 		SET loop_height := Json_unquote(JSON_extract(loop_image, "$.height"));
 		SET loop_height := IF(loop_height = '' OR loop_height = 'null', NULL, loop_height);	
-			
-		SET loop_format := Json_unquote(JSON_extract(loop_image, "$.format"));
-		SET loop_format := IF(loop_format = '' OR loop_format = 'null', NULL, loop_format);	
+		
+		SET loop_originalWidth := Json_unquote(JSON_extract(loop_image, "$.originalWidth"));
+		SET loop_originalWidth := IF(loop_originalWidth = '' OR loop_originalWidth = 'null', NULL, loop_originalWidth);		
+		SET loop_originalHeight := Json_unquote(JSON_extract(loop_image, "$.originalHeight"));
+		SET loop_originalHeight := IF(loop_originalHeight = '' OR loop_originalHeight = 'null', NULL, loop_originalHeight);	
 				
+		SET loop_format := Json_unquote(JSON_extract(loop_image, "$.format"));
+		SET loop_format := IF(loop_format = '' OR loop_format = 'null', NULL, loop_format);
 		
 		SET test_imgSrc := NULL;
 		SET test_draftProductId := NULL;
@@ -75,7 +84,8 @@ BEGIN
 			SELECT draftImageId INTO loop_draftImageId FROM draft_image WHERE imgSrc=loop_imgSrc;
 			if loop_draftImageId IS NULL 
 			Then
-				INSERT INTO draft_image(imgSrc, width, height, FORMAT) VALUES(loop_imgSrc, loop_width, loop_height,loop_format);
+				INSERT INTO draft_image(imgSrc, width, height, `format`, originalWidth, originalHeight, pathOfOriginal)
+					 VALUES(loop_imgSrc, loop_width, loop_height,loop_format, loop_originalWidth, loop_originalHeight, loop_pathOfOriginal);
 				SET loop_draftImageId := @last_draftImageId;
 			END if;		
 			if NOT EXISTS(SELECT 1 FROM draft_image_to_product d WHERE d.draftProductId=inserted_draftProductId AND d.draftImageId=loop_draftImageId)
@@ -84,6 +94,10 @@ BEGIN
 			Else
 				UPDATE draft_image_to_product d SET d.orderNumber=loop_orderNumber WHERE d.draftProductId=inserted_draftProductId AND d.draftImageId=loop_draftImageId;
 			END IF;
+			UPDATE draft_image_to_product i2p
+							INNER JOIN draft_image dim ON dim.draftImageId=i2p.draftImageId AND dim.imgSrc != loop_imgSrc
+								SET i2p.orderNumber=loop_orderNumber+1
+								WHERE i2p.draftProductId=inserted_draftProductId And i2p.orderNumber=loop_orderNumber;
 		END If;
 		Set i := i + 1;
 	SELECT JSON_EXTRACT(in_images, CONCAT('$[',i,']')) INTO loop_image;
