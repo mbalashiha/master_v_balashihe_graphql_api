@@ -711,7 +711,29 @@ export const managementModule = createModule({
                 managerId: context.manager.id,
               },
             });
-            if (res2[0] && res2[0].affectedRows) {
+            const res3: Array<any> = await db.excuteQuery({
+              query: `
+            delete image from image 
+              Where 
+                  image.imgSrc=$imgSrc And
+                  image.imageId Not IN (select imageId from image_to_product)
+          `,
+              variables: {
+                ...image,
+                managerId: context.manager.id,
+              },
+            });
+            const rows1 = await db.excuteQuery({
+              query: `select im.* from image im Where im.imgSrc=$imgSrc And im.imageId In (select imageId from image_to_product)`,
+              variables: image,
+            });
+            const rows2 = await db.excuteQuery({
+              query: `
+                select dim.* from draft_image dim Where 
+                    dim.imgSrc=$imgSrc And dim.draftImageId In (select draftImageId from draft_image_to_product)`,
+              variables: image,
+            });
+            if (!rows1.length && !rows2.length) {
               removedImages.push(image);
             }
           }

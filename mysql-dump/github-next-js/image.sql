@@ -27,9 +27,9 @@ CREATE TABLE IF NOT EXISTS `image` (
   `pathOfOriginal` text DEFAULT NULL,
   PRIMARY KEY (`imageId`) USING BTREE,
   UNIQUE KEY `uniq_imgSrc` (`imgSrc`(100)) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=utf8mb4;
 
--- Дамп данных таблицы github-next-js.image: ~35 rows (приблизительно)
+-- Дамп данных таблицы github-next-js.image: ~57 rows (приблизительно)
 /*!40000 ALTER TABLE `image` DISABLE KEYS */;
 INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`) VALUES
 	(5, '/images/Hat-front-black__72990.1603748583.png', 2048, 2048, NULL, NULL, '2022-06-10 22:43:22', '2022-08-14 18:20:49', NULL, NULL, NULL),
@@ -68,7 +68,27 @@ INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `altText`, `
 	(38, '/uploads/drafts/20190109-155332-1547137192237-2742885.jpg', 3264, 2448, NULL, 'jpeg', '2022-10-21 21:43:20', '2022-10-21 21:43:20', NULL, NULL, NULL),
 	(39, '/uploads/drafts/20190109-155325-1547137204917-2851322.jpg', 3264, 2448, NULL, 'jpeg', '2022-10-21 21:43:20', '2022-10-21 21:43:20', NULL, NULL, NULL),
 	(40, '/uploads/drafts/20190122-183315-1548255518626-2543805.jpg', 2448, 3264, NULL, 'jpeg', '2022-10-23 20:57:00', '2022-10-23 20:57:00', NULL, NULL, NULL),
-	(41, '/uploads/drafts/120180802-162215-1533224898490-2695602.jpg', 2448, 3264, NULL, 'jpeg', '2022-10-23 20:57:00', '2022-10-23 20:57:00', NULL, NULL, NULL);
+	(41, '/uploads/drafts/120180802-162215-1533224898490-2695602.jpg', 2448, 3264, NULL, 'jpeg', '2022-10-23 20:57:00', '2022-10-23 20:57:00', NULL, NULL, NULL),
+	(42, '/uploads/drafts/balashikha-computer-master-120180802-162215-1533224898490-2695602.jpg', 3840, 5120, NULL, NULL, '2022-11-10 16:05:58', '2022-11-10 16:05:58', 2448, 3264, NULL),
+	(43, '/uploads/drafts/balashikha-computer-master-20190122-184158-1548255709387-2674673.jpg', 1620, 2160, NULL, NULL, '2022-11-10 16:05:58', '2022-11-10 16:05:58', 2448, 3264, NULL),
+	(44, '/uploads/drafts/balashikha-computer-master-sort-svgrepo-com-1667412435777-1166.svg', 3840, 3840, NULL, NULL, '2022-11-10 16:05:58', '2022-11-10 16:05:58', 489, 489, NULL),
+	(45, '/uploads/drafts/balashikha-computer-master-20190122-183919-1548255647195-2788447.jpg', 2880, 2160, NULL, NULL, '2022-11-10 16:05:58', '2022-11-10 16:05:58', 3264, 2448, NULL),
+	(46, '/uploads/drafts/balashikha-computer-master-20190122-183922-1548255657355-2821872.jpg', 2880, 2160, NULL, NULL, '2022-11-10 16:05:58', '2022-11-10 16:05:58', 3264, 2448, NULL),
+	(47, '/uploads/drafts/balashikha-computer-master-20190122-183821-1548255782314-2720820.jpg', 2880, 2160, NULL, NULL, '2022-11-10 16:05:58', '2022-11-10 16:05:58', 3264, 2448, NULL),
+	(48, '/uploads/drafts/balashikha-computer-master-20190122-183436-1548255561758-2914105.jpg', 3240, 4320, NULL, NULL, '2022-11-10 16:05:58', '2022-11-10 16:05:58', 2448, 3264, NULL),
+	(49, '/uploads/drafts/balashikha-computer-master-20190109-155341-1547137177679-2779201.jpg', 5760, 4320, NULL, NULL, '2022-11-10 16:05:58', '2022-11-10 16:05:58', 3264, 2448, NULL),
+	(50, '/uploads/drafts/balashikha-computer-master-20190109-155332-1547137192237-2742885.jpg', 5760, 4320, NULL, NULL, '2022-11-10 16:05:58', '2022-11-10 16:05:58', 3264, 2448, NULL),
+	(51, '/uploads/drafts/balashikha-computer-master-20190109-155325-1547137204917-2851322.jpg', 5760, 4320, NULL, NULL, '2022-11-10 16:05:58', '2022-11-10 16:05:58', 3264, 2448, NULL),
+	(52, '/uploads/drafts/balashikha-computer-master-20190122-183315-1548255518626-2543805.jpg', 3240, 4320, NULL, NULL, '2022-11-10 16:05:58', '2022-11-10 16:05:58', 2448, 3264, NULL),
+	(53, '/uploads/drafts/balashikha-computer-master-20190109-124304-1547137252170-2419720.jpg', 5760, 4320, NULL, NULL, '2022-11-10 16:05:58', '2022-11-10 16:05:58', 3264, 2448, NULL),
+	(54, '/uploads/drafts/balashikha-computer-master-20180802-164558-1533226412229-719093.jpg', 5760, 4320, NULL, NULL, '2022-11-10 16:05:58', '2022-11-10 16:05:58', 3264, 2448, NULL),
+	(55, '/uploads/drafts/balashikha-computer-master-20180802-164540-1533226123288-698292.jpg', 2880, 2160, NULL, NULL, '2022-11-10 16:05:58', '2022-11-10 16:05:58', 3264, 2448, NULL),
+	(56, '/uploads/drafts/balashikha-computer-master-20180521-080439-1526880297818-2271365.jpg', 1620, 2160, NULL, NULL, '2022-11-10 16:05:58', '2022-11-10 16:05:58', 2448, 3264, NULL),
+	(57, '/uploads/drafts/balashikha-computer-master-20190109-124249-1547137265575-2378789.jpg', 3240, 4320, NULL, NULL, '2022-11-10 16:05:58', '2022-11-10 16:05:58', 2448, 3264, NULL),
+	(58, '/uploads/drafts/draft-balashikha-computer-master-forum-image-1667929490000-5815.jpg', 7420, 3840, NULL, NULL, '2022-11-10 20:45:49', '2022-11-10 20:45:49', 400, 207, NULL),
+	(59, '/uploads/drafts/draft-balashikha-computer-master-content-uploads-41ova5sqn0l1-1477781790000-17228.jpg', 5754, 3840, NULL, NULL, '2022-11-10 20:45:49', '2022-11-10 20:45:49', 487, 325, NULL),
+	(60, '/uploads/uploads/drafts/drafts/balashikha-computer-master-20190109-155341-1547137177679-2779201.jpg', 5760, 4320, NULL, NULL, '2022-11-10 20:48:34', '2022-11-10 20:48:34', 3264, 2448, NULL),
+	(61, '/uploads/uploads/drafts/drafts/balashikha-computer-master-20190109-155325-1547137204917-2851322.jpg', 5760, 4320, NULL, NULL, '2022-11-10 20:48:34', '2022-11-10 20:48:34', 3264, 2448, NULL);
 /*!40000 ALTER TABLE `image` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

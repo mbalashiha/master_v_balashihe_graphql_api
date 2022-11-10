@@ -32,15 +32,13 @@ CREATE TABLE IF NOT EXISTS `draft_image` (
   CONSTRAINT `FK_draft_image_image` FOREIGN KEY (`existingImageId`) REFERENCES `image` (`imageId`) ON DELETE SET NULL ON UPDATE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Дамп данных таблицы github-next-js.draft_image: ~5 rows (приблизительно)
+-- Дамп данных таблицы github-next-js.draft_image: ~4 rows (приблизительно)
 /*!40000 ALTER TABLE `draft_image` DISABLE KEYS */;
 INSERT IGNORE INTO `draft_image` (`draftImageId`, `imgSrc`, `width`, `height`, `altText`, `format`, `createdAt`, `updatedAt`, `existingImageId`, `originalWidth`, `originalHeight`, `pathOfOriginal`) VALUES
-	(_binary 0x2F8C8FA85F8811EDBD1B60A44C4F528E, '/uploads/drafts/20190122-183922-1548255657355-2821872.jpg', 3264, 2448, NULL, 'jpeg', '2022-10-21 19:12:58', '2022-11-08 20:10:06', 29, NULL, NULL, NULL),
-	(_binary 0x2F8C97035F8811EDBD1B60A44C4F528E, '/uploads/drafts/20190122-183436-1548255561758-2914105.jpg', 2448, 3264, NULL, 'jpeg', '2022-10-21 19:39:20', '2022-11-08 20:10:06', 32, NULL, NULL, NULL),
-	(_binary 0x2F8C98885F8811EDBD1B60A44C4F528E, '/uploads/drafts/20190122-183821-1548255782314-2720820.jpg', 3264, 2448, NULL, 'jpeg', '2022-10-21 19:39:20', '2022-11-08 20:10:06', 34, NULL, NULL, NULL),
-	(_binary 0x798BF68B5F9C11EDBD1B60A44C4F528E, '/uploads/drafts/draft-content-uploads-41ova5sqn0l1-1477781790000-17228.jpg', 2158, 1440, NULL, NULL, '2022-11-08 22:35:20', '2022-11-08 22:35:20', NULL, 487, 325, '/originals-uploaded/original-content-uploads-41ova5sqn0l1-1477781790000-17228.jpg'),
-	(_binary 0x9B00EDFC53D711EDB34C60A44C4F528E, '/uploads/drafts/20190109-155341-1547137177679-2779201.jpg', 3264, 2448, NULL, 'jpeg', '2022-10-24 23:08:20', '2022-10-24 23:08:20', NULL, NULL, NULL, NULL),
-	(_binary 0xCF252D835AD611EDB47F60A44C4F528E, '/uploads/drafts/20190109-155332-1547137192237-2742885.jpg', 3264, 2448, NULL, 'jpeg', '2022-10-21 21:43:20', '2022-11-02 20:50:19', 38, NULL, NULL, NULL);
+	(_binary 0x439875CF612111EDB34760A44C4F528E, '/uploads/drafts/draft-balashikha-computer-master-forum-image-1667929490000-5815.jpg', 7420, 3840, NULL, NULL, '2022-11-10 20:45:49', '2022-11-10 20:58:25', 58, 400, 207, NULL),
+	(_binary 0x4399761A612111EDB34760A44C4F528E, '/uploads/drafts/draft-balashikha-computer-master-content-uploads-41ova5sqn0l1-1477781790000-17228.jpg', 5754, 3840, NULL, NULL, '2022-11-10 20:45:49', '2022-11-10 20:58:25', 59, 487, 325, NULL),
+	(_binary 0xFDE8C8D5611F11EDB34760A44C4F528E, '/uploads/uploads/drafts/drafts/balashikha-computer-master-20190109-155341-1547137177679-2779201.jpg', 5760, 4320, NULL, NULL, '2022-11-10 20:48:34', '2022-11-10 20:49:18', 60, 3264, 2448, NULL),
+	(_binary 0xFDE8D113611F11EDB34760A44C4F528E, '/uploads/uploads/drafts/drafts/balashikha-computer-master-20190109-155325-1547137204917-2851322.jpg', 5760, 4320, NULL, NULL, '2022-11-10 20:48:34', '2022-11-10 20:49:18', 61, 3264, 2448, NULL);
 /*!40000 ALTER TABLE `draft_image` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
