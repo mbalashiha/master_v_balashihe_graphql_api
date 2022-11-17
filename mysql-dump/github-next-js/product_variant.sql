@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS `product_variant` (
 INSERT IGNORE INTO `product_variant` (`variantId`, `productId`, `price`, `compareAtPrice`, `currencyCodeId`, `createdAt`, `updatedAt`, `imageId`, `sku`) VALUES
 	(46, 21, 4.0000, NULL, 1, '2022-10-25 18:56:56', '2022-11-04 23:30:37', NULL, NULL),
 	(64, 41, 10.0000, NULL, 1, '2022-11-01 23:33:29', '2022-11-01 23:33:29', NULL, NULL),
-	(68, 45, 13.0000, NULL, 1, '2022-11-01 23:44:39', '2022-11-01 23:44:39', NULL, NULL),
+	(68, 45, 16.0000, NULL, 1, '2022-11-01 23:44:39', '2022-11-13 16:31:49', NULL, NULL),
 	(70, 15, 50.0000, NULL, 3, '2022-11-05 23:28:36', '2022-11-05 23:28:36', NULL, NULL);
 /*!40000 ALTER TABLE `product_variant` ENABLE KEYS */;
 

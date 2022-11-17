@@ -93,7 +93,6 @@ export const managementModule = createModule({
         handle: String
         description: String
         descriptionHtml: String
-        descriptionRawDraftContentState: String
         vendor: String
         price: Price
         category: ProductCategoryId
@@ -184,29 +183,12 @@ export const managementModule = createModule({
           const product = (products && products[0]) || {
             productId: productId || null,
           };
-          if (
-            product.descriptionRawDraftContentState &&
-            typeof product.descriptionRawDraftContentState === "object"
-          ) {
-            product.descriptionRawDraftContentState = JSON.stringify(
-              product.descriptionRawDraftContentState
-            );
-          }
           product.price = {
             amount: product.amount || null,
             currencyCode: product.currencyCode ?? "RUB",
             currencyCodeId: product.currencyCodeId || "1",
           };
           product.draftProductId = null;
-          if (
-            product &&
-            product.descriptionRawDraftContentState &&
-            typeof product.descriptionRawDraftContentState === "object"
-          ) {
-            product.descriptionRawDraftContentState = JSON.stringify(
-              product.descriptionRawDraftContentState
-            );
-          }
           return product;
         } catch (e: any) {
           console.error(e.stack || e.message);
@@ -248,28 +230,11 @@ export const managementModule = createModule({
           const product = (products && products[0]) || {
             productId: productId || null,
           };
-          if (
-            product.descriptionRawDraftContentState &&
-            typeof product.descriptionRawDraftContentState === "object"
-          ) {
-            product.descriptionRawDraftContentState = JSON.stringify(
-              product.descriptionRawDraftContentState
-            );
-          }
           product.price = {
             amount: product.amount || null,
             currencyCode: product.currencyCode ?? "RUB",
             currencyCodeId: product.currencyCodeId || "1",
-          };
-          if (
-            product &&
-            product.descriptionRawDraftContentState &&
-            typeof product.descriptionRawDraftContentState === "object"
-          ) {
-            product.descriptionRawDraftContentState = JSON.stringify(
-              product.descriptionRawDraftContentState
-            );
-          }
+          };          
           return { draftProductId, ...product };
         } catch (e: any) {
           console.error(e.stack || e.message);
@@ -399,15 +364,6 @@ export const managementModule = createModule({
           }
           const product = (products && products[0]) || null;
           if (product) {
-            if (
-              product &&
-              product.descriptionRawDraftContentState &&
-              typeof product.descriptionRawDraftContentState === "object"
-            ) {
-              product.descriptionRawDraftContentState = JSON.stringify(
-                product.descriptionRawDraftContentState
-              );
-            }
             product.draftProductId = null;
             return product;
           } else return null;
@@ -711,18 +667,18 @@ export const managementModule = createModule({
                 managerId: context.manager.id,
               },
             });
-            const res3: Array<any> = await db.excuteQuery({
+            /** const res3: Array<any> = await db.excuteQuery({
               query: `
             delete image from image 
               Where 
-                  image.imgSrc=$imgSrc And
+                  image.imgSrc=$im//////gSrc And
                   image.imageId Not IN (select imageId from image_to_product)
           `,
               variables: {
                 ...image,
                 managerId: context.manager.id,
               },
-            });
+            }); **/
             const rows1 = await db.excuteQuery({
               query: `select im.* from image im Where im.imgSrc=$imgSrc And im.imageId In (select imageId from image_to_product)`,
               variables: image,
@@ -840,7 +796,6 @@ export const managementModule = createModule({
           return { draftProductId, productId };
         } catch (e: any) {
           console.error(e.stack || e.message);
-          debugger;
           throw e;
         }
       },
@@ -868,7 +823,7 @@ export const managementModule = createModule({
               (productId && parseInt(productId)) || null,
               descriptionInput.description || "",
               descriptionInput.descriptionHtml || "",
-              descriptionInput.descriptionRawDraftContentState || null,
+              null,
             ],
           });
           result = result && result[0] && result[0][0];
@@ -916,7 +871,7 @@ export const managementModule = createModule({
               productInput.price.currencyCodeId || null,
               productInput.description || "",
               productInput.descriptionHtml || "",
-              productInput.descriptionRawDraftContentState || null,
+              null,
               JSON.stringify(productInput.images || []),
               productInput.published ? 1 : 0,
               orderNumber || null,

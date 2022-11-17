@@ -32,10 +32,12 @@ CREATE PROCEDURE `save_product`(
 	IN `in_orderNumber` INT
 )
 BEGIN
+  DECLARE i INT Unsigned DEFAULT 0;  
  DECLARE stored_draftProductId BINARY(16) DEFAULT NULL;
  DECLARE stored_priceAmount DECIMAL(16,4) DEFAULT NULL;
  DECLARE stored_nullOptionsCount INT unsigned DEFAULT NULL;
  DECLARE stored_handle Text DEFAULT NULL;
+  
  SET in_managerId := IF(in_managerId='' OR in_managerId='null', NULL, in_managerId);
  SET in_productId := IF(in_productId='' OR in_productId='null', NULL, in_productId);
  SET in_title := IF(in_title='' OR in_title='null', NULL, in_title);
@@ -47,18 +49,18 @@ BEGIN
  SET in_description := IF(in_description='' OR in_description='null', NULL, in_description);
  SET in_descriptionHtml := IF(in_descriptionHtml='' OR in_descriptionHtml='null', NULL, in_descriptionHtml);
  SET in_descriptionRawDraftContentState := IF(in_descriptionRawDraftContentState='' OR in_descriptionRawDraftContentState='null', NULL, in_descriptionRawDraftContentState);
- 
- If in_orderNumber IS NULL
- Then
-   SELECT MAX(Coalesce(orderNumber,productId))+1 INTO in_orderNumber FROM product;
- END If;
+  
+ if in_orderNumber IS NULL OR in_orderNumber <= 0
+ then
+ 	signal sqlstate '45000' set message_text = 'No correct in_orderNumber';
+ END IF;
  
  if in_draftProductId IS NULL OR in_draftProductId = ''
  then
  	signal sqlstate '45000' set message_text = 'No in_draftProductId';
  END IF;
  
- SET stored_draftProductId := UNHEX(in_draftProductId);
+ CALL resort_products();
  
  IF in_productId IS NULL
  Then
@@ -74,6 +76,9 @@ BEGIN
 	  		published=in_published, orderNumber=in_orderNumber
 	  	WHERE productId=in_productId;
  END IF;
+ 
+ CALL resort_products();
+   
  SELECT Count(*), MIN(v.price) INTO stored_nullOptionsCount, stored_priceAmount FROM product_variant v WHERE v.productId=in_productId 
 	 GROUP BY v.productId;
  If stored_nullOptionsCount > 1

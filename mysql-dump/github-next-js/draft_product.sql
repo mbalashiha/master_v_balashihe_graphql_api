@@ -40,13 +40,13 @@ CREATE TABLE IF NOT EXISTS `draft_product` (
   CONSTRAINT `FK_draft_product_product` FOREIGN KEY (`productId`) REFERENCES `product` (`productId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Дамп данных таблицы github-next-js.draft_product: ~4 rows (приблизительно)
+-- Дамп данных таблицы github-next-js.draft_product: ~3 rows (приблизительно)
 /*!40000 ALTER TABLE `draft_product` DISABLE KEYS */;
 INSERT IGNORE INTO `draft_product` (`draftProductId`, `managerId`, `productId`, `handle`, `title`, `sku`, `product_category_id`, `manufacturerId`, `description`, `descriptionHtml`, `descriptionRawDraftContentState`, `createdAt`, `updatedAt`, `publishedAt`, `images_has_been_copied`, `published`, `orderNumber`) VALUES
-	(_binary 0x2F8ABE5F5F8811EDBD1B60A44C4F528E, 1, 21, '32234ffffffffffff323232/99', '99', NULL, 34, NULL, NULL, NULL, '{"blocks":[{"key":"93fvt","text":"","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}', '2022-11-08 20:10:06', '2022-11-08 20:10:06', NULL, 1, 1, 5),
-	(_binary 0x43974AB4612111EDB34760A44C4F528E, 1, 45, 'li22g4ht33weight-jacket4545420023432afsdf999234324355', '898224339234fsdfdsf993243455', NULL, 32, NULL, NULL, NULL, '{"blocks":[{"key":"16upo","text":"","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}', '2022-11-10 20:58:25', '2022-11-10 21:40:06', NULL, 1, 1, 6),
-	(_binary 0x6B97E61E5D4811EDB3BA60A44C4F528E, 1, 15, 't-shirt', 'T-Shirt', NULL, 5, 16, NULL, NULL, '{"blocks":[{"key":"4uhlq","text":"","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}', '2022-11-05 23:28:36', '2022-11-05 23:28:36', NULL, NULL, 0, 1),
-	(_binary 0xFDE785C8611F11EDB34760A44C4F528E, 1, 41, 'li22ghtweight-jacket4545420023432afsdf999234324355', '898229234fsdfdsf993243455', NULL, 32, NULL, NULL, NULL, '{"blocks":[{"key":"1oigs","text":"","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}', '2022-11-10 20:49:18', '2022-11-10 20:49:18', NULL, 1, 1, 4);
+	(_binary 0x75267585629311EDB37460A44C4F528E, 1, 21, '32234ffffffffffff323232/99', '99', NULL, 34, NULL, NULL, NULL, '', '2022-11-12 17:08:20', '2022-11-13 16:14:51', NULL, 1, 1, 1),
+	(_binary 0x7A1C7E20637111EDB3B560A44C4F528E, 1, 45, '5', '8ddcddcccxdfsdfdf455', NULL, 5, NULL, 'process.nextTick(() => setFieldValue("descriptiyuyuy\n\njkkkkkkkk09909032323232322323209329032093290903209092121212kkkkkjkiopijkl;jkmk98yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyuuuuuuuuuuuuuuu\n\nonHtml", descriptionHtml));', 'process.nextTick(() => setFieldValue("descriptiyuyuy\n\njkkkkkkkk09909032323232322323209329032093290903209092121212kkkkkjkiopijkl;jkmk98yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyuuuuuuuuuuuuuuu\n\nonHtml", descriptionHtml));', NULL, '2022-11-13 19:37:34', '2022-11-13 19:37:34', NULL, 1, 1, 3),
+	(_binary 0xA005640A629B11EDB37460A44C4F528E, 1, 41, 'li22ghtweight-jacket4545420023432afsdf999234324355', '898229234fsdfdsf993243455', NULL, 32, NULL, NULL, NULL, '', '2022-11-12 18:06:48', '2022-11-13 16:14:48', NULL, 1, 1, 4),
+	(_binary 0xEE592933629811EDB37460A44C4F528E, 1, 15, 't-shirt', 'T-Shirt', NULL, 5, 16, NULL, NULL, '', '2022-11-12 17:47:31', '2022-11-13 16:14:46', NULL, 1, 0, 3);
 /*!40000 ALTER TABLE `draft_product` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

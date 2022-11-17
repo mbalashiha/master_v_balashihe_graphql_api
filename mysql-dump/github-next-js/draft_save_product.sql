@@ -33,7 +33,6 @@ DECLARE stored_nullOptionsCount INT UNSIGNED DEFAULT NULL;
 DECLARE stored_draftProductId BINARY(16) DEFAULT NULL;
 DECLARE defaultOptionNameId INT UNSIGNED DEFAULT NULL;
 DECLARE defaultOptionValueId INT UNSIGNED DEFAULT NULL;
-
 SELECT v.valueId INTO defaultOptionValueId
 FROM product_option_name_value v
 WHERE v.value = '';
@@ -50,7 +49,6 @@ INSERT INTO product_option_name(`name`)
 VALUES('default');
 SET defaultOptionNameId := LAST_INSERT_ID();
 END IF;
-
 SET in_managerId := IF(
         in_managerId = ''
         OR in_managerId = 'null',
@@ -105,11 +103,8 @@ WHERE d.draftProductId = UNHEX(in_draftProductId)
     AND d.managerId = in_managerId
 ORDER BY d.updatedAt DESC
 LIMIT 1;
-
-	IF stored_draftProductId IS NULL 
-	THEN 
-		signal sqlstate '45000' set message_text = 'My Error Message';
-
+IF stored_draftProductId IS NULL THEN signal sqlstate '45000'
+set message_text = 'No draftProductId: it can not be Null.';
 ELSE
 UPDATE draft_product
 SET productId = in_productId,
@@ -118,7 +113,7 @@ SET productId = in_productId,
     product_category_id = in_category_id,
     manufacturerId = in_manufacturerId,
     published = in_published,
-    orderNumber=in_orderNumber
+    orderNumber = in_orderNumber
 WHERE draftProductId = stored_draftProductId;
 END IF;
 SELECT COUNT(*),
@@ -127,11 +122,10 @@ SELECT COUNT(*),
 FROM draft_product_variant v
 WHERE v.draftProductId = stored_draftProductId
 GROUP BY v.draftProductId;
-If stored_nullOptionsCount > 1 THEN 
-	DELETE v
-	FROM draft_product_variant v
-	WHERE v.draftProductId = stored_draftProductId;
-	SET stored_priceAmount := NULL;
+If stored_nullOptionsCount > 1 THEN DELETE v
+FROM draft_product_variant v
+WHERE v.draftProductId = stored_draftProductId;
+SET stored_priceAmount := NULL;
 END IF;
 IF stored_priceAmount IS NULL THEN
 INSERT INTO draft_product_variant(draftProductId, price, currencyCodeId)

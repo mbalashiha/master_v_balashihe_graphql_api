@@ -40,10 +40,10 @@ CREATE TABLE IF NOT EXISTS `product` (
 -- Дамп данных таблицы github-next-js.product: ~4 rows (приблизительно)
 /*!40000 ALTER TABLE `product` DISABLE KEYS */;
 INSERT IGNORE INTO `product` (`productId`, `handle`, `title`, `sku`, `product_category_id`, `manufacturerId`, `description`, `descriptionHtml`, `descriptionRawDraftContentState`, `createdAt`, `updatedAt`, `publishedAt`, `published`, `orderNumber`) VALUES
-	(15, 't-shirt', 'T-Shirt', NULL, 5, 16, NULL, NULL, '{"blocks":[{"key":"4uhlq","text":"","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}', '2022-03-26 19:02:09', '2022-11-05 23:28:36', NULL, 0, 1),
-	(21, '32234ffffffffffff323232/99', '99', NULL, 34, NULL, NULL, NULL, '{"blocks":[{"key":"93fvt","text":"","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}', '2022-10-25 18:56:56', '2022-11-04 23:36:44', NULL, 1, 5),
-	(41, 'li22ghtweight-jacket4545420023432afsdf999234324355', '898229234fsdfdsf993243455', NULL, 32, NULL, NULL, NULL, '{"blocks":[{"key":"1oigs","text":"","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}', '2022-11-01 23:33:29', '2022-11-10 20:49:18', NULL, 1, 4),
-	(45, 'li22g4ht33weight-jacket4545420023432afsdf999234324355', '898224339234fsdfdsf993243455', NULL, 32, NULL, NULL, NULL, '{"blocks":[{"key":"16upo","text":"","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}', '2022-11-01 23:44:39', '2022-11-10 16:05:58', NULL, 1, 1);
+	(15, 't-shirt', 'T-Shirt', NULL, 5, 16, NULL, NULL, '', '2022-03-26 19:02:09', '2022-11-13 16:14:13', NULL, 0, 2),
+	(21, '32234ffffffffffff323232/99', '99', NULL, 34, NULL, NULL, NULL, '', '2022-10-25 18:56:56', '2022-11-13 16:14:10', NULL, 1, 1),
+	(41, 'li22ghtweight-jacket4545420023432afsdf999234324355', '898229234fsdfdsf993243455', NULL, 32, NULL, NULL, NULL, '', '2022-11-01 23:33:29', '2022-11-13 16:14:08', NULL, 1, 4),
+	(45, '5', '8ddcddcccxdfsdfdf455', NULL, 5, NULL, 'process.nextTick(() => setFieldValue("descriptiyuyuy\n\njkkkkkkkk09909032323232322323209329032093290903209092121212kkkkkjkiopijkl;jkmk98yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyuuuuuuuuuuuuuuu\n\nonHtml", descriptionHtml));', 'process.nextTick(() => setFieldValue("descriptiyuyuy\n\njkkkkkkkk09909032323232322323209329032093290903209092121212kkkkkjkiopijkl;jkmk98yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyuuuuuuuuuuuuuuu\n\nonHtml", descriptionHtml));', NULL, '2022-11-01 23:44:39', '2022-11-13 19:36:59', NULL, 1, 3);
 /*!40000 ALTER TABLE `product` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

@@ -37,8 +37,8 @@ CREATE TABLE IF NOT EXISTS `draft_image` (
 INSERT IGNORE INTO `draft_image` (`draftImageId`, `imgSrc`, `width`, `height`, `altText`, `format`, `createdAt`, `updatedAt`, `existingImageId`, `originalWidth`, `originalHeight`, `pathOfOriginal`) VALUES
 	(_binary 0x439875CF612111EDB34760A44C4F528E, '/uploads/drafts/draft-balashikha-computer-master-forum-image-1667929490000-5815.jpg', 7420, 3840, NULL, NULL, '2022-11-10 20:45:49', '2022-11-10 20:58:25', 58, 400, 207, NULL),
 	(_binary 0x4399761A612111EDB34760A44C4F528E, '/uploads/drafts/draft-balashikha-computer-master-content-uploads-41ova5sqn0l1-1477781790000-17228.jpg', 5754, 3840, NULL, NULL, '2022-11-10 20:45:49', '2022-11-10 20:58:25', 59, 487, 325, NULL),
-	(_binary 0xFDE8C8D5611F11EDB34760A44C4F528E, '/uploads/uploads/drafts/drafts/balashikha-computer-master-20190109-155341-1547137177679-2779201.jpg', 5760, 4320, NULL, NULL, '2022-11-10 20:48:34', '2022-11-10 20:49:18', 60, 3264, 2448, NULL),
-	(_binary 0xFDE8D113611F11EDB34760A44C4F528E, '/uploads/uploads/drafts/drafts/balashikha-computer-master-20190109-155325-1547137204917-2851322.jpg', 5760, 4320, NULL, NULL, '2022-11-10 20:48:34', '2022-11-10 20:49:18', 61, 3264, 2448, NULL);
+	(_binary 0x764BCA1C629B11EDB37460A44C4F528E, '/uploads/drafts/balashikha-computer-master-avatar-nnm-Cutted-to-Squere-pirate-penguin-1644835172956-121540.jpg', 3840, 3840, NULL, NULL, '2022-11-12 18:05:38', '2022-11-12 18:05:38', NULL, 683, 683, '/originals/uploaded/balashikha-computer-master-avatar-nnm-Cutted-to-Squere-pirate-penguin-1644835172956-121540.jpg'),
+	(_binary 0x7EAFC2F062A311EDB37460A44C4F528E, '/uploads/drafts/balashikha-computer-master-avatar-nnm-another-copy-pinguine-pirate-1644835997144-299703.png', 3840, 3840, NULL, NULL, '2022-11-12 19:03:08', '2022-11-12 19:03:08', NULL, 678, 678, '/originals/uploaded/balashikha-computer-master-avatar-nnm-another-copy-pinguine-pirate-1644835997144-299703.png');
 /*!40000 ALTER TABLE `draft_image` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
