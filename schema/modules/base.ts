@@ -81,6 +81,7 @@ export const baseModule = createModule({
         createdAt: Date
         updatedAt: Date
         publishedAt: Date
+        breadcrumbs: [Breadcrumb]
       }
       input ProductInput {
         productId: ID
@@ -200,6 +201,7 @@ export const baseModule = createModule({
       type Breadcrumb {
         name: String!
         handle: String!
+        type: String
       }
       type ProductCategory {
         id: ID!
@@ -296,6 +298,57 @@ export const baseModule = createModule({
       },
     },
     Product: {
+      breadcrumbs: async (
+        parent,
+        variables,
+        _ctx,
+        info: GraphQLResolveInfo
+      ) => {
+        if (!parent.productId) {
+          throw new Error("Product breadcrumbs: no parent.productId");
+        }
+        try {
+          const rows: any = await db.excuteQuery({
+            query: `select p.*, cb.breadcrumbs, cb.uri_pathes from product p
+            Left Join product_category_breadcrumbs cb On cb.id=p.product_category_id
+              Where p.productId = $productId`,
+            variables: parent,
+          });
+          const product = rows[0];
+          const names = (product.breadcrumbs || "").split("/");
+          const handles = (product.uri_pathes || "").split(";");
+          const breadcrumbs: Array<{
+            name: string;
+            handle: string;
+            type?: string;
+          }> = [];
+          for (let i = 0; i < names.length; i++) {
+            if (!names[i] || !handles[i]) {
+              throw new Error(
+                "Incorrect breadcrumbs with names[i]: " +
+                  typeof names[i] +
+                  " and handles[i]: " +
+                  typeof handles[i]
+              );
+            }
+            breadcrumbs.push({
+              name: names[i],
+              handle: handles[i],
+              type: "product_category",
+            });
+          }
+          breadcrumbs.push({
+            name: product.title,
+            handle: product.handle,
+            type: "product",
+          });
+          return breadcrumbs;
+        } catch (e: any) {
+          console.error(e.stack || e.message || e);
+          debugger;
+          throw e;
+        }
+      },
       price: async (parent, variables, _ctx, info: GraphQLResolveInfo) => {
         try {
           let price = parent.price;

@@ -46,7 +46,7 @@ INSERT IGNORE INTO `draft_product` (`draftProductId`, `managerId`, `productId`, 
 	(_binary 0x75267585629311EDB37460A44C4F528E, 1, 21, '32234ffffffffffff323232/99', '99', NULL, 34, NULL, NULL, NULL, '', '2022-11-12 17:08:20', '2022-11-13 16:14:51', NULL, 1, 1, 1),
 	(_binary 0x7A1C7E20637111EDB3B560A44C4F528E, 1, 45, '5', '8ddcddcccxdfsdfdf455', NULL, 5, NULL, 'process.nextTick(() => setFieldValue("descriptiyuyuy\n\njkkkkkkkk09909032323232322323209329032093290903209092121212kkkkkjkiopijkl;jkmk98yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyuuuuuuuuuuuuuuu\n\nonHtml", descriptionHtml));', 'process.nextTick(() => setFieldValue("descriptiyuyuy\n\njkkkkkkkk09909032323232322323209329032093290903209092121212kkkkkjkiopijkl;jkmk98yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyuuuuuuuuuuuuuuu\n\nonHtml", descriptionHtml));', NULL, '2022-11-13 19:37:34', '2022-11-13 19:37:34', NULL, 1, 1, 3),
 	(_binary 0xA005640A629B11EDB37460A44C4F528E, 1, 41, 'li22ghtweight-jacket4545420023432afsdf999234324355', '898229234fsdfdsf993243455', NULL, 32, NULL, NULL, NULL, '', '2022-11-12 18:06:48', '2022-11-13 16:14:48', NULL, 1, 1, 4),
-	(_binary 0xEE592933629811EDB37460A44C4F528E, 1, 15, 't-shirt', 'T-Shirt', NULL, 5, 16, NULL, NULL, '', '2022-11-12 17:47:31', '2022-11-13 16:14:46', NULL, 1, 0, 3);
+	(_binary 0xEE592933629811EDB37460A44C4F528E, 1, 15, 't-shirt', 'T-Shirt', NULL, 5, 16, NULL, NULL, '', '2022-11-12 17:47:31', '2022-11-18 21:42:31', NULL, 1, 1, 3);
 /*!40000 ALTER TABLE `draft_product` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

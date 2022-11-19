@@ -152,7 +152,7 @@ export const managementModule = createModule({
           let offset = parseInt(variables.offset || parent.offset || 0);
           let limit = parseInt(variables.limit || parent.limit || 250);
           const products: any = await db.excuteQuery({
-            query: "select * from product Limit ?,?",
+            query: "select * from product_list Limit ?,?",
             variables: [offset, limit],
           });
           return products;
