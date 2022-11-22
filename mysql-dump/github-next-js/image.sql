@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS `image` (
   `pathOfOriginal` text DEFAULT NULL,
   PRIMARY KEY (`imageId`) USING BTREE,
   UNIQUE KEY `uniq_imgSrc` (`imgSrc`(100)) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=63 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=64 DEFAULT CHARSET=utf8mb4;
 
 -- Дамп данных таблицы github-next-js.image: ~53 rows (приблизительно)
 /*!40000 ALTER TABLE `image` DISABLE KEYS */;
@@ -89,7 +89,8 @@ INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `altText`, `
 	(59, '/uploads/drafts/draft-balashikha-computer-master-content-uploads-41ova5sqn0l1-1477781790000-17228.jpg', 5754, 3840, NULL, NULL, '2022-11-10 20:45:49', '2022-11-10 20:45:49', 487, 325, NULL),
 	(60, '/uploads/uploads/drafts/drafts/balashikha-computer-master-20190109-155341-1547137177679-2779201.jpg', 5760, 4320, NULL, NULL, '2022-11-10 20:48:34', '2022-11-10 20:48:34', 3264, 2448, NULL),
 	(61, '/uploads/uploads/drafts/drafts/balashikha-computer-master-20190109-155325-1547137204917-2851322.jpg', 5760, 4320, NULL, NULL, '2022-11-10 20:48:34', '2022-11-10 20:48:34', 3264, 2448, NULL),
-	(62, '/uploads/drafts/balashikha-computer-master-avatar-nnm-Cutted-to-Squere-pirate-penguin-1644835172956-121540.jpg', 3840, 3840, NULL, NULL, '2022-11-12 18:05:46', '2022-11-12 18:05:46', 683, 683, NULL);
+	(62, '/uploads/drafts/balashikha-computer-master-avatar-nnm-Cutted-to-Squere-pirate-penguin-1644835172956-121540.jpg', 3840, 3840, NULL, NULL, '2022-11-12 18:05:46', '2022-11-12 18:05:46', 683, 683, NULL),
+	(63, '/uploads/drafts/draft-balashikha-computer-master-files-publ-broken-screen-469x352-1477781754000-46259.jpg', 5116, 3839, NULL, NULL, '2022-11-21 01:07:08', '2022-11-21 01:07:08', 469, 352, NULL);
 /*!40000 ALTER TABLE `image` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

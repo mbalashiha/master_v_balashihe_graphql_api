@@ -23,13 +23,15 @@ CREATE TABLE IF NOT EXISTS `draft_image_to_product` (
   CONSTRAINT `FK_draft_image_to_product_draft_product` FOREIGN KEY (`draftProductId`) REFERENCES `draft_product` (`draftProductId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Дамп данных таблицы github-next-js.draft_image_to_product: ~4 rows (приблизительно)
+-- Дамп данных таблицы github-next-js.draft_image_to_product: ~6 rows (приблизительно)
 /*!40000 ALTER TABLE `draft_image_to_product` DISABLE KEYS */;
 INSERT IGNORE INTO `draft_image_to_product` (`draftProductId`, `draftImageId`, `orderNumber`) VALUES
 	(_binary 0xA005640A629B11EDB37460A44C4F528E, _binary 0x764BCA1C629B11EDB37460A44C4F528E, 1),
 	(_binary 0x75267585629311EDB37460A44C4F528E, _binary 0x7EAFC2F062A311EDB37460A44C4F528E, 1),
 	(_binary 0x7A1C7E20637111EDB3B560A44C4F528E, _binary 0x439875CF612111EDB34760A44C4F528E, 1),
-	(_binary 0x7A1C7E20637111EDB3B560A44C4F528E, _binary 0x4399761A612111EDB34760A44C4F528E, 2);
+	(_binary 0x7A1C7E20637111EDB3B560A44C4F528E, _binary 0x4399761A612111EDB34760A44C4F528E, 2),
+	(_binary 0x1F4F5FF968FE11EDB24160A44C4F528E, _binary 0xB806586A68FE11EDB24160A44C4F528E, 1),
+	(_binary 0x8C9B604C6A8111EDB2D960A44C4F528E, _binary 0xB806586A68FE11EDB24160A44C4F528E, 1);
 /*!40000 ALTER TABLE `draft_image_to_product` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

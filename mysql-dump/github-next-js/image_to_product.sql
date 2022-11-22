@@ -27,7 +27,8 @@ CREATE TABLE IF NOT EXISTS `image_to_product` (
 INSERT IGNORE INTO `image_to_product` (`productId`, `imageId`, `orderNumber`) VALUES
 	(45, 58, 1),
 	(45, 59, 2),
-	(41, 62, 1);
+	(41, 62, 1),
+	(47, 63, 1);
 /*!40000 ALTER TABLE `image_to_product` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

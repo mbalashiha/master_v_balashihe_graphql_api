@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `product_variant` (
   CONSTRAINT `FK_product_variant_image` FOREIGN KEY (`imageId`) REFERENCES `image` (`imageId`),
   CONSTRAINT `FK_product_variant_price_currency_code` FOREIGN KEY (`currencyCodeId`) REFERENCES `price_currency_code` (`currencyCodeId`),
   CONSTRAINT `FK_product_variant_product` FOREIGN KEY (`productId`) REFERENCES `product` (`productId`)
-) ENGINE=InnoDB AUTO_INCREMENT=71 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=72 DEFAULT CHARSET=utf8mb4;
 
 -- Дамп данных таблицы github-next-js.product_variant: ~4 rows (приблизительно)
 /*!40000 ALTER TABLE `product_variant` DISABLE KEYS */;
@@ -38,7 +38,8 @@ INSERT IGNORE INTO `product_variant` (`variantId`, `productId`, `price`, `compar
 	(46, 21, 4.0000, NULL, 1, '2022-10-25 18:56:56', '2022-11-04 23:30:37', NULL, NULL),
 	(64, 41, 10.0000, NULL, 1, '2022-11-01 23:33:29', '2022-11-01 23:33:29', NULL, NULL),
 	(68, 45, 16.0000, NULL, 1, '2022-11-01 23:44:39', '2022-11-13 16:31:49', NULL, NULL),
-	(70, 15, 50.0000, NULL, 3, '2022-11-05 23:28:36', '2022-11-05 23:28:36', NULL, NULL);
+	(70, 15, 50.0000, NULL, 3, '2022-11-05 23:28:36', '2022-11-05 23:28:36', NULL, NULL),
+	(71, 47, 1.0000, NULL, 1, '2022-11-21 01:07:08', '2022-11-21 01:07:08', NULL, NULL);
 /*!40000 ALTER TABLE `product_variant` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
