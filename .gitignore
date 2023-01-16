@@ -5,6 +5,8 @@
 /node_modules/**
 /build
 /build/**
+/.history
+/.history/**
 /.git
 /.git/**
 .env
