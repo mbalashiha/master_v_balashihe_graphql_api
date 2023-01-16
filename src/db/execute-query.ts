@@ -39,15 +39,17 @@ class MysqlDbWrapper {
     if (typeof query !== "string" || !query) {
       throw new Error("Sql query variable must be set as string.");
     }
-    const localReplacer = (_, mainGroup) => {
+    const localReplacer = (_: string, mainGroup: string) => {
       const tryNumberGroup =
-        (/^\d+$/im.test(mainGroup) && parseInt(mainGroup)) || undefined;
-      const queryKey = tryNumberGroup ? tryNumberGroup - 1 : mainGroup;
+        (/^\d+$/im.test(mainGroup.toString()) &&
+          parseInt(mainGroup.toString())) ||
+        undefined;
+      const queryKey: any = tryNumberGroup ? tryNumberGroup - 1 : mainGroup;
       const oneVariable =
         typeof variables[queryKey] !== "undefined"
           ? variables[queryKey]
-          : typeof variables[mainGroup] !== "undefined"
-          ? variables[mainGroup]
+          : typeof variables[mainGroup as any] !== "undefined"
+          ? variables[mainGroup as any]
           : undefined;
       if (Array.isArray(oneVariable) && oneVariable.length) {
         const variableArray = oneVariable;
@@ -152,7 +154,7 @@ class MysqlDbWrapper {
   config(config?: ConnectionConfig): ConnectionConfig {
     return this.db.config(config);
   }
-  query<T = Array<any>>(...args): Promise<T> {
+  query<T = Array<any>>(...args: any[]): Promise<T> {
     return this.db.query(...args) as any as Promise<T>;
   }
   end(): Promise<void> {

@@ -1,6 +1,5 @@
 import { createModule, gql } from "graphql-modules";
 import util from "util";
-import graphqlFields from "graphql-fields";
 import expressJwt from "express-jwt";
 import jwt from "jsonwebtoken";
 import db from "@src/db/execute-query";

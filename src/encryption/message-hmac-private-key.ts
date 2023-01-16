@@ -6,7 +6,7 @@ if (!privateKey) {
   throw new Error("No enviroment variable NEXT_PUBLIC_ADDI_KEY!");
 }
 export const CryptoFormatter = {
-  stringify: function (cipherParams) {
+  stringify: function (cipherParams: CryptoJS.lib.CipherParams) {
     // create json object with ciphertext
     const jsonArray: Array<any> = [];
     jsonArray.push(cipherParams.ciphertext.toString(CryptoJS.enc.Base64));
@@ -20,7 +20,7 @@ export const CryptoFormatter = {
     // stringify json object
     return encodeURIComponent(jsonArray.join(";"));
   },
-  parse: function (str) {
+  parse: function (str: string) {
     // parse json string
     const jsonArray = decodeURIComponent(str).split(";");
     // extract ciphertext from json object, and create cipher params object
@@ -38,7 +38,7 @@ export const CryptoFormatter = {
   },
 };
 
-export const simpleEncrypt = (str: string | object) => {
+export const simpleEncrypt = (str: string | CryptoJS.lib.WordArray) => {
   if (!privateKey) {
     throw new Error("No enviroment variable NEXT_PUBLIC_ADDI_KEY!");
   }
@@ -49,7 +49,7 @@ export const simpleEncrypt = (str: string | object) => {
     format: CryptoFormatter,
   }).toString();
 };
-export const simpleDecrypt = (str: string | object) => {
+export const simpleDecrypt = (str: string | CryptoJS.lib.CipherParams) => {
   if (!privateKey) {
     throw new Error("No enviroment variable NEXT_PUBLIC_ADDI_KEY!");
   }

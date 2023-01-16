@@ -1,4 +1,4 @@
-global.projectRoot = __dirname;
+(global as any).projectRoot = __dirname;
 
 process.on("uncaughtException", function (err) {
   console.error("\n\nUncaught exception: ", err);
@@ -29,9 +29,12 @@ import { managementModule } from "@modules/management";
 import { signInModule } from "@modules/management/sign-in";
 import loginMiddleware from "./login-middleware";
 import { nextTick } from "process";
-import managementLoginMiddleware, { managementSignoutMiddleware } from "./management-login-middleware";
+import managementLoginMiddleware, {
+  managementSignoutMiddleware,
+} from "./management-login-middleware";
 import { verifyManagementLoginMiddleware } from "./management-login-middleware";
 import { AuthRequest } from "@root/types/express-custom";
+import { IncomingMessage, OutgoingMessage, ServerResponse } from "http";
 
 const application = createApplication({
   modules: [baseModule, signInModule, managementModule],
@@ -61,38 +64,55 @@ app.use(cors(corsOptions));
 //   })
 // );
 app.use(cookieParser());
-const verifyCookieToken = (cookieTokenName: string) => (req, res, next) => {
-  const token = req.cookies[cookieTokenName] || "";
-  if (token) {
-    try {
-      (req as any)[cookieTokenName] = jwt.verify(
-        token,
-        process.env["JWT_SECRET"]!
-      );
-      res.cookie(cookieTokenName, token, {
-        httpOnly: true,
-        maxAge: 90 * 24 * 60 * 60 * 1000,
-        /// secure: true, //on HTTPS
-        /// domain: "localhost:4402", //set your domain
-      });
-    } catch (e) {
-      console.error("Authentication token is invalid, please log in");
-      res.cookie(cookieTokenName, "", {
-        httpOnly: true,
-        maxAge: 0,
-        // secure: true, //on HTTPS
-        // domain: "localhost:4402", //set your domain
-      });
+const verifyCookieToken =
+  (cookieTokenName: string) =>
+  (
+    req: IncomingMessage & { cookies: { [x: string]: string } },
+    res: OutgoingMessage & {
+      cookie: (
+        arg0: string,
+        arg1: string,
+        arg2: { httpOnly: boolean; maxAge: number }
+      ) => void;
+    },
+    next: () => any
+  ) => {
+    const token = req.cookies[cookieTokenName] || "";
+    if (token) {
+      try {
+        (req as any)[cookieTokenName] = jwt.verify(
+          token,
+          process.env["JWT_SECRET"]!
+        );
+        res.cookie(cookieTokenName, token, {
+          httpOnly: true,
+          maxAge: 90 * 24 * 60 * 60 * 1000,
+          /// secure: true, //on HTTPS
+          /// domain: "localhost:4402", //set your domain
+        });
+      } catch (e) {
+        console.error("Authentication token is invalid, please log in");
+        res.cookie(cookieTokenName, "", {
+          httpOnly: true,
+          maxAge: 0,
+          // secure: true, //on HTTPS
+          // domain: "localhost:4402", //set your domain
+        });
+      }
     }
-  }
-  return next();
-};
+    return next();
+  };
 app.use(verifyCookieToken("manager"));
 app.use(verifyCookieToken("client"));
 
-const rawBodySaver = (req, res, buf, encoding) => {
+const rawBodySaver: any = (
+  req: IncomingMessage & { rawBody?: string },
+  res: OutgoingMessage,
+  buf: string | Buffer,
+  encoding: BufferEncoding = "utf8"
+) => {
   if (buf && buf.length) {
-    req.rawBody = buf.toString(encoding || "utf8");
+    req.rawBody = buf.toString(encoding);
   }
 };
 // app.post(
@@ -102,14 +122,11 @@ const rawBodySaver = (req, res, buf, encoding) => {
 // );
 app.post(
   "/management/login",
-  bodyParser.raw({ verify: rawBodySaver, type: "*/*" }),
+  bodyParser.raw({ verify: rawBodySaver as any, type: "*/*" }),
   managementLoginMiddleware
 );
 app.get("/management/verify-login", verifyManagementLoginMiddleware);
-app.get(
-  "/management/sign-out",
-  managementSignoutMiddleware
-);
+app.get("/management/sign-out", managementSignoutMiddleware);
 app.use(
   "/graphql",
   graphqlHTTP((req, res, graphQLParams) => {

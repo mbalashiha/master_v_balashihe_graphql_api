@@ -1,6 +1,5 @@
 import { createModule, gql } from "graphql-modules";
 import util from "util";
-import graphqlFields from "graphql-fields";
 import expressJwt from "express-jwt";
 import jwt from "jsonwebtoken";
 import db from "@src/db/execute-query";
@@ -58,7 +57,7 @@ const getExistingOrNewProductDraft = async (
   }
   return { draftProductId };
 };
-function onlyUnique(value, index, self) {
+function onlyUnique(value: any, index: any, self: string | any[]) {
   return self.indexOf(value) === index;
 }
 
@@ -132,6 +131,9 @@ export const managementModule = createModule({
         saveProductDraftDescription(
           descriptionInput: ProductDescriptionInput!
         ): SaveDraftProductPayload
+        saveProductDescription(
+          descriptionInput: ProductDescriptionInput!
+        ): SaveProductDescriptionPayload
         saveProduct(productInput: FullProductInput!): ExistingProductConnection
       }
       type Query {
@@ -147,7 +149,7 @@ export const managementModule = createModule({
   ],
   resolvers: {
     ManagementProductConnection: {
-      nodes: async (parent, variables, _ctx, info: GraphQLResolveInfo) => {
+      nodes: async (parent: { offset: any; limit: any; }, variables: { offset: any; limit: any; }, _ctx: any, info: GraphQLResolveInfo) => {
         try {
           let offset = parseInt(variables.offset || parent.offset || 0);
           let limit = parseInt(variables.limit || parent.limit || 250);
@@ -165,9 +167,9 @@ export const managementModule = createModule({
     },
     ExistingProductConnection: {
       response: async (
-        parent,
-        variables,
-        context,
+        parent: any,
+        variables: { productId: any; },
+        context: any,
         info: GraphQLResolveInfo
       ) => {
         variables = { ...parent, ...variables };
@@ -199,9 +201,9 @@ export const managementModule = createModule({
     },
     DraftProductConnection: {
       response: async (
-        parent,
-        variables,
-        context,
+        parent: any,
+        variables: { productId: any; },
+        context: { manager: { id: any; }; },
         info: GraphQLResolveInfo
       ) => {
         variables = { ...parent, ...variables };
@@ -234,7 +236,7 @@ export const managementModule = createModule({
             amount: product.amount || null,
             currencyCode: product.currencyCode ?? "RUB",
             currencyCodeId: product.currencyCodeId || "1",
-          };          
+          };
           return { draftProductId, ...product };
         } catch (e: any) {
           console.error(e.stack || e.message);
@@ -244,7 +246,7 @@ export const managementModule = createModule({
       },
     },
     UploadedImagesNodes: {
-      nodes: async (parent, variables, context, info: GraphQLResolveInfo) => {
+      nodes: async (parent: any, variables: { productId: any; draftProductId: any; }, context: { manager: { id: any; }; }, info: GraphQLResolveInfo) => {
         if (!context.manager || !context.manager.id) {
           throw new GraphQLError("Manager Unauthorized");
         }
@@ -288,7 +290,7 @@ export const managementModule = createModule({
       },
     },
     UploadedImagesConnection: {
-      images: async (parent, variables, _ctx, info: GraphQLResolveInfo) => {
+      images: async (parent: any, variables: any, _ctx: any, info: GraphQLResolveInfo) => {
         try {
           return { ...parent, ...variables };
         } catch (e: any) {
@@ -299,9 +301,9 @@ export const managementModule = createModule({
     },
     UploadedImagesResponse: {
       imagesConnection: async (
-        parent,
-        variables,
-        context,
+        parent: any,
+        variables: any,
+        context: { manager: { id: any; }; },
         info: GraphQLResolveInfo
       ) => {
         try {
@@ -319,9 +321,9 @@ export const managementModule = createModule({
     },
     RemovedImagesResponse: {
       imagesConnection: async (
-        parent,
-        variables,
-        _ctx,
+        parent: any,
+        variables: any,
+        _ctx: any,
         info: GraphQLResolveInfo
       ) => {
         try {
@@ -332,9 +334,9 @@ export const managementModule = createModule({
         }
       },
       removedImages: async (
-        parent,
-        variables,
-        _ctx,
+        parent: { removedImages: any; },
+        variables: any,
+        _ctx: any,
         info: GraphQLResolveInfo
       ) => {
         try {
@@ -347,9 +349,9 @@ export const managementModule = createModule({
     },
     DraftProductResponse: {
       existingProduct: async (
-        parent,
-        variables,
-        _ctx,
+        parent: any,
+        variables: { productId: any; },
+        _ctx: any,
         info: GraphQLResolveInfo
       ) => {
         try {
@@ -374,9 +376,9 @@ export const managementModule = createModule({
         }
       },
       imagesConnection: async (
-        parent,
-        variables,
-        _ctx,
+        parent: any,
+        variables: any,
+        _ctx: any,
         info: GraphQLResolveInfo
       ) => {
         try {
@@ -387,7 +389,7 @@ export const managementModule = createModule({
           throw e;
         }
       },
-      category: async (parent, variables, _ctx, info: GraphQLResolveInfo) => {
+      category: async (parent: { category: { id: any; }; product_category_id: any; }, variables: any, _ctx: any, info: GraphQLResolveInfo) => {
         try {
           if (parent.category && parent.category.id) {
             return parent.category;
@@ -404,9 +406,9 @@ export const managementModule = createModule({
     },
     Query: {
       productHandleExists: async (
-        parent,
-        variables,
-        context,
+        parent: any,
+        variables: { productId: any; handle: any; },
+        context: any,
         info: GraphQLResolveInfo
       ) => {
         const { productId, handle } = variables;
@@ -430,9 +432,9 @@ export const managementModule = createModule({
         return { exists };
       },
       draftProduct: async (
-        parent,
-        variables,
-        context,
+        parent: any,
+        variables: { productId: any; },
+        context: { manager: { id: string | number; }; },
         info: GraphQLResolveInfo
       ) => {
         if (!context.manager || !context.manager.id) {
@@ -453,9 +455,9 @@ export const managementModule = createModule({
         }
       },
       managementProducts: async (
-        _,
-        variables,
-        context,
+        _: any,
+        variables: any,
+        context: { manager: { id: any; }; },
         info: GraphQLResolveInfo
       ) => {
         if (!context.manager || !context.manager.id) {
@@ -464,9 +466,9 @@ export const managementModule = createModule({
         return { ...variables };
       },
       draftProductImages: async (
-        _,
-        variables,
-        context,
+        _: any,
+        variables: { productId: any; },
+        context: { manager: { id: string | number; }; },
         info: GraphQLResolveInfo
       ) => {
         if (!context.manager || !context.manager.id) {
@@ -482,9 +484,9 @@ export const managementModule = createModule({
     },
     Mutation: {
       deleteProducts: async (
-        parent,
-        variables,
-        context,
+        parent: any,
+        variables: { productIdList: any; },
+        context: { manager: { id: any; }; },
         info: GraphQLResolveInfo
       ) => {
         if (!context.manager || !context.manager.id) {
@@ -515,9 +517,9 @@ export const managementModule = createModule({
         }
       },
       createProductCategory: async (
-        parent,
-        variables,
-        context,
+        parent: any,
+        variables: { categoryInput: { parentCategory: any; slugs: any; }; },
+        context: { manager: { id: any; }; },
         info: GraphQLResolveInfo
       ) => {
         if (!context.manager || !context.manager.id) {
@@ -616,9 +618,9 @@ export const managementModule = createModule({
         }
       },
       removeProductImage: async (
-        parent,
-        variables,
-        context,
+        parent: any,
+        variables: { imagesInput: { productId: any; images: any; }; },
+        context: { manager: { id: string | number; }; },
         info: GraphQLResolveInfo
       ) => {
         if (!context.manager || !context.manager.id) {
@@ -701,9 +703,9 @@ export const managementModule = createModule({
         }
       },
       productImagesUpdate: async (
-        parent,
-        variables,
-        context,
+        parent: any,
+        variables: { imagesInput: { productId: any; images: any; }; },
+        context: { manager: { id: any; }; },
         info: GraphQLResolveInfo
       ) => {
         if (!context.manager || !context.manager.id) {
@@ -739,9 +741,9 @@ export const managementModule = createModule({
         }
       },
       removeProductCategory: async (
-        parent,
-        variables,
-        context,
+        parent: any,
+        variables: any,
+        context: { manager: { id: any; }; },
         info: GraphQLResolveInfo
       ) => {
         if (!context.manager || !context.manager.id) {
@@ -760,9 +762,9 @@ export const managementModule = createModule({
         }
       },
       saveProductDraft: async (
-        parent,
-        variables,
-        context,
+        parent: any,
+        variables: { productInput: ProductInput; },
+        context: { manager: { id: string | number; }; },
         info: GraphQLResolveInfo
       ) => {
         if (!context.manager || !context.manager.id) {
@@ -800,9 +802,9 @@ export const managementModule = createModule({
         }
       },
       saveProductDraftDescription: async (
-        parent,
-        variables,
-        context,
+        parent: any,
+        variables: { descriptionInput: ProductInput; },
+        context: { manager: { id: string | number; }; },
         info: GraphQLResolveInfo
       ) => {
         if (!context.manager || !context.manager.id) {
@@ -835,9 +837,9 @@ export const managementModule = createModule({
         }
       },
       saveProduct: async (
-        parent,
-        variables,
-        context,
+        parent: any,
+        variables: { productInput: FullProductInput; },
+        context: { manager: { id: string | number; }; },
         info: GraphQLResolveInfo
       ) => {
         if (!context.manager || !context.manager.id) {

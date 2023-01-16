@@ -16,6 +16,7 @@ export type CurrencySearchElement = {
 };
 import "cross-fetch/polyfill";
 import Cache from "stale-lru-cache";
+import fetch from "cross-fetch";
 
 const getOneCurrency = (
   text: string,
@@ -101,7 +102,7 @@ export type CurrencyCourcesMap = Map<
   string,
   { currencyCode: string; cource: number }
 >;
-const needToRefresh = (currenciesEnv) =>
+const needToRefresh = (currenciesEnv: any) =>
   !currenciesEnv ||
   !currenciesEnv.currencies ||
   !currenciesEnv.currencies.size ||
@@ -115,7 +116,7 @@ export const getCurrencyCources = async (
     __dirname,
     `cache.${CURRENCIES_STORAGE_KEY}.json`
   );
-  let text;
+  let text = "";
   let currenciesEnv;
   const uri =
     typeof window !== "undefined" ? BROWSER_API_URL : CB_CURRENCIES_URL;
@@ -162,9 +163,11 @@ export const getCurrencyCources = async (
     text && text.indexOf(`<td>${searchByCurrencyCode}</td>`);
 
   const preResult: CurrencySearchElement[] = [];
-  if (currencyNameIndex >= 0) {
-    preResult.push(...getCurrencyBackward(text, currencyNameIndex).reverse());
-    preResult.push(...getCurrencyForward(text, currencyNameIndex));
+  if (typeof currencyNameIndex !== "undefined" && currencyNameIndex >= 0) {
+    preResult.push(
+      ...getCurrencyBackward(text, currencyNameIndex as any).reverse()
+    );
+    preResult.push(...getCurrencyForward(text, currencyNameIndex as any));
   }
   const resultMap: Map<string, { currencyCode: string; cource: number }> =
     new Map();
@@ -199,13 +202,13 @@ const cache = new Cache({
   maxSize: 100,
   maxAge: 6 * 60 * 60 * 1000,
   staleWhileRevalidate: 6 * 60 * 60 * 1000,
-  revalidate: async function (url, callback) {
+  revalidate: async function (url: string | URL | RequestInfo, callback) {
     try {
       if (
         !lastFetchErrorTimestamp ||
         Date.now() - lastFetchErrorTimestamp > 10 * 60 * 1000
       ) {
-        const resp = await fetch(url);
+        const resp = await fetch(url as any);
         if (resp.status !== 200) {
           callback(resp);
         } else {
@@ -219,11 +222,11 @@ const cache = new Cache({
     }
   },
 });
-cache.wrap(CURRENCIES_STORAGE_KEY, revalidate, function (error, html) {
+cache.wrap(CURRENCIES_STORAGE_KEY, revalidate as any, function (error, html) {
   // Do something with cached response
 });
 // Only called to fetch the initial response and when the item becomes stale
-async function revalidate(_, callback) {
+async function revalidate(_: never, callback: Function) {
   try {
     const map = await getCurrencyCources();
     return callback(null, map);
@@ -231,7 +234,10 @@ async function revalidate(_, callback) {
     return callback(e);
   }
 }
-export const normalizePriceCurrency = (price: any) => {
+export const normalizePriceCurrency = (price: {
+  amount: number | string;
+  currencyCode: string;
+}) => {
   const currencies = cache.get(
     CURRENCIES_STORAGE_KEY
   ) as any as CurrencyCourcesMap;
@@ -240,7 +246,7 @@ export const normalizePriceCurrency = (price: any) => {
     if (currency) {
       const cource = currency.cource;
       price.amount = (
-        parseFloat(cource as any) * parseFloat(price.amount)
+        parseFloat(cource as any) * parseFloat(price.amount.toString())
       ).toFixed(6);
       price.currencyCode = "RUB";
     }

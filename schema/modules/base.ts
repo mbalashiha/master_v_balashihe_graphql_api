@@ -1,6 +1,5 @@
 import { createModule, gql } from "graphql-modules";
 import util from "util";
-import graphqlFields from "graphql-fields";
 import db from "@src/db/execute-query";
 import { GraphQLResolveInfo } from "graphql";
 import { isPositiveInteger } from "@src/utils/type-checkers";
@@ -9,7 +8,7 @@ import { Console } from "console";
 import { normalizePriceCurrency } from "@src/utils/currency/converter";
 import { FullProductInput, ProductInput } from "@schema/types/indext";
 
-function onlyUnique(value, index, self) {
+function onlyUnique(value: any, index: any, self: string | any[]) {
   return self.indexOf(value) === index;
 }
 export const baseModule = createModule({
@@ -236,6 +235,9 @@ export const baseModule = createModule({
         userErrors: [UserError]
         draftProductId: ID!
       }
+      type SaveProductDescriptionPayload {
+        userErrors: [UserError]
+      }
       type SavedImages {
         imgSrc: String!
         imageId: ID!
@@ -270,7 +272,7 @@ export const baseModule = createModule({
       // },
     },
     Image: {
-      products: async (parent, variables, _ctx, info: GraphQLResolveInfo) => {
+      products: async (parent: any, variables: any, _ctx: any, info: GraphQLResolveInfo) => {
         try {
           const rows = await db.excuteQuery({
             query: `
@@ -287,7 +289,7 @@ export const baseModule = createModule({
       },
     },
     ProductConnection: {
-      nodes: async (parent, variables, _ctx, info: GraphQLResolveInfo) => {
+      nodes: async (parent: { offset: any; limit: any; }, variables: { offset: any; limit: any; }, _ctx: any, info: GraphQLResolveInfo) => {
         let offset = parseInt(variables.offset || parent.offset || 0);
         let limit = parseInt(variables.limit || parent.limit || 250);
         const products: any = await db.excuteQuery({
@@ -299,9 +301,9 @@ export const baseModule = createModule({
     },
     Product: {
       breadcrumbs: async (
-        parent,
-        variables,
-        _ctx,
+        parent: { productId: any; },
+        variables: any,
+        _ctx: any,
         info: GraphQLResolveInfo
       ) => {
         if (!parent.productId) {
@@ -349,7 +351,7 @@ export const baseModule = createModule({
           throw e;
         }
       },
-      price: async (parent, variables, _ctx, info: GraphQLResolveInfo) => {
+      price: async (parent: { price: any; }, variables: any, _ctx: any, info: GraphQLResolveInfo) => {
         try {
           let price = parent.price;
           if (typeof price === "string") {
@@ -366,7 +368,7 @@ export const baseModule = createModule({
           throw e;
         }
       },
-      image: async (parent, variables, _ctx, info: GraphQLResolveInfo) => {
+      image: async (parent: { image: any; }, variables: any, _ctx: any, info: GraphQLResolveInfo) => {
         try {
           if (parent.image && typeof parent.image === "string") {
             parent.image = JSON.parse(parent.image);
@@ -381,7 +383,7 @@ export const baseModule = createModule({
           throw e;
         }
       },
-      images: async (parent, variables, _ctx, info: GraphQLResolveInfo) => {
+      images: async (parent: { images: string | never[]; }, variables: any, _ctx: any, info: GraphQLResolveInfo) => {
         try {
           if (parent.images && typeof parent.images === "string") {
             parent.images = JSON.parse(parent.images);
@@ -393,7 +395,7 @@ export const baseModule = createModule({
           throw e;
         }
       },
-      vendor: async (parent, variables, _ctx, info: GraphQLResolveInfo) => {
+      vendor: async (parent: { vendor: any; }, variables: any, _ctx: any, info: GraphQLResolveInfo) => {
         try {
           return parent.vendor || null;
         } catch (e: any) {
@@ -404,16 +406,16 @@ export const baseModule = createModule({
     },
     CheckoutResponse: {
       checkoutConnection: async (
-        parent,
-        variables,
-        _ctx,
+        parent: any,
+        variables: any,
+        _ctx: any,
         info: GraphQLResolveInfo
       ) => {
         return { ...parent, ...variables };
       },
     },
     CheckoutConnection: {
-      checkout: async (parent, variables, _ctx, info: GraphQLResolveInfo) => {
+      checkout: async (parent: any, variables: any, _ctx: any, info: GraphQLResolveInfo) => {
         try {
           variables = { ...parent, ...variables };
           const checkoutRows: any = await db.excuteQuery({
@@ -448,7 +450,7 @@ export const baseModule = createModule({
       },
     },
     Checkout: {
-      totalPrice: async (parent, variables, _ctx, info: GraphQLResolveInfo) => {
+      totalPrice: async (parent: { totalPrice: any; }, variables: any, _ctx: any, info: GraphQLResolveInfo) => {
         try {
           if (typeof parent.totalPrice === "string") {
             parent.totalPrice = JSON.parse(parent.totalPrice);
@@ -466,7 +468,7 @@ export const baseModule = createModule({
           throw e;
         }
       },
-      lineItems: async (parent, variables, _ctx, info: GraphQLResolveInfo) => {
+      lineItems: async (parent: any, variables: any, _ctx: any, info: GraphQLResolveInfo) => {
         const obj = { ...parent, ...variables };
         if (obj.lineItemsJson && typeof obj.lineItemsJson === "string") {
           obj.lineItems = JSON.parse(obj.lineItemsJson);
@@ -480,7 +482,7 @@ export const baseModule = createModule({
       },
     },
     LineItemConnection: {
-      nodes: async (parent, variables, _ctx, info: GraphQLResolveInfo) => {
+      nodes: async (parent: { lineItems: any; checkoutId: any; id: any; offset: any; limit: any; }, variables: { offset: number; limit: number; checkoutId: any; id: any; }, _ctx: any, info: GraphQLResolveInfo) => {
         variables.offset = variables.offset || 0;
         variables.limit = variables.limit || 250;
         parent = { ...parent, ...variables };
@@ -502,7 +504,7 @@ export const baseModule = createModule({
               query: sql.cart.getCheckoutQuery,
               variables,
             });
-            const checkoutResult = lineItems;
+            const checkoutResult: any = lineItems as any;
             if (checkoutResult) {
               if (checkoutResult.subtotalPrice) {
                 checkoutResult.subtotalPrice = normalizePriceCurrency(
@@ -524,7 +526,7 @@ export const baseModule = createModule({
           parent.offset,
           parent.offset + parent.limit
         );
-        sliced.forEach((element) => {
+        sliced.forEach((element: { checkoutId: any; image: string; }) => {
           element.checkoutId = parent.checkoutId || variables.checkoutId;
           if (typeof element.image === "string") {
             element.image = JSON.parse(element.image);
@@ -534,7 +536,7 @@ export const baseModule = createModule({
       },
     },
     LineItem: {
-      product: async (parent, variables, _ctx, info: GraphQLResolveInfo) => {
+      product: async (parent: any, variables: any, _ctx: any, info: GraphQLResolveInfo) => {
         try {
           const nodes: any = await db.excuteQuery({
             query: `select p.*
@@ -549,7 +551,7 @@ export const baseModule = createModule({
           throw e;
         }
       },
-      title: async (parent, variables, _ctx, info: GraphQLResolveInfo) => {
+      title: async (parent: any, variables: any, _ctx: any, info: GraphQLResolveInfo) => {
         try {
           const nodes: any = await db.excuteQuery({
             query: `select Coalesce(p.title, v.sku) title 
@@ -568,9 +570,9 @@ export const baseModule = createModule({
     },
     ProductCategory: {
       productsCount: async (
-        parent,
-        variables,
-        _ctx,
+        parent: { productsCount: any; },
+        variables: any,
+        _ctx: any,
         info: GraphQLResolveInfo
       ) => {
         try {
@@ -581,9 +583,9 @@ export const baseModule = createModule({
         }
       },
       breadcrumbs: async (
-        parent,
-        variables,
-        _ctx,
+        parent: { breadcrumbs: any; uri_pathes: any; },
+        variables: any,
+        _ctx: any,
         info: GraphQLResolveInfo
       ) => {
         try {
@@ -610,9 +612,9 @@ export const baseModule = createModule({
     },
     RemovedCategoryResponse: {
       categoriesConnection: async (
-        parent,
-        variables,
-        _ctx,
+        parent: any,
+        variables: any,
+        _ctx: any,
         info: GraphQLResolveInfo
       ) => {
         try {
@@ -625,9 +627,9 @@ export const baseModule = createModule({
     },
     ProductsCategoriesResponse: {
       categoriesConnection: async (
-        parent,
-        variables,
-        _ctx,
+        parent: any,
+        variables: any,
+        _ctx: any,
         info: GraphQLResolveInfo
       ) => {
         try {
@@ -639,7 +641,7 @@ export const baseModule = createModule({
       },
     },
     ProductsCategoriesConnection: {
-      nodes: async (parent, variables, _ctx, info: GraphQLResolveInfo) => {
+      nodes: async (parent: any, variables: any, _ctx: any, info: GraphQLResolveInfo) => {
         try {
           const nodes = await db.excuteQuery({
             query: `select *
@@ -654,9 +656,9 @@ export const baseModule = createModule({
     },
     Mutation: {
       checkoutLineItemsRemove: async (
-        _,
-        variables,
-        _ctx,
+        _: any,
+        variables: { lineItemIds: any; checkoutId?: any; },
+        _ctx: any,
         info: GraphQLResolveInfo
       ) => {
         try {
@@ -677,9 +679,9 @@ export const baseModule = createModule({
         }
       },
       checkoutLineItemsUpdate: async (
-        _,
-        variables,
-        _ctx,
+        _: any,
+        variables: { input: any; },
+        _ctx: any,
         info: GraphQLResolveInfo
       ) => {
         try {
@@ -703,9 +705,9 @@ export const baseModule = createModule({
         }
       },
       checkoutLineItemsAdd: async (
-        _,
-        variables,
-        _ctx,
+        _: any,
+        variables: { input: any; },
+        _ctx: any,
         info: GraphQLResolveInfo
       ) => {
         const input = variables.input || variables || {};
@@ -740,17 +742,17 @@ export const baseModule = createModule({
         return "Hello world!";
       },
       productsCategories: async (
-        _,
-        variables,
-        _ctx,
+        _: any,
+        variables: any,
+        _ctx: any,
         info: GraphQLResolveInfo
       ) => {
         return { ..._, ...variables };
       },
       priceCurrencyCodes: async (
-        _,
-        variables,
-        _ctx,
+        _: any,
+        variables: any,
+        _ctx: any,
         info: GraphQLResolveInfo
       ) => {
         const codes = await db.excuteQuery({
@@ -758,7 +760,7 @@ export const baseModule = createModule({
         });
         return { nodes: codes };
       },
-      productByHandle: async (_, variables, _ctx, info: GraphQLResolveInfo) => {
+      productByHandle: async (_: any, variables: { handle: any; }, _ctx: any, info: GraphQLResolveInfo) => {
         const { handle } = variables;
         const products: any = await db.excuteQuery({
           query: "select * from product_view where handle=?",
@@ -766,10 +768,10 @@ export const baseModule = createModule({
         });
         return products[0];
       },
-      products: async (_, variables, _ctx, info: GraphQLResolveInfo) => {
+      products: async (_: any, variables: any, _ctx: any, info: GraphQLResolveInfo) => {
         return { ...variables };
       },
-      checkout: async (_, variables, _ctx, info: GraphQLResolveInfo) => {
+      checkout: async (_: any, variables: { id: any; checkoutId: any; }, _ctx: any, info: GraphQLResolveInfo) => {
         if (variables.id && !variables.checkoutId) {
           variables.checkoutId = variables.id;
         }

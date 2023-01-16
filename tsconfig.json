@@ -1,18 +1,21 @@
 {
   "compilerOptions": {
-    "target": "ES6",
-    "lib": ["ES6", "esnext", "dom"],
-    "skipLibCheck": true,
-    // "lib": ["dom", "dom.iterable", "esnext"],
-    "downlevelIteration": true,
-    "importHelpers": true,
+    "target": "es5",
+    "lib": ["ESNext"],
     "allowJs": true,
-    "noEmit": false,
-    "noEmitOnError": false,
-    "sourceMap": true,
-    // "outFile": "./",                       /* Concatenate and emit output to single file. */
+    "skipLibCheck": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "baseUrl": "." /* Concatenate and emit output to single file. */,
     "outDir": "./build",
-    "baseUrl": "./",
     "paths": {
       "@src": ["src"],
       "@src/*": ["src/*"],
@@ -22,18 +25,8 @@
       "@schema/*": ["schema/*"],
       "@modules": ["schema/modules"],
       "@modules/*": ["schema/modules/*"]
-    },
-    "noImplicitAny": false,
-    "strict": true,
-    "forceConsistentCasingInFileNames": false,
-    "esModuleInterop": true,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "preserve",
-    "incremental": true
+    }
   },
   "include": ["**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", ".history", ".git"]
 }

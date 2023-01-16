@@ -12,12 +12,16 @@ module.exports = merge(common, {
   module: {
     rules: [
       {
-        test: /\.ts$/,
-        enforce: "pre",
-        loader: "ts-loader",
-        options: {
-          configFile: "tsconfig.prod.json",
-        },
+        test: /\.tsx?$/,
+        exclude: /node_modules/,
+        use: [
+          {
+            loader: "ts-loader",
+            options: {
+              compilerOptions: { noEmit: false },
+            },
+          },
+        ],
       },
     ],
   },
