@@ -22,13 +22,11 @@ import excuteQuery from "@src/db/execute-query";
 import fsa from "fs/promises";
 import fs from "fs";
 import path from "path";
-import { makeExecutableSchema } from "@graphql-tools/schema";
 import { createApplication } from "graphql-modules";
 import { baseModule } from "@modules/base";
 import { managementModule } from "@modules/management";
+import { blogArticlesModule } from "@modules/blog";
 import { signInModule } from "@modules/management/sign-in";
-import loginMiddleware from "./login-middleware";
-import { nextTick } from "process";
 import managementLoginMiddleware, {
   managementSignoutMiddleware,
 } from "./management-login-middleware";
@@ -37,7 +35,7 @@ import { AuthRequest } from "@root/types/express-custom";
 import { IncomingMessage, OutgoingMessage, ServerResponse } from "http";
 
 const application = createApplication({
-  modules: [baseModule, signInModule, managementModule],
+  modules: [baseModule, signInModule, managementModule, blogArticlesModule],
 });
 const execute = application.createExecution();
 const schema = application.schema;
@@ -146,8 +144,8 @@ app.use(
 console.log("express index.js file is executed!");
 // true if file is executed
 
-app.listen(4402, "localhost", () => {
-  console.log("Running a GraphQL API server at http://localhost:4402/graphql");
+app.listen(4402, () => {
+  console.log("Running a GraphQL API server at http://:4402/graphql");
 });
 // } else {
 //   console.log("express index.js file is NOT executed");

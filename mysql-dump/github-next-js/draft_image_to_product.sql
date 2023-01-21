@@ -1,13 +1,15 @@
 -- --------------------------------------------------------
 -- Хост:                         127.0.0.1
--- Версия сервера:               10.5.9-MariaDB - mariadb.org binary distribution
+-- Версия сервера:               10.10.2-MariaDB - mariadb.org binary distribution
 -- Операционная система:         Win64
--- HeidiSQL Версия:              11.2.0.6213
+-- HeidiSQL Версия:              12.3.0.6589
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
 /*!50503 SET NAMES utf8mb4 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
@@ -21,19 +23,18 @@ CREATE TABLE IF NOT EXISTS `draft_image_to_product` (
   KEY `FK_draft_image_to_product_draft_image` (`draftImageId`),
   CONSTRAINT `FK_draft_image_to_product_draft_image` FOREIGN KEY (`draftImageId`) REFERENCES `draft_image` (`draftImageId`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_draft_image_to_product_draft_product` FOREIGN KEY (`draftProductId`) REFERENCES `draft_product` (`draftProductId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Дамп данных таблицы github-next-js.draft_image_to_product: ~6 rows (приблизительно)
-/*!40000 ALTER TABLE `draft_image_to_product` DISABLE KEYS */;
 INSERT IGNORE INTO `draft_image_to_product` (`draftProductId`, `draftImageId`, `orderNumber`) VALUES
-	(_binary 0xA005640A629B11EDB37460A44C4F528E, _binary 0x764BCA1C629B11EDB37460A44C4F528E, 1),
-	(_binary 0x75267585629311EDB37460A44C4F528E, _binary 0x7EAFC2F062A311EDB37460A44C4F528E, 1),
-	(_binary 0x7A1C7E20637111EDB3B560A44C4F528E, _binary 0x439875CF612111EDB34760A44C4F528E, 1),
-	(_binary 0x7A1C7E20637111EDB3B560A44C4F528E, _binary 0x4399761A612111EDB34760A44C4F528E, 2),
-	(_binary 0x1F4F5FF968FE11EDB24160A44C4F528E, _binary 0xB806586A68FE11EDB24160A44C4F528E, 1),
-	(_binary 0x8C9B604C6A8111EDB2D960A44C4F528E, _binary 0xB806586A68FE11EDB24160A44C4F528E, 1);
-/*!40000 ALTER TABLE `draft_image_to_product` ENABLE KEYS */;
+	(_binary 0xa005640a629b11edb37460a44c4f528e, _binary 0x764bca1c629b11edb37460a44c4f528e, 1),
+	(_binary 0x75267585629311edb37460a44c4f528e, _binary 0x7eafc2f062a311edb37460a44c4f528e, 1),
+	(_binary 0x7a1c7e20637111edb3b560a44c4f528e, _binary 0x439875cf612111edb34760a44c4f528e, 1),
+	(_binary 0x7a1c7e20637111edb3b560a44c4f528e, _binary 0x4399761a612111edb34760a44c4f528e, 2),
+	(_binary 0x1f4f5ff968fe11edb24160a44c4f528e, _binary 0xb806586a68fe11edb24160a44c4f528e, 1),
+	(_binary 0xabd4a7b86dd411edb23e60a44c4f528e, _binary 0xb806586a68fe11edb24160a44c4f528e, 1);
 
+/*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

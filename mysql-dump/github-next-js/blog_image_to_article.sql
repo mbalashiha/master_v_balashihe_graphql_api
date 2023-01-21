@@ -14,15 +14,18 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
--- Дамп структуры для таблица github-next-js.uri_pathes
-CREATE TABLE IF NOT EXISTS `uri_pathes` (
-  `uri` text CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `Индекс 2` (`uri`(100))
+-- Дамп структуры для таблица github-next-js.blog_image_to_article
+CREATE TABLE IF NOT EXISTS `blog_image_to_article` (
+  `articleId` int(10) unsigned NOT NULL,
+  `imageId` int(10) unsigned NOT NULL,
+  `orderNumber` tinyint(3) unsigned NOT NULL,
+  UNIQUE KEY `FK_blog_article_image_to_product_image` (`imageId`,`articleId`) USING BTREE,
+  KEY `FK_image_to_blog_article` (`articleId`) USING BTREE,
+  CONSTRAINT `FK_blog_image_to_article_blog_article` FOREIGN KEY (`articleId`) REFERENCES `blog_article` (`articeId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_blog_image_to_article_image` FOREIGN KEY (`imageId`) REFERENCES `image` (`imageId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Дамп данных таблицы github-next-js.uri_pathes: ~0 rows (приблизительно)
+-- Дамп данных таблицы github-next-js.blog_image_to_article: ~0 rows (приблизительно)
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

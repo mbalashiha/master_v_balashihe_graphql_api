@@ -14,15 +14,22 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
--- Дамп структуры для таблица github-next-js.uri_pathes
-CREATE TABLE IF NOT EXISTS `uri_pathes` (
-  `uri` text CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `Индекс 2` (`uri`(100))
+-- Дамп структуры для таблица github-next-js.blog_category
+CREATE TABLE IF NOT EXISTS `blog_category` (
+  `blog_category_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `category_name` text NOT NULL,
+  `handle` text CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
+  `parent_id` int(10) unsigned DEFAULT NULL,
+  `updatedAt` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `createdAt` timestamp NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`blog_category_id`) USING BTREE,
+  UNIQUE KEY `uniq_blog_category_handle_uri_slug` (`handle`(100)) USING BTREE,
+  UNIQUE KEY `uniq_blog_category_category_name` (`category_name`(100)) USING BTREE,
+  KEY `FK_blog_category_blog_category_index` (`parent_id`) USING BTREE,
+  CONSTRAINT `FK_blog_category_blog_category_constraint` FOREIGN KEY (`parent_id`) REFERENCES `blog_category` (`blog_category_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Дамп данных таблицы github-next-js.uri_pathes: ~0 rows (приблизительно)
+-- Дамп данных таблицы github-next-js.blog_category: ~0 rows (приблизительно)
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
