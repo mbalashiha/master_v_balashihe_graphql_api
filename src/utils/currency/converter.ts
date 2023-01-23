@@ -222,7 +222,7 @@ const cache = new Cache({
     }
   },
 });
-cache.wrap(CURRENCIES_STORAGE_KEY, revalidate as any, function (error, html) {
+cache.wrap(CURRENCIES_STORAGE_KEY, revalidate as any, function (error: any, html: any) {
   // Do something with cached response
 });
 // Only called to fetch the initial response and when the item becomes stale

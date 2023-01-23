@@ -1,20 +1,23 @@
-const { merge } = require("webpack-merge");
+// const { merge } = require("webpack-merge");
 const path = require("path");
 const webpack = require("webpack");
 const nodeExternals = require("webpack-node-externals");
 const WebpackShellPluginNext = require("webpack-shell-plugin-next");
-const TerserPlugin = require("terser-webpack-plugin");
 const Dotenv = require("dotenv-webpack");
 const resolveTsconfigPathsToAlias = require("./resolve-tsconfig-path-to-webpack-alias");
-const NODE_ENV = "development";
+
 module.exports = {
   devServer: {
     historyApiFallback: true,
   },
   entry: "./src/index.ts",
-  devtool: false,
   mode: "development",
   target: "node",
+  node: {
+    // Need this when working with express, otherwise the build fails
+    __dirname: false, // if you don't put this is, __dirname
+    __filename: false, // and __filename return blank or /
+  },
   output: {
     path: path.resolve(__dirname, "build"),
     filename: "index.js",
@@ -31,9 +34,6 @@ module.exports = {
         use: [
           {
             loader: "ts-loader",
-            options: {
-              compilerOptions: { noEmit: false },
-            },
           },
         ],
       },
@@ -59,7 +59,6 @@ module.exports = {
   ],
   watch: true,
   watchOptions: {
-    ignored: ["build/**", "/build", "/build/**", "*.cache.json"],
+    ignored: ["/build", "/build/**", "*.cache.json"],
   },
-  optimization: {},
 };

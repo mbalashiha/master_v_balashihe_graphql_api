@@ -73,6 +73,7 @@ export const spawnAsync = (
     });
   });
 export const spawnMysqldump = async () => {
+  debugger;
   const dateString = new Date().toISOString().split("T")[0];
   const getCurrentDayDumpFile = (databaseName: string) =>
     path.join(
@@ -108,7 +109,7 @@ export const spawnMysqldump = async () => {
       if (!(await fse.pathExists(currentDatabaseDumpFilepath))) {
         console.log("processing database: " + databaseName);
         await fse.mkdirp(path.dirname(currentDatabaseDumpFilepath));
-        const text2 = await spawnAsync(
+        await spawnAsync(
           mysqldumpExePath,
           [
             "-u",
