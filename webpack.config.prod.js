@@ -25,13 +25,5 @@ module.exports = merge(common, {
       },
     ],
   },
-  plugins: [
-    new WebpackShellPluginNext({
-      onBuildEnd: {
-        scripts: [],
-        blocking: false,
-        parallel: true,
-      },
-    }),
-  ],
+  plugins: [],
 });
