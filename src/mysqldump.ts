@@ -73,7 +73,6 @@ export const spawnAsync = (
     });
   });
 export const spawnMysqldump = async () => {
-  debugger;
   const dateString = new Date().toISOString().split("T")[0];
   const getCurrentDayDumpFile = (databaseName: string) =>
     path.join(

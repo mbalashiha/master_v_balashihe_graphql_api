@@ -11,6 +11,7 @@ module.exports = {
     historyApiFallback: true,
   },
   entry: "./src/index.ts",
+  devtool: "source-map",
   mode: "development",
   target: "node",
   node: {
@@ -50,11 +51,6 @@ module.exports = {
     }),
     new Dotenv({
       path: path.resolve(__dirname, "./.env.local"), // load this now instead of the ones in '.env'
-    }),
-    new webpack.SourceMapDevToolPlugin({
-      filename: "[file].map",
-      fallbackModuleFilenameTemplate: "[absolute-resource-path]",
-      moduleFilenameTemplate: "[absolute-resource-path]",
     }),
   ],
   watch: true,
