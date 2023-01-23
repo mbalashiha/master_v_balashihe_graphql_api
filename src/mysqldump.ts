@@ -4,14 +4,36 @@ import path from "path";
 import fs from "fs";
 import fsa from "fs/promises";
 import fse from "fs-extra";
-const mysqldumpExePath = `D:\\Program Files\\MariaDB 10.10\\bin\\mysqldump.exe`;
-const mysqlExePath = `D:\\Program Files\\MariaDB 10.10\\bin\\mysql.exe`;
+const mysqldumpExePathes = [
+  `D:\\Program Files\\MariaDB 10.10\\bin\\mysqldump.exe`,
+  `C:\\Program Files\\MariaDB 10.10\\bin\\mysqldump.exe`,
+];
+const mysqlExePathes = [
+  `D:\\Program Files\\MariaDB 10.10\\bin\\mysql.exe`,
+  `C:\\Program Files\\MariaDB 10.10\\bin\\mysql.exe`,
+];
 
 const root_user_name = process.env["SUPER_SECRET_MYSQL_USER"] || "";
 const root_user_password = process.env["SUPER_SECRET_MYSQL_PASS"] || "";
 
 const path_to_dump_dir = path.resolve("mysql-full-dump");
 
+const getFirstExistingPath = async (pathes: Array<string>): Promise<string> => {
+  for (const tryPath of pathes) {
+    try {
+      if (await fse.pathExists(tryPath)) {
+        return tryPath;
+      }
+    } catch (e) {}
+  }
+  return "";
+};
+const getMysqldumpExePath = () => {
+  return getFirstExistingPath(mysqldumpExePathes);
+};
+const getMysqlExePath = () => {
+  return getFirstExistingPath(mysqlExePathes);
+};
 export const spawnAsync = (
   command: string,
   args?: readonly string[] | undefined,
@@ -63,6 +85,13 @@ export const spawnMysqldump = async () => {
   if (!root_user_password) {
     throw new Error("No root_user_password!");
   }
+  const [mysqlExePath, mysqldumpExePath] = await Promise.all([
+    getMysqlExePath(),
+    getMysqldumpExePath(),
+  ]);
+  console.log(
+    `\nmysqlExePath: "${mysqlExePath}", mysqldumpExePath: "${mysqldumpExePath}"`
+  );
   const text = await spawnAsync(mysqlExePath, [
     "-u",
     root_user_name,
