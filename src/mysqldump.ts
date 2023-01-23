@@ -5,12 +5,12 @@ import fs from "fs";
 import fsa from "fs/promises";
 import fse from "fs-extra";
 const mysqldumpExePathes = [
-  `D:\\Program Files\\MariaDB 10.10\\bin\\mysqldump.exe`,
   `C:\\Program Files\\MariaDB 10.10\\bin\\mysqldump.exe`,
+  `D:\\Program Files\\MariaDB 10.10\\bin\\mysqldump.exe`,
 ];
 const mysqlExePathes = [
-  `D:\\Program Files\\MariaDB 10.10\\bin\\mysql.exe`,
   `C:\\Program Files\\MariaDB 10.10\\bin\\mysql.exe`,
+  `D:\\Program Files\\MariaDB 10.10\\bin\\mysql.exe`,
 ];
 
 const root_user_name = process.env["SUPER_SECRET_MYSQL_USER"] || "";
@@ -43,23 +43,21 @@ export const spawnAsync = (
     let stdout: string = "",
       stderr: string = "";
     const bat = spawn(command, args);
-
-    bat.stdout.on("data", (data) => {
-      if (writeStream) {
-        writeStream.write(data);
-      } else {
+    if (writeStream) {
+      bat.stdout.pipe(writeStream);
+    } else {
+      bat.stdout.on("data", (data) => {
         stdout += data.toString();
-      }
-    });
-
+      });
+    }
     bat.stderr.on("data", (data) => {
       stderr += data.toString();
     });
 
     bat.on("exit", (code) => {
-      if (writeStream) {
-        writeStream.close();
-      }
+      // if (writeStream) {
+      //   writeStream.close();
+      // }
       if (stderr) {
         console.error(stderr.trim());
       }
@@ -119,7 +117,7 @@ export const spawnMysqldump = async () => {
             databaseName,
             "--hex-blob",
             "--single-transaction",
-            "--quick",
+            "--routines",
             // "--lock-tables=false",
           ],
           fs.createWriteStream(currentDatabaseDumpFilepath)
