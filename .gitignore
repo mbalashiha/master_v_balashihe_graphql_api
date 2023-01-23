@@ -4,6 +4,8 @@
 /build/**
 /.history
 /.history/**
+/mysql-full-dump
+/mysql-full-dump/**
 /.git
 /.git/**
 .env

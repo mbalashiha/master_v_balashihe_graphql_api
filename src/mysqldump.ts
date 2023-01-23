@@ -24,7 +24,7 @@ export const spawnAsync = (
 
     bat.stdout.on("data", (data) => {
       if (writeStream) {
-        writeStream.write(data.toString());
+        writeStream.write(data);
       } else {
         stdout += data.toString();
       }
@@ -38,13 +38,13 @@ export const spawnAsync = (
       if (writeStream) {
         writeStream.close();
       }
-      console.log(`Child exited with code ${code}`);
       if (stderr) {
-        console.error(stderr);
+        console.error(stderr.trim());
       }
       if (stdout) {
-        console.log(stdout);
+        console.log(stdout.trim());
       }
+      console.log(`---> Spawned child process exited with code ${code}`);
       if (code == 0) {
         resolve(stdout || stderr);
       } else {
@@ -78,7 +78,7 @@ export const spawnMysqldump = async () => {
   for (const databaseName of databaseList) {
     try {
       const currentDatabaseDumpFilepath = getCurrentDayDumpFile(databaseName);
-      if (!(await fse.exists(currentDatabaseDumpFilepath))) {
+      if (!(await fse.pathExists(currentDatabaseDumpFilepath))) {
         await fse.mkdirp(path.dirname(currentDatabaseDumpFilepath));
         const text2 = await spawnAsync(
           mysqldumpExePath,
@@ -96,7 +96,9 @@ export const spawnMysqldump = async () => {
           fs.createWriteStream(currentDatabaseDumpFilepath)
         );
       }
-    } catch (e) {}
+    } catch (e: any) {
+      console.error(`Error dumping database: ${databaseName}\n\n`);
+    }
   }
   console.log("mysql database dumping finished!");
 };
