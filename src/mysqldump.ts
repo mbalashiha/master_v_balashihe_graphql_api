@@ -106,6 +106,7 @@ export const spawnMysqldump = async () => {
     try {
       const currentDatabaseDumpFilepath = getCurrentDayDumpFile(databaseName);
       if (!(await fse.pathExists(currentDatabaseDumpFilepath))) {
+        console.log("processing database: " + databaseName);
         await fse.mkdirp(path.dirname(currentDatabaseDumpFilepath));
         const text2 = await spawnAsync(
           mysqldumpExePath,
