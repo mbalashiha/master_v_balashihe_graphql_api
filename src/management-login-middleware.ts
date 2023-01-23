@@ -52,7 +52,7 @@ export const managementLoginMiddleware = async (
     throw { message: "Authentification failed" };
   } catch (e: any) {
     console.error(e.stack || e.message);
-    return res.json({ success: false, error: e.stack || e.message || e });
+    return res.status(403).json({ success: false, error: e.stack || e.message || e });
   }
 };
 export const managementSignoutMiddleware = async (

@@ -33,6 +33,7 @@ import managementLoginMiddleware, {
 import { verifyManagementLoginMiddleware } from "./management-login-middleware";
 import { AuthRequest } from "@root/types/express-custom";
 import { IncomingMessage, OutgoingMessage, ServerResponse } from "http";
+import { spawnMysqldump } from "./mysqldump";
 
 const application = createApplication({
   modules: [baseModule, signInModule, managementModule, blogArticlesModule],
@@ -53,6 +54,11 @@ const corsOptions = {
   credentials: true,
 };
 const app = express();
+// app.use((req, res, next) => {
+//   console.log(req);
+//   debugger;
+//   next();
+// });
 app.use(cors(corsOptions));
 // app.use(
 //   expressjwt({
@@ -107,10 +113,10 @@ const rawBodySaver: any = (
   req: IncomingMessage & { rawBody?: string },
   res: OutgoingMessage,
   buf: string | Buffer,
-  encoding: BufferEncoding = "utf8"
+  encoding: BufferEncoding
 ) => {
   if (buf && buf.length) {
-    req.rawBody = buf.toString(encoding);
+    req.rawBody = buf.toString(encoding || "utf8");
   }
 };
 // app.post(
@@ -146,6 +152,7 @@ console.log("express index.js file is executed!");
 
 app.listen(4402, () => {
   console.log("Running a GraphQL API server at http://:4402/graphql");
+  setTimeout(() => spawnMysqldump(), 10 * 1000);
 });
 // } else {
 //   console.log("express index.js file is NOT executed");
