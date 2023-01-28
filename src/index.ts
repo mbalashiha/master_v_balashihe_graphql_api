@@ -33,7 +33,7 @@ import managementLoginMiddleware, {
 import { verifyManagementLoginMiddleware } from "./management-login-middleware";
 import { AuthRequest } from "@root/types/express-custom";
 import { IncomingMessage, OutgoingMessage, ServerResponse } from "http";
-import { spawnMysqldump } from "./mysqldump";
+import { spawnMysqldump } from "./db/mysqldump";
 
 const application = createApplication({
   modules: [baseModule, signInModule, managementModule, blogArticlesModule],
@@ -82,6 +82,7 @@ const verifyCookieToken =
     next: () => any
   ) => {
     const token = req.cookies[cookieTokenName] || "";
+    (req as any).responseObject = res;
     if (token) {
       try {
         (req as any)[cookieTokenName] = jwt.verify(
@@ -139,7 +140,11 @@ app.use(
       customExecuteFn: execute,
       graphiql: true,
       context: {
-        res,
+        res: (req as AuthRequest).responseObject,
+        tokens: {
+          managerToken: (req as AuthRequest).cookies["manager"] || null,
+          clientToken: (req as AuthRequest).cookies["client"] || null,
+        },
         manager: (req as AuthRequest).manager || null,
         client: (req as AuthRequest).client || null,
       },

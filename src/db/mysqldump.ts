@@ -64,10 +64,10 @@ export const spawnAsync = (
       if (stdout) {
         console.log(stdout.trim());
       }
-      console.log(`---> Spawned child process exited with code ${code}`);
       if (code == 0) {
         resolve(stdout || stderr);
       } else {
+        console.error(`---> Spawned child process exited with code ${code}`);
         reject(stderr || stdout);
       }
     });
@@ -106,7 +106,9 @@ export const spawnMysqldump = async () => {
     try {
       const currentDatabaseDumpFilepath = getCurrentDayDumpFile(databaseName);
       if (!(await fse.pathExists(currentDatabaseDumpFilepath))) {
-        console.log("processing database: " + databaseName);
+        console.log(
+          `---> ${databaseName}. processing database: ${databaseName}`
+        );
         await fse.mkdirp(path.dirname(currentDatabaseDumpFilepath));
         await spawnAsync(
           mysqldumpExePath,
