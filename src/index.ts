@@ -34,9 +34,18 @@ import { verifyManagementLoginMiddleware } from "./management-login-middleware";
 import { AuthRequest } from "@root/types/express-custom";
 import { IncomingMessage, OutgoingMessage, ServerResponse } from "http";
 import { spawnMysqldump } from "./db/mysqldump";
+import { BlogManagementModule } from "@root/schema/modules/blog/management/blog";
+import { BlogArticleDraftModule } from "@root/schema/modules/blog/management/draft";
 
 const application = createApplication({
-  modules: [baseModule, signInModule, managementModule, blogArticlesModule],
+  modules: [
+    baseModule,
+    signInModule,
+    managementModule,
+    blogArticlesModule,
+    BlogManagementModule,
+    BlogArticleDraftModule,
+  ],
 });
 const execute = application.createExecution();
 const schema = application.schema;

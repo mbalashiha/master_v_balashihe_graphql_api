@@ -38,16 +38,36 @@ export const managementLoginMiddleware = async (
         if (!values || !values.id) {
           throw { message: "Authentification failed" };
         }
-        const token = jwt.sign({ ...values }, process.env["JWT_SECRET"]!);
-        res.cookie("manager", token, {
-          httpOnly: true,
-          maxAge: 90 * 24 * 60 * 60 * 1000,
-          // secure: true, //on HTTPS
-          // domain: "localhost:4402", //set your domain
+        const rows = await db.excuteQuery({
+          query: "select * from managers where id=?",
+          variables: [values.id],
         });
-        return res.json({
-          success: true,
-        });
+        let result: any = { success: true};
+        const managerRow = rows && rows[0];
+        if (managerRow && managerRow.id) {
+          delete managerRow.password;
+          const manager = {
+            id: managerRow.id || null,
+            friendlyName:
+              managerRow.friendly_name ||
+              managerRow.email ||
+              managerRow.login ||
+              null,
+            isManager: true,
+            isAdmin: !!managerRow.is_admin,
+            created: managerRow.created || null,
+            updated: managerRow.updated || null,
+          };
+          result = {...result, manager};
+          const token = jwt.sign({ ...values }, process.env["JWT_SECRET"]!);
+          res.cookie("manager", token, {
+            httpOnly: true,
+            maxAge: 90 * 24 * 60 * 60 * 1000,
+            // secure: true, //on HTTPS
+            // domain: "localhost:4402", //set your domain
+          });
+          return res.json(result);
+        };
       }
     }
     throw { message: "Authentification failed" };

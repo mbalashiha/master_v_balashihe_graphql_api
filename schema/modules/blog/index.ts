@@ -16,17 +16,21 @@ export const blogArticlesModule = createModule({
   dirname: __dirname,
   typeDefs: [
     gql`
+      type CategoryId {
+        id: ID
+      }
       type BlogArticle {
-        articleId: ID!
+        articleId: ID
         title: String
         handle: String
-        description: String
-        descriptionHtml: String
+        text: String
+        textHtml: String
+        textRawDraftContentState: String
+        autoHandleSlug: String
         published: Boolean
         orderNumber: Int
-        category: BlogCategoryId
-        image: Image
-        images(limit: Int): ImageConnection
+        blogCategoryId: ID
+        category: CategoryId
         createdAt: Date
         updatedAt: Date
         publishedAt: Date
@@ -39,9 +43,6 @@ export const blogArticlesModule = createModule({
         published: Boolean
         orderNumber: Int
         category: BlogCategoryIdInput
-      }
-      type BlogCategoryId {
-        id: ID
       }
       input BlogCategoryIdInput {
         id: ID
@@ -122,43 +123,6 @@ export const blogArticlesModule = createModule({
         } catch (e: any) {
           console.error(e.stack || e.message || e);
           debugger;
-          throw e;
-        }
-      },
-      image: async (
-        parent: { image: any },
-        variables: any,
-        _ctx: any,
-        info: GraphQLResolveInfo
-      ) => {
-        try {
-          if (parent.image && typeof parent.image === "string") {
-            parent.image = JSON.parse(parent.image);
-          }
-          if (parent.image && parent.image.imgSrc) {
-            return parent.image;
-          } else {
-            return null;
-          }
-        } catch (e: any) {
-          console.error(e.stack || e.message);
-          throw e;
-        }
-      },
-      images: async (
-        parent: { images: string | never[] },
-        variables: any,
-        _ctx: any,
-        info: GraphQLResolveInfo
-      ) => {
-        try {
-          if (parent.images && typeof parent.images === "string") {
-            parent.images = JSON.parse(parent.images);
-          }
-          const nodes = parent.images || [];
-          return { nodes };
-        } catch (e: any) {
-          console.error(e.stack || e.message);
           throw e;
         }
       },
