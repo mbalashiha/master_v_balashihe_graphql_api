@@ -11,6 +11,7 @@ process.on(
   }
 );
 import express from "express";
+import http from "http";
 import bodyParser from "body-parser";
 import { expressjwt } from "express-jwt";
 import jwt from "jsonwebtoken";
@@ -37,6 +38,11 @@ import { spawnMysqldump } from "./db/mysqldump";
 import { BlogManagementModule } from "@root/schema/modules/blog/management/blog";
 import { BlogArticleDraftModule } from "@root/schema/modules/blog/management/draft";
 
+const corsOptions = {
+  origin: "http://localhost:3000", //change with your own client URL
+  credentials: true,
+};
+
 const application = createApplication({
   modules: [
     baseModule,
@@ -58,10 +64,6 @@ const schema = application.schema;
 if (!process.env["JWT_SECRET"]) {
   throw new Error("No JWT_SECRET");
 }
-const corsOptions = {
-  origin: "http://localhost:3000", //change with your own client URL
-  credentials: true,
-};
 const app = express();
 // app.use((req, res, next) => {
 //   console.log(req);
@@ -130,19 +132,19 @@ const rawBodySaver: any = (
   }
 };
 // app.post(
-//   "/login",
+//   "/rest/api/login",
 //   bodyParser.raw({ verify: rawBodySaver, type: "*/*" }),
 //   loginMiddleware
 // );
 app.post(
-  "/management/login",
+  "/rest/api/management/login",
   bodyParser.raw({ verify: rawBodySaver as any, type: "*/*" }),
   managementLoginMiddleware
 );
-app.get("/management/verify-login", verifyManagementLoginMiddleware);
-app.get("/management/sign-out", managementSignoutMiddleware);
+app.get("/rest/api/management/verify-login", verifyManagementLoginMiddleware);
+app.get("/rest/api/management/sign-out", managementSignoutMiddleware);
 app.use(
-  "/graphql",
+  "/graphql/api",
   graphqlHTTP((req, res, graphQLParams) => {
     return {
       schema,
@@ -160,12 +162,8 @@ app.use(
     };
   })
 );
-
-console.log("express index.js file is executed!");
-// true if file is executed
-
 app.listen(4402, () => {
-  console.log("Running a GraphQL API server at http://:4402/graphql");
+  console.log("Running a GraphQL API server at http://:4402/graphql/api");
   setTimeout(() => spawnMysqldump(), 10 * 1000);
 });
 // } else {

@@ -24,7 +24,7 @@ module.exports = {
     filename: "index.js",
   },
   resolve: {
-    extensions: [".ts", ".js"],
+    extensions: [".ts", ".js", ".tsx", ".jsx"],
     alias: { ...resolveTsconfigPathsToAlias() },
   },
   module: {

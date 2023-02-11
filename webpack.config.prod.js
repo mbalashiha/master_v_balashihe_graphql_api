@@ -1,14 +1,28 @@
-const { merge } = require("webpack-merge");
+// const { merge } = require("webpack-merge");
 const path = require("path");
+const webpack = require("webpack");
 const nodeExternals = require("webpack-node-externals");
-const WebpackShellPluginNext = require("webpack-shell-plugin-next");
+const Dotenv = require("dotenv-webpack");
+const resolveTsconfigPathsToAlias = require("./resolve-tsconfig-path-to-webpack-alias");
 
-const NODE_ENV = "production";
-const common = require("./webpack.config.js");
-
-module.exports = merge(common, {
+module.exports = {
+  entry: "./src/index.ts",
+  devtool: false,
   mode: "production",
-  watch: false,
+  target: "node",
+  node: {
+    // Need this when working with express, otherwise the build fails
+    __dirname: false, // if you don't put this is, __dirname
+    __filename: false, // and __filename return blank or /
+  },
+  output: {
+    path: path.resolve(__dirname, "production"),
+    filename: "index.js",
+  },
+  resolve: {
+    extensions: [".ts", ".js", ".tsx", ".jsx"],
+    alias: { ...resolveTsconfigPathsToAlias() },
+  },
   module: {
     rules: [
       {
@@ -17,13 +31,16 @@ module.exports = merge(common, {
         use: [
           {
             loader: "ts-loader",
-            options: {
-              compilerOptions: { noEmit: false },
-            },
+            options: { configFile: "./tsconfig.prod.json" },
           },
         ],
       },
     ],
   },
-  plugins: [],
-});
+  externals: [nodeExternals()],
+  plugins: [
+    new Dotenv({
+      path: path.resolve(__dirname, "./.env.local"), // load this now instead of the ones in '.env'
+    }),
+  ],
+};

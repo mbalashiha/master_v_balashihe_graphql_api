@@ -45,6 +45,7 @@ export const BlogArticleDraftModule = createModule({
         existingArticleId: ID
       }
       type ArticleDraftResponse {
+        message: String
         updatedDraft: ArticleDraft
       }
       type Query {
@@ -65,17 +66,19 @@ export const BlogArticleDraftModule = createModule({
           id?: string;
           managerId: string | number;
           articleId?: string | number;
+          existingArticleId?: string | number;
           draftArticleId: string;
         },
         variables: void,
         ctx: void,
         info: GraphQLResolveInfo
       ) => {
-        const { id, managerId, articleId, draftArticleId } = parent;
+        const { id, managerId, articleId, draftArticleId, existingArticleId } =
+          parent;
         return await selectArticleDraft({
           draftArticleId: id || draftArticleId,
           managerId,
-          articleId,
+          articleId: articleId || existingArticleId,
         });
       },
     },
@@ -131,7 +134,9 @@ export const BlogArticleDraftModule = createModule({
             $title,
             $handle,
             $autoHandleSlug,
-            $blogCategoryId
+            $blogCategoryId,
+            $published,
+            $orderNumber
             );`,
             variables: {
               managerId: context.manager.id,
@@ -140,19 +145,19 @@ export const BlogArticleDraftModule = createModule({
               handle: articleDraft.handle || null,
               autoHandleSlug: articleDraft.autoHandleSlug || null,
               blogCategoryId: articleDraft.blogCategoryId || null,
+              published: articleDraft.published ? 1 : null,
+              orderNumber: articleDraft.orderNumber || null,
             },
           });
-          console.log(sqlResult);
-          console.log();
-
           const row = (sqlResult[0] && sqlResult[0][0]) || {};
           if (!row.message) {
             throw new Error("No message from sql procedure!");
           }
           return {
             managerId: context.manager.id,
-            existingArticleId: articleDraft.existingArticleId || null,
             id: row.draftArticleId,
+            articleId: articleDraft.existingArticleId || null,
+            existingArticleId: articleDraft.existingArticleId || null,
             ...row,
           };
         } catch (e: any) {
@@ -200,8 +205,9 @@ export const BlogArticleDraftModule = createModule({
           }
           return {
             managerId: context.manager.id,
-            existingArticleId: articleTextDraft.existingArticleId || null,
             id: row.draftArticleId,
+            articleId: articleTextDraft.existingArticleId || null,
+            existingArticleId: articleTextDraft.existingArticleId || null,
             ...row,
           };
         } catch (e: any) {
