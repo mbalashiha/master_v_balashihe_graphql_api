@@ -36,17 +36,6 @@ export const blogArticlesModule = createModule({
         publishedAt: Date
         breadcrumbs: [Breadcrumb]
       }
-      input BlogArticleInput {
-        articleId: ID
-        title: String
-        handle: String
-        published: Boolean
-        orderNumber: Int
-        category: BlogCategoryIdInput
-      }
-      input BlogCategoryIdInput {
-        id: ID
-      }
       type BlogArticlesConnection {
         pageInfo: PageInfo
         nodes(offset: Int, limit: Int): [BlogArticle]

@@ -60,6 +60,19 @@ export namespace Schema {
     publishedAt: Date;
     breadcrumbs: Breadcrumb[];
   }
+  export interface ArticleInput {
+    id: ID;
+    title: String;
+    handle: String;
+    autoHandleSlug: String;
+    text: String;
+    textHtml: String;
+    textRawDraftContentState: String;
+    published: Boolean;
+    orderNumber: Int;
+    blogCategoryId: ID;
+    existingArticleId: ID;
+  }
   export interface ArticleDraft {
     draftArticleId: ID;
     title: string;

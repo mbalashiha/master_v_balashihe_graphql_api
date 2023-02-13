@@ -35,7 +35,7 @@ import { verifyManagementLoginMiddleware } from "./management-login-middleware";
 import { AuthRequest } from "@root/types/express-custom";
 import { IncomingMessage, OutgoingMessage, ServerResponse } from "http";
 import { spawnMysqldump } from "./db/mysqldump";
-import { BlogManagementModule } from "@root/schema/modules/blog/management/blog";
+import { BlogManagementModule } from "@root/schema/modules/blog/management/article-input";
 import { BlogArticleDraftModule } from "@root/schema/modules/blog/management/draft";
 
 const corsOptions = {
