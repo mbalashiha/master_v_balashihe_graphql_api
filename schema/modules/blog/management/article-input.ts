@@ -32,6 +32,12 @@ export const BlogManagementModule = createModule({
         blogCategoryId: ID
         existingArticleId: ID
       }
+      type DeleteArticleResponse {
+        error: String
+        message: String
+        success: Boolean!
+        articleList: [BlogArticle]!
+      }
       type SavedArticleResponse {
         error: String
         message: String
@@ -40,6 +46,7 @@ export const BlogManagementModule = createModule({
       type Mutation {
         managementSearchArticles(search: String): [BlogArticle]!
         saveArticle(article: ArticleInput!): SavedArticleResponse!
+        deleteArticle(id: ID!): DeleteArticleResponse!
       }
       type Query {
         managementGetArticles(search: String): [BlogArticle]!
@@ -47,6 +54,23 @@ export const BlogManagementModule = createModule({
     `,
   ],
   resolvers: {
+    DeleteArticleResponse: {
+      articleList: async (
+        parent: void,
+        variables: void,
+        context: GraphqlContext,
+        info: GraphQLResolveInfo
+      ) => {
+        if (!context.manager || !context.manager.id) {
+          throw new Error("Manager Unauthorized");
+        }
+        const rows = await db.excuteQuery({
+          query: "select * from blog_article",
+          variables: [],
+        });
+        return rows;
+      },
+    },
     Query: {
       managementGetArticles: async (
         parent: void,
@@ -60,9 +84,10 @@ export const BlogManagementModule = createModule({
           throw new Error("Manager Unauthorized");
         }
         const rows = await db.excuteQuery({
-          query: "select * from managers where id=?",
+          query: "select * from blog_article",
           variables: [],
         });
+        return rows;
       },
     },
     Mutation: {
@@ -117,6 +142,32 @@ export const BlogManagementModule = createModule({
           return {
             ...row,
             success: Boolean(row.success),
+          };
+        } catch (e: any) {
+          console.error(e.stack || e.message);
+          return { success: false, error: e.stack || e.message || e };
+        }
+      },
+      deleteArticle: async (
+        parent: void,
+        variables: { id: string | number },
+        context: GraphqlContext,
+        info: GraphQLResolveInfo
+      ) => {
+        if (!context.manager || !context.manager.id) {
+          throw new Error("Manager Unauthorized");
+        }
+        const { id } = variables;
+        try {
+          const sqlResult = await db.excuteQuery({
+            query: `delete from blog_article where id=$id`,
+            variables: {
+              id,
+            },
+          });
+          return {
+            success: true,
+            message: "article deleted",
           };
         } catch (e: any) {
           console.error(e.stack || e.message);

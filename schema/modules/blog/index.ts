@@ -20,7 +20,7 @@ export const blogArticlesModule = createModule({
         id: ID
       }
       type BlogArticle {
-        articleId: ID
+        id: ID
         title: String
         handle: String
         text: String

@@ -29,8 +29,8 @@ export default async function selectArticleDraft({
       });
       if (!rows[0] || !rows[0].id) {
         rows = await db.excuteQuery({
-          query: `select d.articleId as id, d.articleId as existingArticleId, 
-                      d.* from blog_article d Where d.articleId=$articleId`,
+          query: `select ba.id as existingArticleId, 
+                      ba.* from blog_article ba Where ba.id=$articleId`,
           variables: { articleId, managerId },
         });
       }
@@ -42,9 +42,11 @@ export default async function selectArticleDraft({
       });
     }
     let result = rows[0] && rows[0].id && rows[0];
-    // debugger;
     if (!result) {
       result = { id: null, existingArticleId: articleId || null };
+    }
+    if (!result.existingArticleId) {
+      result.existingArticleId = articleId || null;
     }
     return result;
   } catch (e: any) {

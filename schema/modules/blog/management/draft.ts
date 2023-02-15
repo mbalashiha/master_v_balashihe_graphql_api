@@ -97,17 +97,15 @@ export const BlogArticleDraftModule = createModule({
         _ctx: any,
         info: GraphQLResolveInfo
       ) => {
+        let rows;
         try {
           if (parent.existingArticleId) {
-            const rows = await db.excuteQuery({
-              query: "select * from blog_article Where articleId=?",
+            rows = await db.excuteQuery({
+              query: "select * from blog_article Where id=?",
               variables: [parent.existingArticleId],
             });
-            if (rows[0] && rows[0].articleId) {
-              return rows[0];
-            }
           }
-          return null;
+          return (rows && rows[0]) || null;
         } catch (e: any) {
           console.error(e);
           debugger;
@@ -197,8 +195,6 @@ export const BlogArticleDraftModule = createModule({
                 articleTextDraft.textRawDraftContentState || null,
             },
           });
-          console.log(sqlResult);
-          console.log();
           const row = (sqlResult[0] && sqlResult[0][0]) || {};
           if (!row.message) {
             throw new Error("No message from sql procedure!");
@@ -229,7 +225,8 @@ export const BlogArticleDraftModule = createModule({
           throw new GraphQLError("Manager Unauthorized");
         }
         const managerId = context.manager.id;
-        return await selectArticleDraft({ managerId, articleId });
+        const result = await selectArticleDraft({ managerId, articleId });
+        return result;
       },
     },
   },

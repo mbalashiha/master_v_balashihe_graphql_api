@@ -45,7 +45,7 @@ export namespace Schema {
     id: ID;
   }
   export interface BlogArticle {
-    articleId: ID;
+    id: ID;
     title: string;
     handle: string;
     text: string;
@@ -61,6 +61,7 @@ export namespace Schema {
     breadcrumbs: Breadcrumb[];
   }
   export interface ArticleInput {
+    existingArticleId: ID;
     id: ID;
     title: String;
     handle: String;
@@ -71,7 +72,6 @@ export namespace Schema {
     published: Boolean;
     orderNumber: Int;
     blogCategoryId: ID;
-    existingArticleId: ID;
   }
   export interface ArticleDraft {
     draftArticleId: ID;
