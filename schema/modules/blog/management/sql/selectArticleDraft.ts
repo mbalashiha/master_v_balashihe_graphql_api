@@ -43,7 +43,11 @@ export default async function selectArticleDraft({
     }
     let result = rows[0] && rows[0].id && rows[0];
     if (!result) {
-      result = { id: null, existingArticleId: articleId || null };
+      result = {
+        id: null,
+        existingArticleId: articleId || null,
+        articleId: articleId || null,
+      };
     }
     if (!result.existingArticleId) {
       result.existingArticleId = articleId || null;

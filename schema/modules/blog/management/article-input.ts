@@ -3,7 +3,7 @@ import util from "util";
 import expressJwt from "express-jwt";
 import jwt from "jsonwebtoken";
 import db from "@src/db/execute-query";
-import { GraphQLResolveInfo } from "graphql";
+import { GraphQLError, GraphQLResolveInfo } from "graphql";
 import { isPositiveInteger } from "@src/utils/type-checkers";
 import { sql } from "@schema/sql-query";
 import { Console } from "console";
@@ -13,6 +13,7 @@ import { simpleDecrypt } from "@src/encryption/message-hmac-private-key";
 import cookieParser from "cookie-parser";
 import { GraphqlContext } from "@root/types/express-custom";
 import { Schema } from "@root/schema/types/schema";
+import { selectArticleDraft } from "./sql";
 
 export const BlogManagementModule = createModule({
   id: "blog-article-input-module",
@@ -42,6 +43,8 @@ export const BlogManagementModule = createModule({
         error: String
         message: String
         success: Boolean!
+        articleId: ID
+        articleDraft: ArticleDraft!
       }
       type Mutation {
         managementSearchArticles(search: String): [BlogArticle]!
@@ -54,6 +57,28 @@ export const BlogManagementModule = createModule({
     `,
   ],
   resolvers: {
+    SavedArticleResponse: {
+      articleDraft: async (
+        parent: { articleId?: string },
+        variables: void,
+        context: { manager: { id: string | number } },
+        info: GraphQLResolveInfo
+      ) => {
+        try {
+          const { articleId } = parent;
+          if (!context.manager || !context.manager.id) {
+            throw new GraphQLError("Manager Unauthorized");
+          }
+          const managerId = context.manager.id;
+          const result = await selectArticleDraft({ managerId, articleId });
+          return result;
+        } catch (e: any) {
+          console.error(e.stack || e.message || e);
+          debugger;
+          throw e;
+        }
+      },
+    },
     DeleteArticleResponse: {
       articleList: async (
         parent: void,
@@ -101,6 +126,7 @@ export const BlogManagementModule = createModule({
           throw new Error("Manager Unauthorized");
         }
         const { article } = variables;
+        const articleId = article.existingArticleId || null;
         try {
           const sqlResult = await db.excuteQuery({
             query: `call blog_save_article(
@@ -145,7 +171,11 @@ export const BlogManagementModule = createModule({
           };
         } catch (e: any) {
           console.error(e.stack || e.message);
-          return { success: false, error: e.stack || e.message || e };
+          return {
+            articleId,
+            success: false,
+            error: e.stack || e.message || e,
+          };
         }
       },
       deleteArticle: async (

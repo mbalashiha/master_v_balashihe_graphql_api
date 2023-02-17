@@ -26,7 +26,6 @@ export const managementLoginMiddleware = async (
   try {
     const value = (req as any).rawBody || req.body.toString("utf8");
     const decoded = value && typeof value === "string" && simpleDecrypt(value);
-    debugger;
     if (decoded) {
       const { login, password } = decoded;
       if (login && password) {
