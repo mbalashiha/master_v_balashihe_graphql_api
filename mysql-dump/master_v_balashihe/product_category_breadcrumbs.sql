@@ -1,7 +1,7 @@
 -- --------------------------------------------------------
 -- Хост:                         127.0.0.1
--- Версия сервера:               10.10.2-MariaDB - mariadb.org binary distribution
--- Операционная система:         Win64
+-- Версия сервера:               10.6.11-MariaDB-0ubuntu0.22.04.1 - Ubuntu 22.04
+-- Операционная система:         debian-linux-gnu
 -- HeidiSQL Версия:              12.3.0.6589
 -- --------------------------------------------------------
 
@@ -17,20 +17,7 @@
 -- Дамп структуры для представление master_v_balashihe.product_category_breadcrumbs
 -- Удаление временной таблицы и создание окончательной структуры представления
 DROP TABLE IF EXISTS `product_category_breadcrumbs`;
-CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `product_category_breadcrumbs` AS SELECT
- 1 AS `id`,
-  1 AS `category_name`,
-  1 AS `parent_id`,
-  1 AS `handle`,
-  1 AS `slug`,
-  1 AS `breadcrumbs`,
-  1 AS `uri_pathes`,
-  1 AS `updatedAt`,
-  1 AS `createdAt`,
-  1 AS `product_category_id`,
-  1 AS `productsCount`,
-  1 AS `parentId`,
-  1 AS `name` ;
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `product_category_breadcrumbs` AS select 1 AS `id`,1 AS `category_name`,1 AS `parent_id`,1 AS `handle`,1 AS `slug`,1 AS `breadcrumbs`,1 AS `uri_pathes`,1 AS `updatedAt`,1 AS `createdAt`,1 AS `product_category_id`,1 AS `productsCount`,1 AS `parentId`,1 AS `name`;
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

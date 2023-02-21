@@ -81,43 +81,43 @@ app.use(cors(corsOptions));
 app.use(cookieParser());
 const verifyCookieToken =
   (cookieTokenName: string) =>
-  (
-    req: IncomingMessage & { cookies: { [x: string]: string } },
-    res: OutgoingMessage & {
-      cookie: (
-        arg0: string,
-        arg1: string,
-        arg2: { httpOnly: boolean; maxAge: number }
-      ) => void;
-    },
-    next: () => any
-  ) => {
-    const token = req.cookies[cookieTokenName] || "";
-    (req as any).responseObject = res;
-    if (token) {
-      try {
-        (req as any)[cookieTokenName] = jwt.verify(
-          token,
-          process.env["JWT_SECRET"]!
-        );
-        res.cookie(cookieTokenName, token, {
-          httpOnly: true,
-          maxAge: 90 * 24 * 60 * 60 * 1000,
-          /// secure: true, //on HTTPS
-          /// domain: "localhost:4402", //set your domain
-        });
-      } catch (e) {
-        console.error("Authentication token is invalid, please log in");
-        res.cookie(cookieTokenName, "", {
-          httpOnly: true,
-          maxAge: 0,
-          // secure: true, //on HTTPS
-          // domain: "localhost:4402", //set your domain
-        });
+    (
+      req: IncomingMessage & { cookies: { [x: string]: string } },
+      res: OutgoingMessage & {
+        cookie: (
+          arg0: string,
+          arg1: string,
+          arg2: { httpOnly: boolean; maxAge: number }
+        ) => void;
+      },
+      next: () => any
+    ) => {
+      const token = req.cookies[cookieTokenName] || "";
+      (req as any).responseObject = res;
+      if (token) {
+        try {
+          (req as any)[cookieTokenName] = jwt.verify(
+            token,
+            process.env["JWT_SECRET"]!
+          );
+          res.cookie(cookieTokenName, token, {
+            httpOnly: true,
+            maxAge: 90 * 24 * 60 * 60 * 1000,
+            /// secure: true, //on HTTPS
+            /// domain: "localhost:4402", //set your domain
+          });
+        } catch (e) {
+          console.error("Authentication token is invalid, please log in");
+          res.cookie(cookieTokenName, "", {
+            httpOnly: true,
+            maxAge: 0,
+            // secure: true, //on HTTPS
+            // domain: "localhost:4402", //set your domain
+          });
+        }
       }
-    }
-    return next();
-  };
+      return next();
+    };
 app.use(verifyCookieToken("manager"));
 app.use(verifyCookieToken("client"));
 
@@ -163,7 +163,7 @@ app.use(
   })
 );
 app.listen(4402, () => {
-  console.log("Running a GraphQL API server at http://:4402/graphql/api");
+  console.log("Running a GraphQL API server at http://localhost:4402/graphql/api");
   setTimeout(() => spawnMysqldump(), 10 * 1000);
 });
 // } else {

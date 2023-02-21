@@ -1,7 +1,7 @@
 -- --------------------------------------------------------
 -- Хост:                         127.0.0.1
--- Версия сервера:               10.10.2-MariaDB - mariadb.org binary distribution
--- Операционная система:         Win64
+-- Версия сервера:               10.6.11-MariaDB-0ubuntu0.22.04.1 - Ubuntu 22.04
+-- Операционная система:         debian-linux-gnu
 -- HeidiSQL Версия:              12.3.0.6589
 -- --------------------------------------------------------
 
@@ -17,13 +17,7 @@
 -- Дамп структуры для представление master_v_balashihe.checkout_view
 -- Удаление временной таблицы и создание окончательной структуры представления
 DROP TABLE IF EXISTS `checkout_view`;
-CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `checkout_view` AS SELECT
- 1 AS `webUrl`,
-  1 AS `checkoutName`,
-  1 AS `taxesIncluded`,
-  1 AS `completedAt`,
-  1 AS `createdAt`,
-  1 AS `updatedAt` ;
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `checkout_view` AS select 1 AS `webUrl`,1 AS `checkoutName`,1 AS `taxesIncluded`,1 AS `completedAt`,1 AS `createdAt`,1 AS `updatedAt`;
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

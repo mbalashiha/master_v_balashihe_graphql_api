@@ -5,10 +5,12 @@ import fs from "fs";
 import fsa from "fs/promises";
 import fse from "fs-extra";
 const mysqldumpExePathes = [
+  "/usr/bin/mysqldump",
   `C:\\Program Files\\MariaDB 10.10\\bin\\mysqldump.exe`,
   `D:\\Program Files\\MariaDB 10.10\\bin\\mysqldump.exe`,
 ];
 const mysqlExePathes = [
+  "/usr/bin/mysql",
   `C:\\Program Files\\MariaDB 10.10\\bin\\mysql.exe`,
   `D:\\Program Files\\MariaDB 10.10\\bin\\mysql.exe`,
 ];
@@ -24,9 +26,9 @@ const getFirstExistingPath = async (pathes: Array<string>): Promise<string> => {
       if (await fse.pathExists(tryPath)) {
         return tryPath;
       }
-    } catch (e) {}
+    } catch (e) { }
   }
-  return "";
+  throw new Error('No one file path exists from array: ' + JSON.stringify(pathes, null, 2));
 };
 const getMysqldumpExePath = () => {
   return getFirstExistingPath(mysqldumpExePathes);
@@ -119,9 +121,10 @@ export const spawnMysqldump = async () => {
             "--databases",
             databaseName,
             "--hex-blob",
-            "--single-transaction",
+            // "--add-drop-trigger",
             "--routines",
-            // "--lock-tables=false",
+            "--triggers",
+            "--single-transaction",
           ],
           fs.createWriteStream(currentDatabaseDumpFilepath)
         );
