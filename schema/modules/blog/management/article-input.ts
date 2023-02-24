@@ -2,8 +2,9 @@ import { createModule, gql } from "graphql-modules";
 import util from "util";
 import expressJwt from "express-jwt";
 import jwt from "jsonwebtoken";
-import db from "@src/db/execute-query";
-import { GraphQLError, GraphQLResolveInfo } from "graphql";
+import db from "@src/sql/execute-query";
+import sanitizeHtml from "sanitize-html";
+import { GraphQLError, GraphQLResolveInfo } from "graphql"; import * as windows1251 from 'windows-1251';
 import { isPositiveInteger } from "@src/utils/type-checkers";
 import { sql } from "@schema/sql-query";
 import { Console } from "console";
@@ -128,7 +129,7 @@ export const BlogManagementModule = createModule({
         const { article } = variables;
         const articleId = article.existingArticleId || null;
         try {
-          const sqlResult = await db.excuteQuery({
+          let sqlResult = await db.excuteQuery({
             query: `call blog_save_article(
             $managerId,
             $existingArticleId,
@@ -145,18 +146,22 @@ export const BlogManagementModule = createModule({
             variables: {
               managerId: context.manager.id,
               existingArticleId: article.existingArticleId || null,
-              title: article.title || null,
+              title: (article.title || "") || null,
               handle: article.handle || null,
               autoHandleSlug: article.autoHandleSlug || null,
               blogCategoryId: article.blogCategoryId || null,
               published: article.published ? 1 : null,
               orderNumber: article.orderNumber || null,
-              text: article.text || null,
-              textHtml: article.textHtml || null,
+              text:
+                (article.text || "") || null,
+              textHtml: (article.textHtml || "") || null,
               textRawDraftContentState:
                 article.textRawDraftContentState || null,
             },
           });
+          if (!sqlResult) {
+            throw new Error('sql procedure result is undefined!');
+          }
           const row: {
             success?: boolean;
             message?: string;
@@ -170,7 +175,9 @@ export const BlogManagementModule = createModule({
             success: Boolean(row.success),
           };
         } catch (e: any) {
+          console.log(article);
           console.error(e.stack || e.message);
+          debugger;
           return {
             articleId,
             success: false,

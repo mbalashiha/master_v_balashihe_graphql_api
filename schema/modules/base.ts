@@ -1,6 +1,6 @@
 import { createModule, gql } from "graphql-modules";
 import util from "util";
-import db from "@src/db/execute-query";
+import db from "@src/sql/execute-query";
 import { GraphQLResolveInfo } from "graphql";
 import { isPositiveInteger } from "@src/utils/type-checkers";
 import { sql } from "@schema/sql-query";
@@ -328,9 +328,9 @@ export const baseModule = createModule({
             if (!names[i] || !handles[i]) {
               throw new Error(
                 "Incorrect breadcrumbs with names[i]: " +
-                  typeof names[i] +
-                  " and handles[i]: " +
-                  typeof handles[i]
+                typeof names[i] +
+                " and handles[i]: " +
+                typeof handles[i]
               );
             }
             breadcrumbs.push({
@@ -425,7 +425,7 @@ export const baseModule = createModule({
           if (checkoutRows.length !== 1) {
             console.error(
               "checkout result rows from mysql is not 1: checkoutRows.length: " +
-                checkoutRows.length.toString()
+              checkoutRows.length.toString()
             );
           }
           const checkoutResult = checkoutRows[0] || null;
@@ -596,9 +596,9 @@ export const baseModule = createModule({
             if (!names[i] || !handles[i]) {
               throw new Error(
                 "Incorrect breadcrumbs with names[i]: " +
-                  typeof names[i] +
-                  " and handles[i]: " +
-                  typeof handles[i]
+                typeof names[i] +
+                " and handles[i]: " +
+                typeof handles[i]
               );
             }
             breadcrumbs.push({ name: names[i], handle: handles[i] });
@@ -715,8 +715,8 @@ export const baseModule = createModule({
         const lineItems = Array.isArray(input.lineItems)
           ? input.lineItems
           : input.lineItems
-          ? [input.lineItems]
-          : [];
+            ? [input.lineItems]
+            : [];
         try {
           if (
             lineItems &&

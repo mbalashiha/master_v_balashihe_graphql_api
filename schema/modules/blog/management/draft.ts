@@ -1,9 +1,10 @@
 import { createModule, gql } from "graphql-modules";
 import util from "util";
-import db from "@src/db/execute-query";
+import db from "@src/sql/execute-query";
 import { GraphQLError, GraphQLResolveInfo } from "graphql";
 import { Schema } from "@root/schema/types/schema";
 import { selectArticleDraft } from "./sql";
+
 export const BlogArticleDraftModule = createModule({
   id: "blog-article-draft-module",
   dirname: __dirname,
@@ -108,7 +109,7 @@ export const BlogArticleDraftModule = createModule({
           return (rows && rows[0]) || null;
         } catch (e: any) {
           console.error(e);
-          debugger;
+          // debugger;
           throw e;
         }
       },
@@ -139,7 +140,7 @@ export const BlogArticleDraftModule = createModule({
             variables: {
               managerId: context.manager.id,
               existingArticleId: articleDraft.existingArticleId || null,
-              title: articleDraft.title || null,
+              title: (articleDraft.title || '') || null,
               handle: articleDraft.handle || null,
               autoHandleSlug: articleDraft.autoHandleSlug || null,
               blogCategoryId: articleDraft.blogCategoryId || null,
@@ -160,7 +161,6 @@ export const BlogArticleDraftModule = createModule({
           };
         } catch (e: any) {
           console.error(e.stack || e.message);
-          debugger;
           throw e;
         }
       },
@@ -173,12 +173,13 @@ export const BlogArticleDraftModule = createModule({
         if (!context.manager || !context.manager.id) {
           throw new GraphQLError("Manager Unauthorized");
         }
+        const { articleTextDraft } = variables;
         try {
           const { articleTextDraft } = variables;
           if (articleTextDraft.text && !articleTextDraft.textHtml) {
             throw new Error("Has text but no textHtml. Impossible!");
-          }
-          const sqlResult = await db.excuteQuery({
+          };
+          let sqlResult = await db.excuteQuery({
             query: `call blog_article_text_save_draft(
               $managerId,
               $existingArticleId,
@@ -189,12 +190,15 @@ export const BlogArticleDraftModule = createModule({
             variables: {
               managerId: context.manager.id,
               existingArticleId: articleTextDraft.existingArticleId || null,
-              text: articleTextDraft.text || null,
-              textHtml: articleTextDraft.textHtml || null,
+              text: (articleTextDraft.text || '') || null,
+              textHtml: (articleTextDraft.textHtml || '') || null,
               textRawDraftContentState:
                 articleTextDraft.textRawDraftContentState || null,
             },
           });
+          if (!sqlResult) {
+            throw new Error('sql procedure result is undefined!');
+          }
           const row = (sqlResult[0] && sqlResult[0][0]) || {};
           if (!row.message) {
             throw new Error("No message from sql procedure!");
@@ -207,8 +211,9 @@ export const BlogArticleDraftModule = createModule({
             ...row,
           };
         } catch (e: any) {
+          console.error(articleTextDraft);
           console.error(e.stack || e.message);
-          debugger;
+          // debugger;
           throw e;
         }
       },

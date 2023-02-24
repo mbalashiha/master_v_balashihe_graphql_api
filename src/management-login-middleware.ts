@@ -2,7 +2,7 @@ import { createModule, gql } from "graphql-modules";
 import util from "util";
 import expressJwt from "express-jwt";
 import jwt from "jsonwebtoken";
-import db from "@src/db/execute-query";
+import db from "@src/sql/execute-query";
 import { Request, Response } from "express";
 import { GraphQLResolveInfo } from "graphql";
 import { isPositiveInteger } from "@src/utils/type-checkers";
@@ -41,7 +41,7 @@ export const managementLoginMiddleware = async (
           query: "select * from managers where id=?",
           variables: [values.id],
         });
-        let result: any = { success: true};
+        let result: any = { success: true };
         const managerRow = rows && rows[0];
         if (managerRow && managerRow.id) {
           delete managerRow.password;
@@ -57,7 +57,7 @@ export const managementLoginMiddleware = async (
             created: managerRow.created || null,
             updated: managerRow.updated || null,
           };
-          result = {...result, manager};
+          result = { ...result, manager };
           const token = jwt.sign({ ...values }, process.env["JWT_SECRET"]!);
           res.cookie("manager", token, {
             httpOnly: true,

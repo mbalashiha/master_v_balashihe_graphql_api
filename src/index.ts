@@ -19,7 +19,7 @@ import cors from "cors";
 import { Request, Response } from "express";
 import { graphqlHTTP } from "express-graphql";
 import cookieParser from "cookie-parser";
-import excuteQuery from "@src/db/execute-query";
+import excuteQuery from "@src/sql/execute-query";
 import fsa from "fs/promises";
 import fs from "fs";
 import path from "path";
@@ -34,7 +34,7 @@ import managementLoginMiddleware, {
 import { verifyManagementLoginMiddleware } from "./management-login-middleware";
 import { AuthRequest } from "@root/types/express-custom";
 import { IncomingMessage, OutgoingMessage, ServerResponse } from "http";
-import { spawnMysqldump } from "./db/mysqldump";
+import { spawnMysqldump } from "./sql/mysqldump";
 import { BlogManagementModule } from "@root/schema/modules/blog/management/article-input";
 import { BlogArticleDraftModule } from "@root/schema/modules/blog/management/draft";
 

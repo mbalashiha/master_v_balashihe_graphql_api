@@ -20,6 +20,8 @@
     "paths": {
       "@src": ["src"],
       "@src/*": ["src/*"],
+      "@sql": ["src/sql"],
+      "@sql/*": ["src/sql/*"],
       "@root": ["."],
       "@root/*": ["./*"],
       "@schema": ["schema"],

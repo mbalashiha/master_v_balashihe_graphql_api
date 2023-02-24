@@ -2,7 +2,7 @@ import { createModule, gql } from "graphql-modules";
 import util from "util";
 import expressJwt from "express-jwt";
 import jwt from "jsonwebtoken";
-import db from "@src/db/execute-query";
+import db from "@src/sql/execute-query";
 import { GraphQLResolveInfo } from "graphql";
 import { isPositiveInteger } from "@src/utils/type-checkers";
 import { sql } from "@schema/sql-query";

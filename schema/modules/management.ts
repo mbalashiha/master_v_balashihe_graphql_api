@@ -2,7 +2,7 @@ import { createModule, gql } from "graphql-modules";
 import util from "util";
 import expressJwt from "express-jwt";
 import jwt from "jsonwebtoken";
-import db from "@src/db/execute-query";
+import db from "@src/sql/execute-query";
 import { GraphQLError, GraphQLResolveInfo } from "graphql";
 import { isPositiveInteger } from "@src/utils/type-checkers";
 import { sql } from "@schema/sql-query";
@@ -504,7 +504,7 @@ export const managementModule = createModule({
             if (productId) {
               debugger;
               await db.excuteQuery({
-                query: `call delete_product_with_backup(?)`,
+                query: `call delete_product_with_backup($?)`,
                 variables: [productId],
               });
             }
