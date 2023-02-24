@@ -1,5 +1,10 @@
 // sql database query
-import { Connection, ConnectionConfig, EscapeFunctions, default as originalMysqlPackage } from "mysql";
+import {
+  Connection,
+  ConnectionConfig,
+  EscapeFunctions,
+  default as originalMysqlPackage,
+} from "mysql";
 import mysql from "serverless-mysql";
 
 const database_env_unavailable_error = {
@@ -48,7 +53,9 @@ class MysqlDbWrapper {
         return matchedString;
       } else if (Array.isArray(oneVariable) && oneVariable.length) {
         const variableArray = oneVariable;
-        return `(${variableArray.map((el) => self.valueEscape(el)).join(", ")})`;
+        return `(${variableArray
+          .map((el) => self.valueEscape(el))
+          .join(", ")})`;
       } else if (Array.isArray(oneVariable) && !oneVariable.length) {
         return `(${self.valueEscape(null as any)})`;
       } else {
@@ -56,12 +63,14 @@ class MysqlDbWrapper {
       }
     };
     let positionVar = 0;
-    query = query.replace(/\?+/igm, (matched) => {
+    query = query.replace(/\?+/gim, (matched) => {
       const oneVariable = variables[positionVar];
-      positionVar++;
-      if (matched === '??' && oneVariable) {
+      if (oneVariable === "?" || oneVariable === "??") {
+        positionVar++;
+      }
+      if (matched === "??" && oneVariable) {
         return originalMysqlPackage.escapeId(oneVariable);
-      } else if (matched === '?') {
+      } else if (matched === "?") {
         return chooseEscape(oneVariable, matched);
       } else {
         return matched;
@@ -77,8 +86,8 @@ class MysqlDbWrapper {
         typeof variables[queryKey] !== "undefined"
           ? variables[queryKey]
           : typeof variables[mainGroup as any] !== "undefined"
-            ? variables[mainGroup as any]
-            : undefined;
+          ? variables[mainGroup as any]
+          : undefined;
       return chooseEscape(oneVariable, matchedString);
     };
     query = query.replace(
@@ -111,7 +120,7 @@ class MysqlDbWrapper {
     } finally {
       try {
         await db.end();
-      } catch (e) { }
+      } catch (e) {}
     }
   }
   async excuteQuery<T = Array<any>>({
@@ -150,7 +159,7 @@ class MysqlDbWrapper {
     } finally {
       try {
         await db.end();
-      } catch (e) { }
+      } catch (e) {}
     }
   }
   public rowsPostProcessing<T>(rows: any): T {
@@ -162,7 +171,7 @@ class MysqlDbWrapper {
         if (typeof value === "string" && /^[\[\{]{1}\"/.test(value)) {
           try {
             row[key] = JSON.parse(value);
-          } catch (e) { }
+          } catch (e) {}
         }
       }
     }
