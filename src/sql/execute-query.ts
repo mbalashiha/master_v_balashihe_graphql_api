@@ -202,8 +202,14 @@ class MysqlDbWrapper {
   config(config?: ConnectionConfig): ConnectionConfig {
     return this.db.config(config);
   }
-  query<T = Array<any>>(...args: any[]): Promise<T> {
-    return this.db.query(...args) as any as Promise<T>;
+  query<T = Array<any>>(
+    query: QueryProps["query"],
+    variables?: QueryProps["variables"]
+  ): Promise<T> {
+    return this.excuteQuery<T>({
+      query,
+      variables,
+    });
   }
   end(): Promise<void> {
     return this.db.end();

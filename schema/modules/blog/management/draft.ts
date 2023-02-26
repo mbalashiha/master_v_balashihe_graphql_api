@@ -4,6 +4,7 @@ import db from "@src/sql/execute-query";
 import { GraphQLError, GraphQLResolveInfo } from "graphql";
 import { Schema } from "@root/schema/types/schema";
 import { selectArticleDraft } from "./sql";
+import { ID } from "graphql-modules/shared/types";
 
 export const BlogArticleDraftModule = createModule({
   id: "blog-article-draft-module",
@@ -46,7 +47,9 @@ export const BlogArticleDraftModule = createModule({
         existingArticleId: ID
       }
       type ArticleDraftResponse {
+        error: String
         message: String
+        success: Boolean!
         updatedDraft: ArticleDraft
       }
       type Query {
@@ -57,6 +60,7 @@ export const BlogArticleDraftModule = createModule({
         saveArticleTextDraft(
           articleTextDraft: ArticleTextDraftInput
         ): ArticleDraftResponse
+        deleteArticleDraft(id: ID!): ArticleDraftResponse
       }
     `,
   ],
@@ -71,14 +75,17 @@ export const BlogArticleDraftModule = createModule({
           draftArticleId: string;
         },
         variables: void,
-        ctx: void,
+        context: { manager: { id: string | number } },
         info: GraphQLResolveInfo
       ) => {
+        if (!context.manager || !context.manager.id) {
+          throw new GraphQLError("Manager Unauthorized");
+        }
         const { id, managerId, articleId, draftArticleId, existingArticleId } =
           parent;
         return await selectArticleDraft({
           draftArticleId: id || draftArticleId,
-          managerId,
+          managerId: context.manager.id,
           articleId: articleId || existingArticleId,
         });
       },
@@ -140,7 +147,7 @@ export const BlogArticleDraftModule = createModule({
             variables: {
               managerId: context.manager.id,
               existingArticleId: articleDraft.existingArticleId || null,
-              title: (articleDraft.title || '') || null,
+              title: articleDraft.title || "" || null,
               handle: articleDraft.handle || null,
               autoHandleSlug: articleDraft.autoHandleSlug || null,
               blogCategoryId: articleDraft.blogCategoryId || null,
@@ -178,7 +185,7 @@ export const BlogArticleDraftModule = createModule({
           const { articleTextDraft } = variables;
           if (articleTextDraft.text && !articleTextDraft.textHtml) {
             throw new Error("Has text but no textHtml. Impossible!");
-          };
+          }
           let sqlResult = await db.excuteQuery({
             query: `call blog_article_text_save_draft(
               $managerId,
@@ -190,20 +197,29 @@ export const BlogArticleDraftModule = createModule({
             variables: {
               managerId: context.manager.id,
               existingArticleId: articleTextDraft.existingArticleId || null,
-              text: (articleTextDraft.text || '') || null,
-              textHtml: (articleTextDraft.textHtml || '') || null,
+              text: articleTextDraft.text || "" || null,
+              textHtml: articleTextDraft.textHtml || "" || null,
               textRawDraftContentState:
                 articleTextDraft.textRawDraftContentState || null,
             },
           });
           if (!sqlResult) {
-            throw new Error('sql procedure result is undefined!');
+            throw new Error("sql procedure result is undefined!");
           }
           const row = (sqlResult[0] && sqlResult[0][0]) || {};
-          if (!row.message) {
-            throw new Error("No message from sql procedure!");
+          let success = true;
+          let error = row.error || null;
+          let message = row.message || null;
+          if (!message) {
+            message = "No message from sql procedure!";
+            if (!error) {
+              error = message;
+            }
           }
           return {
+            success,
+            error,
+            message,
             managerId: context.manager.id,
             id: row.draftArticleId,
             articleId: articleTextDraft.existingArticleId || null,
@@ -215,6 +231,51 @@ export const BlogArticleDraftModule = createModule({
           console.error(e.stack || e.message);
           // debugger;
           throw e;
+        }
+      },
+      deleteArticleDraft: async (
+        parent: void,
+        variables: { id: ID },
+        context: { manager: { id: string | number } },
+        info: GraphQLResolveInfo
+      ) => {
+        if (!context.manager || !context.manager.id) {
+          throw new GraphQLError("Manager Unauthorized");
+        }
+        const { id } = variables;
+        try {
+          const rows = await db.query(
+            "select * from draft_blog_article where draftArticleId=unhex($id)",
+            { id }
+          );
+          const draft = rows && rows[0];
+          let success = true;
+          let error = null;
+          let message = null;
+          if (draft) {
+            const rows = await db.query(
+              "delete from draft_blog_article where draftArticleId=unhex($id)",
+              { id }
+            );
+          } else {
+            success = false;
+            error = "Recieved unexisting draft id!";
+            message = error;
+          }
+          return {
+            success,
+            error,
+            message,
+            managerId: context.manager.id,
+            id: null,
+            articleId: draft.existingArticleId || null,
+            existingArticleId: draft.existingArticleId || null,
+          };
+        } catch (e: any) {
+          console.error(id);
+          console.error(e.stack || e.message);
+          let error = e.stack || e.message || e;
+          return { success: false, error, message: error };
         }
       },
     },

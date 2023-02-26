@@ -13,7 +13,7 @@ export default async function selectArticleDraft({
     let rows: any;
     if (draftArticleId) {
       rows = await db.excuteQuery({
-        query: `select Lower(Hex(d.draftArticleId)) as id, d.* from draft_blog_article d 
+        query: `select d.* from draft_blog_article_view d 
                     Where d.draftArticleId=unhex($draftArticleId)`,
         variables: { draftArticleId },
       });
@@ -23,38 +23,37 @@ export default async function selectArticleDraft({
     }
     if (articleId) {
       rows = await db.excuteQuery({
-        query: `select Lower(Hex(d.draftArticleId)) as id, d.* from draft_blog_article d 
+        query: `select d.* from draft_blog_article_view d 
                     Where d.isDraftSaved is Null And d.existingArticleId=$articleId And d.managerId=$managerId`,
         variables: { articleId, managerId },
       });
       if (!rows[0] || !rows[0].id) {
         rows = await db.excuteQuery({
-          query: `select ba.id as existingArticleId, 
-                      ba.* from blog_article ba Where ba.id=$articleId`,
+          query: `select ba.* from null_draft_blog_article ba Where ba.existingArticleId=$articleId`,
           variables: { articleId, managerId },
         });
       }
     } else {
       rows = await db.excuteQuery({
-        query: `select Lower(Hex(d.draftArticleId)) as id, d.* from draft_blog_article d 
+        query: `select d.* from draft_blog_article_view d 
                     Where d.isDraftSaved is Null And d.existingArticleId Is NULL And d.managerId=$managerId`,
         variables: { articleId, managerId },
       });
     }
-    let result = rows[0] && rows[0].id && rows[0];
-    if (!result) {
+    const isEmpty = !(rows[0] && (rows[0].id || rows[0].existingArticleId));
+    let result;
+    if (isEmpty) {
       result = {
         id: null,
         existingArticleId: articleId || null,
         articleId: articleId || null,
       };
-    }
-    if (!result.existingArticleId) {
-      result.existingArticleId = articleId || null;
+    } else {
+      result = rows[0];
     }
     return result;
   } catch (e: any) {
-    console.error(e);
+    console.error(e.stack || e.message || e);
     debugger;
     throw e;
   }
