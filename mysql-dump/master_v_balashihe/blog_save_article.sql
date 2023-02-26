@@ -25,9 +25,9 @@ CREATE PROCEDURE `blog_save_article`(
 	IN `in_blogCategoryId` TEXT,
 	IN `in_published` TEXT,
 	IN `in_orderNumber` TEXT,
-	IN `in_text` MEDIUMTEXT,
-	IN `in_textHtml` MEDIUMTEXT,
-	IN `in_textRawDraftContentState` MEDIUMTEXT
+	IN `in_text` LONGTEXT,
+	IN `in_textHtml` LONGTEXT,
+	IN `in_textRawDraftContentState` LONGTEXT
 )
 BEGIN
 	DECLARE stored_articleId INT(10) unsigned DEFAULT Null;
@@ -40,8 +40,8 @@ BEGIN
 	Set in_blogCategoryId := If(in_blogCategoryId='' OR in_blogCategoryId IS NULL,NULL, in_blogCategoryId);
 	Set in_published := If(in_published='' OR in_published IS NULL,NULL, in_published);
 	Set in_orderNumber := If(in_orderNumber='' OR in_orderNumber IS NULL,NULL, in_orderNumber);
-	Set in_text := If(in_text='' OR in_text IS NULL,NULL, TRIM(in_text));
-	Set in_textHtml := If(in_textHtml='' OR in_textHtml IS NULL,NULL, TRIM(in_textHtml));
+	Set in_text := If(in_text='' OR in_text IS NULL,NULL, in_text);
+	Set in_textHtml := If(in_textHtml='' OR in_textHtml IS NULL,NULL, in_textHtml);
 	Set in_textRawDraftContentState := If(in_textRawDraftContentState='' OR in_textRawDraftContentState IS NULL,NULL, TRIM(in_textRawDraftContentState));
 	
 	If in_existingArticleId IS NOT NULL
@@ -55,8 +55,8 @@ BEGIN
 				IFNULL(in_published,'')=IFNULL(d.published,'') And
 				IFNULL(in_orderNumber,'')=IFNULL(d.orderNumber,'') And
 				IFNULL(in_text,'')=IFNULL(d.`text`,'') And
-				IFNULL(in_textHtml,'')=IFNULL(d.textHtml,'') And
-				IFNULL(in_textRawDraftContentState,'')=IFNULL(d.textRawDraftContentState,'');
+				IFNULL(in_textHtml,'')=IFNULL(d.`textHtml`,'') And
+				IFNULL(in_textRawDraftContentState,'')=IFNULL(d.`textRawDraftContentState`,'');
 	END IF;
 	If stored_articleId IS NOT null
 	Then
@@ -65,7 +65,8 @@ BEGIN
 		
 		If in_existingArticleId IS Null
 		Then
-			INSERT INTO blog_article(managerId, createdByManagerId, title, handle, autoHandleSlug, blogCategoryId, published, orderNumber, `text`, textHtml, textRawDraftContentState)
+			INSERT INTO blog_article(managerId, createdByManagerId, title, handle, autoHandleSlug, blogCategoryId, published, orderNumber, 
+			`text`, `textHtml`, `textRawDraftContentState`)
 				VALUES(
 					in_managerId,					
 					in_managerId,
@@ -91,8 +92,8 @@ BEGIN
 				published=in_published,
 				orderNumber=in_orderNumber,
 				`text`=in_text, 
-				textHtml=in_textHtml,
-				textRawDraftContentState=in_textRawDraftContentState
+				`textHtml`=in_textHtml,
+				`textRawDraftContentState`=in_textRawDraftContentState
 				WHERE id=in_existingArticleId;
 			SET stored_articleId := in_existingArticleId;
 			SELECT stored_articleId AS articleId, true as success, 'Article was updated' AS message;

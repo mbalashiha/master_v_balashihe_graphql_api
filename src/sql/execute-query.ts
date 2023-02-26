@@ -36,8 +36,25 @@ class MysqlDbWrapper {
       throw database_env_unavailable_error as any;
     }
   }
-  public valueEscape(variable: any) {
-    return originalMysqlPackage.escape(variable);
+  public escapeId(
+    value: string,
+    forbidQualified?: boolean | undefined
+  ): string {
+    return originalMysqlPackage.escapeId(value, forbidQualified);
+  }
+  public escapeValue(
+    value: any,
+    stringifyObjects?: boolean | undefined,
+    timeZone?: string | undefined
+  ): string {
+    return originalMysqlPackage.escape(value, stringifyObjects, timeZone);
+  }
+  public valueEscape(
+    value: any,
+    stringifyObjects?: boolean | undefined,
+    timeZone?: string | undefined
+  ): string {
+    return originalMysqlPackage.escape(value, stringifyObjects, timeZone);
   }
   public format(
     query: string,
@@ -69,7 +86,9 @@ class MysqlDbWrapper {
         positionVar++;
       }
       if (matched === "??" && oneVariable) {
-        return originalMysqlPackage.escapeId(oneVariable);
+        return self.escapeId(
+          typeof oneVariable === "string" ? oneVariable : oneVariable.toString()
+        );
       } else if (matched === "?") {
         return chooseEscape(oneVariable, matched);
       } else {

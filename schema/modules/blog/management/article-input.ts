@@ -1,17 +1,8 @@
 import { createModule, gql } from "graphql-modules";
 import util from "util";
-import expressJwt from "express-jwt";
-import jwt from "jsonwebtoken";
 import db from "@src/sql/execute-query";
 import sanitizeHtml from "sanitize-html";
-import { GraphQLError, GraphQLResolveInfo } from "graphql"; import * as windows1251 from 'windows-1251';
-import { isPositiveInteger } from "@src/utils/type-checkers";
-import { sql } from "@schema/sql-query";
-import { Console } from "console";
-import { normalizePriceCurrency } from "@src/utils/currency/converter";
-import { FullProductInput, ProductInput } from "@schema/types/indext";
-import { simpleDecrypt } from "@src/encryption/message-hmac-private-key";
-import cookieParser from "cookie-parser";
+import { GraphQLError, GraphQLResolveInfo } from "graphql";
 import { GraphqlContext } from "@root/types/express-custom";
 import { Schema } from "@root/schema/types/schema";
 import { selectArticleDraft } from "./sql";
