@@ -44,6 +44,8 @@ BEGIN
 	Set in_textHtml := If(in_textHtml='' OR in_textHtml IS NULL,NULL, in_textHtml);
 	Set in_textRawDraftContentState := If(in_textRawDraftContentState='' OR in_textRawDraftContentState IS NULL,NULL, TRIM(in_textRawDraftContentState));
 	
+	SET in_handle := IF(in_handle IS NULL OR in_handle ='', in_autoHandleSlug, in_handle);
+	
 	If in_existingArticleId IS NOT NULL
 	Then
 	SELECT id INTO stored_articleId FROM blog_article d

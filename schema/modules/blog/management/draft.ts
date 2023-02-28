@@ -147,7 +147,9 @@ export const BlogArticleDraftModule = createModule({
             variables: {
               managerId: context.manager.id,
               existingArticleId: articleDraft.existingArticleId || null,
-              title: articleDraft.title || "" || null,
+              title:
+                (articleDraft.title || "").trim().replace(/\s+/gim, " ") ||
+                null,
               handle: articleDraft.handle || null,
               autoHandleSlug: articleDraft.autoHandleSlug || null,
               blogCategoryId: articleDraft.blogCategoryId || null,

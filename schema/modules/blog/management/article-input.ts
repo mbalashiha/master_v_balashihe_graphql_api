@@ -137,21 +137,21 @@ export const BlogManagementModule = createModule({
             variables: {
               managerId: context.manager.id,
               existingArticleId: article.existingArticleId || null,
-              title: (article.title || "") || null,
+              title:
+                (article.title || "").trim().replace(/\s+/gim, " ") || null,
               handle: article.handle || null,
               autoHandleSlug: article.autoHandleSlug || null,
               blogCategoryId: article.blogCategoryId || null,
               published: article.published ? 1 : null,
               orderNumber: article.orderNumber || null,
-              text:
-                (article.text || "") || null,
-              textHtml: (article.textHtml || "") || null,
+              text: article.text || "" || null,
+              textHtml: article.textHtml || "" || null,
               textRawDraftContentState:
                 article.textRawDraftContentState || null,
             },
           });
           if (!sqlResult) {
-            throw new Error('sql procedure result is undefined!');
+            throw new Error("sql procedure result is undefined!");
           }
           const row: {
             success?: boolean;

@@ -40,13 +40,43 @@ export const blogArticlesModule = createModule({
         pageInfo: PageInfo
         nodes(offset: Int, limit: Int): [BlogArticle]
       }
+      type ArticleCard {
+        title: String!
+        handle: String!
+        createdAt: Date!
+      }
+      type ArticlesCardsConnection {
+        nodes: [ArticleCard]!
+      }
+      type PathHandle {
+        handle: String!
+      }
+      type PathHandlesRespose {
+        nodes: [PathHandle]!
+      }
       type Query {
         blogArticles(offset: Int, limit: Int): BlogArticlesConnection
         blogArticleByHandle(handle: String): BlogArticle
+        articlesPathes: PathHandlesRespose!
+        articlesCards: ArticlesCardsConnection!
+        articleByHandle(handle: String): BlogArticle
       }
     `,
   ],
   resolvers: {
+    PathHandlesRespose: {
+      nodes: async (
+        parent: void,
+        variables: void,
+        _ctx: any,
+        info: GraphQLResolveInfo
+      ) => {
+        const articles: any = await db.excuteQuery({
+          query: "select handle from blog_article",
+        });
+        return articles;
+      },
+    },
     BlogArticlesConnection: {
       nodes: async (
         parent: { offset?: number; limit?: number },
@@ -57,7 +87,25 @@ export const blogArticlesModule = createModule({
         let offset = variables.offset || parent.offset || 0;
         let limit = variables.limit || parent.limit || 250;
         const articles: any = await db.excuteQuery({
-          query: "select * from blog_article Where published=1 Limit ?,?",
+          query:
+            "select * from blog_article Order By createdAt Desc, updatedAt Desc",
+          variables: [offset, limit],
+        });
+        return articles;
+      },
+    },
+    ArticlesCardsConnection: {
+      nodes: async (
+        parent: { offset?: number; limit?: number },
+        variables: { offset?: number; limit?: number },
+        _ctx: any,
+        info: GraphQLResolveInfo
+      ) => {
+        let offset = variables.offset || parent.offset || 0;
+        let limit = variables.limit || parent.limit || 250;
+        const articles: any = await db.excuteQuery({
+          query:
+            "select handle, title, createdAt from blog_article Order By createdAt Desc, updatedAt Desc",
           variables: [offset, limit],
         });
         return articles;
@@ -92,9 +140,9 @@ export const blogArticlesModule = createModule({
             if (!names[i] || !handles[i]) {
               throw new Error(
                 "Incorrect breadcrumbs with names[i]: " +
-                typeof names[i] +
-                " and handles[i]: " +
-                typeof handles[i]
+                  typeof names[i] +
+                  " and handles[i]: " +
+                  typeof handles[i]
               );
             }
             breadcrumbs.push({
@@ -143,9 +191,9 @@ export const blogArticlesModule = createModule({
               if (!names[i] || !handles[i]) {
                 throw new Error(
                   "Incorrect breadcrumbs with names[i]: " +
-                  typeof names[i] +
-                  " and handles[i]: " +
-                  typeof handles[i]
+                    typeof names[i] +
+                    " and handles[i]: " +
+                    typeof handles[i]
                 );
               }
               breadcrumbs.push({ name: names[i], handle: handles[i] });
@@ -157,7 +205,6 @@ export const blogArticlesModule = createModule({
           }
         },
       },
-      Mutation: {},
       Query: {
         blogCategories: async (
           _: any,
@@ -192,12 +239,40 @@ export const blogArticlesModule = createModule({
     },
     Query: {
       blogArticles: async (
-        _: any,
+        parent: any,
         variables: any,
         _ctx: any,
         info: GraphQLResolveInfo
       ) => {
-        return { ..._, ...variables };
+        return { ...parent, ...variables };
+      },
+      articlesPathes: async (
+        parent: any,
+        variables: any,
+        _ctx: any,
+        info: GraphQLResolveInfo
+      ) => {
+        return { ...parent, ...variables };
+      },
+      articlesCards: async (
+        parent: any,
+        variables: any,
+        _ctx: any,
+        info: GraphQLResolveInfo
+      ) => {
+        return { ...parent, ...variables };
+      },
+      articleByHandle: async (
+        parent: any,
+        variables: { handle: string },
+        _ctx: any,
+        info: GraphQLResolveInfo
+      ) => {
+        let rows = await db.query(`select * from blog_article where handle=?`, [
+          variables.handle,
+        ]);
+        let result = rows && rows[0];
+        return { ...parent, ...variables, ...result };
       },
     },
   },
