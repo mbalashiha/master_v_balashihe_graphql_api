@@ -55,10 +55,18 @@ export const blogArticlesModule = createModule({
         nodes: [PathHandle]!
       }
       type Query {
-        blogArticles(offset: Int, limit: Int): BlogArticlesConnection
+        blogArticles(
+          search: String
+          offset: Int
+          limit: Int
+        ): BlogArticlesConnection
         blogArticleByHandle(handle: String): BlogArticle
         articlesPathes: PathHandlesRespose!
-        articlesCards: ArticlesCardsConnection!
+        articlesCards(
+          search: String
+          offset: Int
+          limit: Int
+        ): ArticlesCardsConnection!
         articleByHandle(handle: String): BlogArticle
       }
     `,
@@ -79,11 +87,12 @@ export const blogArticlesModule = createModule({
     },
     BlogArticlesConnection: {
       nodes: async (
-        parent: { offset?: number; limit?: number },
+        parent: { search?: string; offset?: number; limit?: number },
         variables: { offset?: number; limit?: number },
         _ctx: any,
         info: GraphQLResolveInfo
       ) => {
+        let search = parent.search || "";
         let offset = variables.offset || parent.offset || 0;
         let limit = variables.limit || parent.limit || 250;
         const articles: any = await db.excuteQuery({
@@ -96,11 +105,12 @@ export const blogArticlesModule = createModule({
     },
     ArticlesCardsConnection: {
       nodes: async (
-        parent: { offset?: number; limit?: number },
+        parent: { search?: string; offset?: number; limit?: number },
         variables: { offset?: number; limit?: number },
         _ctx: any,
         info: GraphQLResolveInfo
       ) => {
+        let search = parent.search || "";
         let offset = variables.offset || parent.offset || 0;
         let limit = variables.limit || parent.limit || 250;
         const articles: any = await db.excuteQuery({
