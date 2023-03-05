@@ -17,9 +17,10 @@
 -- Дамп структуры для таблица master_v_balashihe.draft_blog_article
 CREATE TABLE IF NOT EXISTS `draft_blog_article` (
   `draftArticleId` binary(16) NOT NULL DEFAULT unhex(replace(uuid(),'-','')),
-  `handle` text CHARACTER SET latin1 COLLATE latin1_general_ci DEFAULT NULL,
   `title` text DEFAULT NULL,
+  `handle` text CHARACTER SET latin1 COLLATE latin1_general_ci DEFAULT NULL,
   `autoHandleSlug` text CHARACTER SET latin1 COLLATE latin1_general_ci DEFAULT NULL,
+  `absURL` varchar(1024) CHARACTER SET latin1 COLLATE latin1_general_ci DEFAULT NULL,
   `blogCategoryId` int(10) unsigned DEFAULT NULL,
   `text` mediumtext DEFAULT NULL,
   `textHtml` mediumtext DEFAULT NULL,
