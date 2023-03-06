@@ -37,6 +37,7 @@ import { IncomingMessage, OutgoingMessage, ServerResponse } from "http";
 import { spawnMysqldump } from "./sql/mysqldump";
 import { BlogManagementModule } from "@root/schema/modules/blog/management/article-input";
 import { BlogArticleDraftModule } from "@root/schema/modules/blog/management/draft";
+import { ManagementArticlesCardsModule } from "@root/schema/modules/blog/management/article-cards";
 
 const corsOptions = {
   origin: "http://localhost:3000", //change with your own client URL
@@ -51,6 +52,7 @@ const application = createApplication({
     blogArticlesModule,
     BlogManagementModule,
     BlogArticleDraftModule,
+    ManagementArticlesCardsModule,
   ],
 });
 const execute = application.createExecution();

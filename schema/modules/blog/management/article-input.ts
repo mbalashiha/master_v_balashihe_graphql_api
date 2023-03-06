@@ -29,7 +29,7 @@ export const BlogManagementModule = createModule({
         error: String
         message: String
         success: Boolean!
-        articleList: [BlogArticle]!
+        articleList: ManagementArticlesCards!
       }
       type SavedArticleResponse {
         error: String
@@ -41,7 +41,7 @@ export const BlogManagementModule = createModule({
       type Mutation {
         managementSearchArticles(search: String): [BlogArticle]!
         saveArticle(article: ArticleInput!): SavedArticleResponse!
-        deleteArticle(id: ID!): DeleteArticleResponse!
+        deleteArticle(id: ID!, search: String): DeleteArticleResponse!
       }
       type Query {
         managementGetArticles(search: String): [BlogArticle]!
@@ -144,7 +144,7 @@ export const BlogManagementModule = createModule({
               blogCategoryId: article.blogCategoryId || null,
               published: article.published ? 1 : null,
               orderNumber: article.orderNumber || null,
-              text: article.text || "" || null,
+              text: (article.text || "").replace(/\s+/gim, " ") || null,
               textHtml: article.textHtml || "" || null,
               textRawDraftContentState:
                 article.textRawDraftContentState || null,
@@ -178,7 +178,7 @@ export const BlogManagementModule = createModule({
       },
       deleteArticle: async (
         parent: void,
-        variables: { id: string | number },
+        variables: { id: string | number; search?: string },
         context: GraphqlContext,
         info: GraphQLResolveInfo
       ) => {
@@ -186,6 +186,7 @@ export const BlogManagementModule = createModule({
           throw new Error("Manager Unauthorized");
         }
         const { id } = variables;
+        const search = variables.search || "";
         try {
           const sqlResult = await db.excuteQuery({
             query: `delete from blog_article where id=$id`,
@@ -194,6 +195,7 @@ export const BlogManagementModule = createModule({
             },
           });
           return {
+            search,
             success: true,
             message: "article deleted",
           };
