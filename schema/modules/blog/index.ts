@@ -8,6 +8,27 @@ import { Console } from "console";
 import { normalizePriceCurrency } from "@src/utils/currency/converter";
 import { FullProductInput, ProductInput } from "@schema/types/indext";
 import { fullTextSearch } from "@src/sql/full-text-search";
+const getFirst = (notThisId: number | string) =>
+  db.excuteQuery({
+    query: `SELECT id, title, handle FROM blog_article WHERE id = (SELECT MIN(id) FROM blog_article) And id != $articleId`,
+    variables: { articleId: notThisId },
+  });
+const getLast = (notThisId: number | string) =>
+  db.excuteQuery({
+    query: `SELECT id, title, handle FROM blog_article WHERE id = (SELECT MAX(id) FROM blog_article) And id != $articleId`,
+    variables: { articleId: notThisId },
+  });
+const getPrev = (id: number | string) =>
+  db.excuteQuery({
+    query: `SELECT id, title, handle FROM blog_article WHERE id = (SELECT MAX(id) FROM blog_article WHERE id < $articleId)`,
+    variables: { articleId: id },
+  });
+const getNext = (id: number | string) =>
+  db.excuteQuery({
+    query: `SELECT id, title, handle FROM blog_article WHERE id = (SELECT MIN(id) FROM blog_article WHERE id > $articleId)`,
+    variables: { articleId: id },
+  });
+
 function onlyUnique(value: any, index: any, self: string | any[]) {
   return self.indexOf(value) === index;
 }
@@ -18,6 +39,24 @@ export const blogArticlesModule = createModule({
     gql`
       type CategoryId {
         id: ID
+      }
+      type ArticleCard {
+        id: ID
+        title: String!
+        handle: String!
+        createdAt: Date!
+        score: Float
+        fragment: String
+      }
+      type NavigationItem {
+        id: ID
+        title: String
+        handle: String
+      }
+      type BlogArticleNavigation {
+        prev: NavigationItem
+        next: NavigationItem
+        nearestSiblings: [NavigationItem]
       }
       type BlogArticle {
         id: ID
@@ -35,18 +74,11 @@ export const blogArticlesModule = createModule({
         updatedAt: Date
         publishedAt: Date
         breadcrumbs: [Breadcrumb]
+        navigation: BlogArticleNavigation
       }
       type BlogArticlesConnection {
         pageInfo: PageInfo
         nodes(offset: Int, limit: Int): [BlogArticle]
-      }
-      type ArticleCard {
-        id: ID
-        title: String!
-        handle: String!
-        createdAt: Date!
-        score: Float
-        fragment: String
       }
       type ArticlesCardsConnection {
         nodes: [ArticleCard]!
@@ -146,7 +178,76 @@ export const blogArticlesModule = createModule({
         }
       },
     },
+    BlogArticleNavigation: {},
     BlogArticle: {
+      navigation: async (
+        parent: { id: number | string },
+        variables: any,
+        _ctx: any,
+        info: GraphQLResolveInfo
+      ) => {
+        const articleId = parent.id;
+        if (!articleId) {
+          throw new Error("Why is no parent article id for navigation node!");
+        }
+        try {
+          const articlesBeforeList: any[] = [];
+          const articlesAfterList: any[] = [];
+          const prevRows = await getPrev(articleId);
+          const nextRows = await getNext(articleId);
+          let prev = prevRows[0] || null;
+          let next = nextRows[0] || null;
+          let loopPrev = prev;
+          let loopNext = next;
+          if (loopPrev) {
+            articlesBeforeList.push(prev);
+          }
+          if (loopNext) {
+            articlesAfterList.push(next);
+          }
+          const maximumSidebarItemsLength = 10;
+          while (
+            (loopNext || loopPrev) &&
+            articlesBeforeList.length + articlesAfterList.length <
+              maximumSidebarItemsLength
+          ) {
+            if (loopNext) {
+              const rows = await getNext(loopNext.id);
+              loopNext = rows[0];
+              if (loopNext) {
+                articlesAfterList.push(loopNext);
+              }
+            }
+            if (
+              articlesBeforeList.length + articlesAfterList.length <
+                maximumSidebarItemsLength &&
+              loopPrev
+            ) {
+              const rows = await getPrev(loopPrev.id);
+              loopPrev = rows[0];
+              if (loopPrev) {
+                articlesBeforeList.unshift(loopPrev);
+              }
+            }
+          }
+          const nearestSiblings = [
+            ...articlesBeforeList,
+            { ...parent, handle: "" },
+            ...articlesAfterList,
+          ];
+          if (!prev) {
+            prev = await getLast(parent.id);
+          }
+          if (!next) {
+            next = await getFirst(parent.id);
+          }
+          return { next, prev, nearestSiblings };
+        } catch (e: any) {
+          console.error(e.stack || e.message || e);
+          debugger;
+          throw e;
+        }
+      },
       breadcrumbs: async (
         parent: { productId: any },
         variables: any,
