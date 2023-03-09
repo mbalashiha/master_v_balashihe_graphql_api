@@ -8,24 +8,28 @@ import { Console } from "console";
 import { normalizePriceCurrency } from "@src/utils/currency/converter";
 import { FullProductInput, ProductInput } from "@schema/types/indext";
 import { fullTextSearch } from "@src/sql/full-text-search";
-const getFirst = (notThisId: number | string) =>
-  db.excuteQuery({
-    query: `SELECT id, title, handle FROM blog_article WHERE id = (SELECT MIN(id) FROM blog_article) And id != $articleId`,
+const getFirst = async (notThisId: number | string) => {
+  const rows = await db.excuteQuery({
+    query: `SELECT 1 as itIsloop, id, title, handle FROM blog_article WHERE id = (SELECT MIN(id) FROM blog_article) And id != $articleId`,
     variables: { articleId: notThisId },
   });
-const getLast = (notThisId: number | string) =>
-  db.excuteQuery({
-    query: `SELECT id, title, handle FROM blog_article WHERE id = (SELECT MAX(id) FROM blog_article) And id != $articleId`,
+  return rows[0] || { itIsloop: 1, id: null, title: "", handle: "" };
+};
+const getLast = async (notThisId: number | string) => {
+  const rows = await db.excuteQuery({
+    query: `SELECT 1 as itIsloop, id, title, handle FROM blog_article WHERE id = (SELECT MAX(id) FROM blog_article) And id != $articleId`,
     variables: { articleId: notThisId },
   });
+  return rows[0] || { itIsloop: 1, id: null, title: "", handle: "" };
+};
 const getPrev = (id: number | string) =>
   db.excuteQuery({
-    query: `SELECT id, title, handle FROM blog_article WHERE id = (SELECT MAX(id) FROM blog_article WHERE id < $articleId)`,
+    query: `SELECT null as itIsloop, id, title, handle FROM blog_article WHERE id = (SELECT MAX(id) FROM blog_article WHERE id < $articleId)`,
     variables: { articleId: id },
   });
 const getNext = (id: number | string) =>
   db.excuteQuery({
-    query: `SELECT id, title, handle FROM blog_article WHERE id = (SELECT MIN(id) FROM blog_article WHERE id > $articleId)`,
+    query: `SELECT null as itIsloop, id, title, handle FROM blog_article WHERE id = (SELECT MIN(id) FROM blog_article WHERE id > $articleId)`,
     variables: { articleId: id },
   });
 
@@ -50,12 +54,13 @@ export const blogArticlesModule = createModule({
       }
       type NavigationItem {
         id: ID
-        title: String
+        title: String!
         handle: String
+        itIsloop: Boolean
       }
       type BlogArticleNavigation {
-        prev: NavigationItem
-        next: NavigationItem
+        prev: NavigationItem!
+        next: NavigationItem!
         nearestSiblings: [NavigationItem]
       }
       type BlogArticle {
@@ -241,7 +246,13 @@ export const blogArticlesModule = createModule({
           if (!next) {
             next = await getFirst(parent.id);
           }
-          return { next, prev, nearestSiblings };
+          next.itIsloop = Boolean(next.itIsloop);
+          prev.itIsloop = Boolean(prev.itIsloop);
+          nearestSiblings.forEach((elem: any) => {
+            elem.itIsloop = Boolean(elem.itIsloop);
+          });
+          const navigation = { next, prev, nearestSiblings };
+          return navigation;
         } catch (e: any) {
           console.error(e.stack || e.message || e);
           debugger;
