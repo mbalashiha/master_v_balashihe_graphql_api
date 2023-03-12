@@ -1,4 +1,24 @@
-(global as any).projectRoot = __dirname;
+import path from "path";
+import fs from "fs";
+import fse from "fs-extra";
+(() => {
+  try {
+    const subRoot = path.resolve(path.join(__dirname, "..", ".."));
+    const subRootFolders = fs
+      .readdirSync(subRoot)
+      .filter((folder) => !folder.endsWith("_api"))
+      .map((folder) => path.join(subRoot, folder))
+      .filter((folder) => fs.statSync(folder).isDirectory());
+    const siteFolder = subRootFolders[0];
+    const sitePublicFolder = path.join(siteFolder, "public");
+    const imageUploadFolder = path.join(sitePublicFolder, "image", "upload");
+    process.env["sitePublicFolder"] = sitePublicFolder;
+    process.env["imageUploadFolder"] = imageUploadFolder;
+    fse.mkdirpSync(imageUploadFolder);
+  } catch (e: any) {
+    console.error(e.stack || e.message || e);
+  }
+})();
 
 process.on("uncaughtException", function (err) {
   console.error("\n\nUncaught exception: ", err);
@@ -11,18 +31,13 @@ process.on(
   }
 );
 import express from "express";
-import http from "http";
 import bodyParser from "body-parser";
-import { expressjwt } from "express-jwt";
 import jwt from "jsonwebtoken";
 import cors from "cors";
 import { Request, Response } from "express";
 import { graphqlHTTP } from "express-graphql";
 import cookieParser from "cookie-parser";
 import excuteQuery from "@src/sql/execute-query";
-import fsa from "fs/promises";
-import fs from "fs";
-import path from "path";
 import { createApplication } from "graphql-modules";
 import { baseModule } from "@modules/base";
 import { managementModule } from "@modules/management";
@@ -38,6 +53,8 @@ import { spawnMysqldump } from "./sql/mysqldump";
 import { BlogManagementModule } from "@root/schema/modules/blog/management/article-input";
 import { BlogArticleDraftModule } from "@root/schema/modules/blog/management/draft";
 import { ManagementArticlesCardsModule } from "@root/schema/modules/blog/management/article-cards";
+import { checkIfAuthenticated } from "./check-if-authenticated";
+import uploadResponseHandler, { uploadMiddleware } from "./multer-image-upload";
 
 const corsOptions = {
   origin: "http://localhost:3000", //change with your own client URL
@@ -83,43 +100,43 @@ app.use(cors(corsOptions));
 app.use(cookieParser());
 const verifyCookieToken =
   (cookieTokenName: string) =>
-    (
-      req: IncomingMessage & { cookies: { [x: string]: string } },
-      res: OutgoingMessage & {
-        cookie: (
-          arg0: string,
-          arg1: string,
-          arg2: { httpOnly: boolean; maxAge: number }
-        ) => void;
-      },
-      next: () => any
-    ) => {
-      const token = req.cookies[cookieTokenName] || "";
-      (req as any).responseObject = res;
-      if (token) {
-        try {
-          (req as any)[cookieTokenName] = jwt.verify(
-            token,
-            process.env["JWT_SECRET"]!
-          );
-          res.cookie(cookieTokenName, token, {
-            httpOnly: true,
-            maxAge: 90 * 24 * 60 * 60 * 1000,
-            /// secure: true, //on HTTPS
-            /// domain: "localhost:4402", //set your domain
-          });
-        } catch (e) {
-          console.error("Authentication token is invalid, please log in");
-          res.cookie(cookieTokenName, "", {
-            httpOnly: true,
-            maxAge: 0,
-            // secure: true, //on HTTPS
-            // domain: "localhost:4402", //set your domain
-          });
-        }
+  (
+    req: IncomingMessage & { cookies: { [x: string]: string } },
+    res: OutgoingMessage & {
+      cookie: (
+        arg0: string,
+        arg1: string,
+        arg2: { httpOnly: boolean; maxAge: number }
+      ) => void;
+    },
+    next: () => any
+  ) => {
+    const token = req.cookies[cookieTokenName] || "";
+    (req as any).responseObject = res;
+    if (token) {
+      try {
+        (req as any)[cookieTokenName] = jwt.verify(
+          token,
+          process.env["JWT_SECRET"]!
+        );
+        res.cookie(cookieTokenName, token, {
+          httpOnly: true,
+          maxAge: 90 * 24 * 60 * 60 * 1000,
+          /// secure: true, //on HTTPS
+          /// domain: "localhost:4402", //set your domain
+        });
+      } catch (e) {
+        console.error("Authentication token is invalid, please log in");
+        res.cookie(cookieTokenName, "", {
+          httpOnly: true,
+          maxAge: 0,
+          // secure: true, //on HTTPS
+          // domain: "localhost:4402", //set your domain
+        });
       }
-      return next();
-    };
+    }
+    return next();
+  };
 app.use(verifyCookieToken("manager"));
 app.use(verifyCookieToken("client"));
 
@@ -143,8 +160,21 @@ app.post(
   bodyParser.raw({ verify: rawBodySaver as any, type: "*/*" }),
   managementLoginMiddleware
 );
+app.post(
+  "/rest/api/management/upload/image",
+  checkIfAuthenticated,
+  uploadMiddleware,
+  uploadResponseHandler
+);
 app.get("/rest/api/management/verify-login", verifyManagementLoginMiddleware);
 app.get("/rest/api/management/sign-out", managementSignoutMiddleware);
+
+app.post(
+  "/rest/api/management/upload/image",
+  checkIfAuthenticated,
+  uploadMiddleware,
+  uploadResponseHandler
+);
 app.use(
   "/graphql/api",
   graphqlHTTP((req, res, graphQLParams) => {
@@ -165,7 +195,9 @@ app.use(
   })
 );
 app.listen(4402, () => {
-  console.log("Running a GraphQL API server at http://localhost:4402/graphql/api");
+  console.log(
+    "Running a GraphQL API server at http://localhost:4402/graphql/api"
+  );
   setTimeout(() => spawnMysqldump(), 10 * 1000);
 });
 // } else {
