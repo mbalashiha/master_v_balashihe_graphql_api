@@ -2,7 +2,7 @@
 -- Хост:                         127.0.0.1
 -- Версия сервера:               10.6.11-MariaDB-0ubuntu0.22.04.1 - Ubuntu 22.04
 -- Операционная система:         debian-linux-gnu
--- HeidiSQL Версия:              12.3.0.6589
+-- HeidiSQL Версия:              12.4.0.6659
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -20,8 +20,8 @@ CREATE PROCEDURE `blog_article_text_save_draft`(
 	IN `in_managerId` TEXT,
 	IN `in_existingArticleId` TEXT,
 	IN `in_text` MEDIUMTEXT,
-	IN `in_textHtml` MEDIUMTEXT,
-	IN `in_textRawDraftContentState` MEDIUMTEXT
+	IN `in_textHtml` LONGTEXT,
+	IN `in_textRawDraftContentState` LONGTEXT
 )
 BEGIN
 	DECLARE stored_draftArticleId BINARY(16) DEFAULT Null;

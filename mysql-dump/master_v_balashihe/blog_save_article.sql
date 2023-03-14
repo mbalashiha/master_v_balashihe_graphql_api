@@ -2,7 +2,7 @@
 -- Хост:                         127.0.0.1
 -- Версия сервера:               10.6.11-MariaDB-0ubuntu0.22.04.1 - Ubuntu 22.04
 -- Операционная система:         debian-linux-gnu
--- HeidiSQL Версия:              12.3.0.6589
+-- HeidiSQL Версия:              12.4.0.6659
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -78,7 +78,7 @@ BEGIN
 					in_blogCategoryId,
 					in_published,
 					in_orderNumber,
-					in_text, 
+					IFNULL(in_text, ''), 
 				   in_textHtml,
 					in_textRawDraftContentState
 				);
@@ -93,7 +93,7 @@ BEGIN
 				blogCategoryId=in_blogCategoryId,
 				published=in_published,
 				orderNumber=in_orderNumber,
-				`text`=in_text, 
+				`text`=IFNULL(in_text,''), 
 				`textHtml`=in_textHtml,
 				`textRawDraftContentState`=in_textRawDraftContentState
 				WHERE id=in_existingArticleId;
@@ -110,7 +110,7 @@ BEGIN
 				blogCategoryId=in_blogCategoryId,
 				published=in_published,
 				orderNumber=in_orderNumber,
-				`text`=in_text, 
+				`text`=IFNULL(in_text,''), 
 				textHtml=in_textHtml,
 				textRawDraftContentState=in_textRawDraftContentState
 		WHERE in_managerId=d.managerId AND d.isDraftSaved IS NULL And

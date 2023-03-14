@@ -13,6 +13,7 @@ export interface UploadedFileUriObject {
   db: {
     imgSrc: string;
     pathOfOriginal: string;
+    fieldname: string;
   };
 }
 type EnhRequest = express.Request & {
@@ -53,6 +54,7 @@ const storage = multer.diskStorage({
     cb: (error: Error | null, destination: string) => void
   ): void {
     // Uploads is the Upload_folder_name
+    const originalFieldname = file.fieldname;
     const fieldname = file.fieldname
       .replace(/[.]{2,}/gim, ".")
       .replace(/[\/\\][.]/gim, "/")
@@ -75,6 +77,7 @@ const storage = multer.diskStorage({
       db: {
         imgSrc,
         pathOfOriginal: originalUriFilepath,
+        fieldname: originalFieldname,
       },
     };
     req.fullFilepathes = Array.isArray(req.fullFilepathes)
@@ -101,7 +104,7 @@ const storage = multer.diskStorage({
 
 // Define the maximum size for uploading
 // picture i.e. 1 MB. it is optional
-const maxSize = 10 * 1000 * 1000;
+const maxSize = 128 * 1000 * 1000;
 
 export const uploadMiddleware = multer({
   storage: storage,
@@ -125,11 +128,13 @@ export const uploadResponseHandler = async function (
     width: number;
     height: number;
     imageId: string | number | null;
+    fieldname: string;
   }> = [];
   let lastError: string | null = null;
   for (let i = 0; i < fullFilepathes.length; i++) {
     try {
       const obj = fullFilepathes[i];
+      const fieldname = obj.db.fieldname;
       const imgSrc = obj.db.imgSrc;
       const filepath = obj.absolutePathOfOriginal;
       const absoluteFinalPath = obj.absoluteFinalPath;
@@ -169,14 +174,13 @@ export const uploadResponseHandler = async function (
           if (insertRowDataPacket && insertRowDataPacket.insertId) {
             imageId = insertRowDataPacket.insertId;
           }
-          console.log("inserted image row result:", insertRowDataPacket);
         } catch (e: any) {
           if (e) {
             lastError = e.stack || e.message || e;
             console.error(e.stack || e.message || e);
           }
         }
-        result.push({ imgSrc, width, height, imageId });
+        result.push({ fieldname, imgSrc, width, height, imageId });
       }
     } catch (e: any) {
       if (e) {
@@ -185,12 +189,12 @@ export const uploadResponseHandler = async function (
       }
       console.error();
     }
-    const resultJson = {
-      success: lastError || result.length <= 0 ? false : true,
-      error: lastError || null,
-      images: result,
-    };
-    return res.json(resultJson);
   }
+  const resultJson = {
+    success: lastError || result.length <= 0 ? false : true,
+    error: lastError || null,
+    images: result,
+  };
+  return res.json(resultJson);
 } as any;
 export default uploadResponseHandler;
