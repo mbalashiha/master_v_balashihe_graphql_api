@@ -5,6 +5,8 @@ import fs from "fs/promises";
 import multer from "multer";
 import delay from "delay";
 import util from "util";
+import sharp from "sharp";
+import db from "./sql/execute-query";
 export interface UploadedFileUriObject {
   absolutePathOfOriginal: string;
   absoluteFinalPath: string;
@@ -50,7 +52,6 @@ const storage = multer.diskStorage({
     file: Express.Multer.File,
     cb: (error: Error | null, destination: string) => void
   ): void {
-    debugger;
     // Uploads is the Upload_folder_name
     const fieldname = file.fieldname
       .replace(/[.]{2,}/gim, ".")
@@ -61,11 +62,12 @@ const storage = multer.diskStorage({
       originalsFolder,
       fieldname
     );
-    const absoluteFinalPath: string = path.join(finalFolder, fieldname);
+    const webpFieldName = fieldname.replace(/\.[^\.]+$/, "") + ".webp";
+    const absoluteFinalPath: string = path.join(finalFolder, webpFieldName);
     const originalUriFilepath: string =
       "/" + ["image", "upload", "originals", fieldname].join("/");
     const finalUriFilepath: string =
-      "/" + ["image", "upload", "webp", fieldname].join("/");
+      "/" + ["image", "upload", "webp", webpFieldName].join("/");
     const imgSrc: string = finalUriFilepath;
     const filePathObject: UploadedFileUriObject = {
       absolutePathOfOriginal,
@@ -118,55 +120,77 @@ export const uploadResponseHandler = async function (
   next: Function
 ) {
   const { fullFilepathes } = req;
-  const result: Array<any> = [];
-  let lastError: any = null;
+  const result: Array<{
+    imgSrc: string;
+    width: number;
+    height: number;
+    imageId: string | number | null;
+  }> = [];
+  let lastError: string | null = null;
   for (let i = 0; i < fullFilepathes.length; i++) {
-    for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      const obj = fullFilepathes[i];
+      const imgSrc = obj.db.imgSrc;
+      const filepath = obj.absolutePathOfOriginal;
+      const absoluteFinalPath = obj.absoluteFinalPath;
+      let data: sharp.OutputInfo | undefined = undefined;
       try {
-        const obj = fullFilepathes[i];
-        const imgSrc = obj.db.imgSrc;
-        const filepath = obj.absolutePathOfOriginal;
-        if (imgSrc && filepath) {
-          const {
-            outputInfo,
-            originalMeta,
-            originalHeight,
-            originalWidth,
-            width,
-            height,
-          } = {} as any; //await convertUploadedImageFile(pathOfOriginal, draftPath);
-          result.push({
-            imgSrc: obj.db.imgSrc,
-            width,
-            height,
-            originalWidth,
-            originalHeight,
-            pathOfOriginal: obj.db.pathOfOriginal,
-          });
-          lastError = null;
-        }
-        break;
+        const imageStream = sharp(filepath);
+        data = await imageStream
+          .toFormat("webp", { quality: 95 })
+          .toFile(absoluteFinalPath);
       } catch (e: any) {
-        lastError = e;
-        console.error(e);
         if (e) {
+          lastError = e.stack || e.message || e;
           console.error(e.stack || e.message || e);
         }
-        console.error();
-        await delay(100);
+      } finally {
+        try {
+          await fse.remove(filepath);
+        } catch {}
       }
+      if (data && data.width && data.height) {
+        let imageId: string | number | null = null;
+        const { width, height } = data;
+        lastError = null;
+        try {
+          let insertRowDataPacket: any = await db.query(
+            `insert into image(imgSrc, width, height, originalWidth, originalHeight) values($imgSrc, $width, $height, $width, $height)
+                ON DUPLICATE KEY UPDATE
+                  image.width = VALUES(image.width),
+                  image.height = VALUES(image.height),
+                  image.originalWidth = VALUES(image.originalWidth),
+                  image.originalHeight = VALUES(image.originalHeight)`,
+            { imgSrc, width, height }
+          );
+          insertRowDataPacket =
+            (insertRowDataPacket && insertRowDataPacket[0]) ||
+            insertRowDataPacket;
+          if (insertRowDataPacket && insertRowDataPacket.insertId) {
+            imageId = insertRowDataPacket.insertId;
+          }
+          console.log("inserted image row result:", insertRowDataPacket);
+        } catch (e: any) {
+          if (e) {
+            lastError = e.stack || e.message || e;
+            console.error(e.stack || e.message || e);
+          }
+        }
+        result.push({ imgSrc, width, height, imageId });
+      }
+    } catch (e: any) {
+      if (e) {
+        lastError = e.stack || e.message || e;
+        console.error(e.stack || e.message || e);
+      }
+      console.error();
     }
-  }
-  if (lastError) {
-    return res.status(500).json({
-      error:
-        lastError.stack ||
-        lastError.message ||
-        JSON.stringify(lastError, null, 2),
-      success: false,
-    });
-  } else {
-    return res.json({ success: true, images: result });
+    const resultJson = {
+      success: lastError || result.length <= 0 ? false : true,
+      error: lastError || null,
+      images: result,
+    };
+    return res.json(resultJson);
   }
 } as any;
 export default uploadResponseHandler;
