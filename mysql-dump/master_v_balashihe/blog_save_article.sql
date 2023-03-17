@@ -27,7 +27,9 @@ CREATE PROCEDURE `blog_save_article`(
 	IN `in_orderNumber` TEXT,
 	IN `in_text` LONGTEXT,
 	IN `in_textHtml` LONGTEXT,
-	IN `in_textRawDraftContentState` LONGTEXT
+	IN `in_textRawDraftContentState` LONGTEXT,
+	IN `in_renderHtml` LONGTEXT,
+	IN `in_imageId` TEXT
 )
 BEGIN
 	DECLARE stored_articleId INT(10) unsigned DEFAULT Null;
@@ -42,6 +44,8 @@ BEGIN
 	Set in_orderNumber := If(in_orderNumber='' OR in_orderNumber IS NULL,NULL, in_orderNumber);
 	Set in_text := If(in_text='' OR in_text IS NULL,NULL, in_text);
 	Set in_textHtml := If(in_textHtml='' OR in_textHtml IS NULL,NULL, in_textHtml);
+	Set in_renderHtml := If(in_renderHtml='' OR in_renderHtml IS NULL,NULL, in_renderHtml);
+	Set in_imageId := If(in_imageId='' OR in_imageId IS NULL,NULL, in_imageId);
 	Set in_textRawDraftContentState := If(in_textRawDraftContentState='' OR in_textRawDraftContentState IS NULL,NULL, TRIM(in_textRawDraftContentState));
 	
 	SET in_handle := IF(in_handle IS NULL OR in_handle ='', in_autoHandleSlug, in_handle);
@@ -58,6 +62,8 @@ BEGIN
 				IFNULL(in_orderNumber,'')=IFNULL(d.orderNumber,'') And
 				IFNULL(in_text,'')=IFNULL(d.`text`,'') And
 				IFNULL(in_textHtml,'')=IFNULL(d.`textHtml`,'') And
+				IFNULL(in_renderHtml,'')=IFNULL(d.`renderHtml`,'') And
+				IFNULL(in_imageId,'')=IFNULL(d.`imageId`,'') And
 				IFNULL(in_textRawDraftContentState,'')=IFNULL(d.`textRawDraftContentState`,'');
 	END IF;
 	If stored_articleId IS NOT null
@@ -68,7 +74,7 @@ BEGIN
 		If in_existingArticleId IS Null
 		Then
 			INSERT INTO blog_article(managerId, createdByManagerId, title, handle, autoHandleSlug, blogCategoryId, published, orderNumber, 
-			`text`, `textHtml`, `textRawDraftContentState`)
+			`text`, `textHtml`,`renderHtml`, `imageId`, `textRawDraftContentState`)
 				VALUES(
 					in_managerId,					
 					in_managerId,
@@ -80,6 +86,8 @@ BEGIN
 					in_orderNumber,
 					IFNULL(in_text, ''), 
 				   in_textHtml,
+					in_renderHtml,
+					in_imageId,
 					in_textRawDraftContentState
 				);
 			SET stored_articleId := LAST_INSERT_ID();
@@ -94,7 +102,9 @@ BEGIN
 				published=in_published,
 				orderNumber=in_orderNumber,
 				`text`=IFNULL(in_text,''), 
-				`textHtml`=in_textHtml,
+				`textHtml`=in_textHtml, 
+				`renderHtml`=in_renderHtml,
+				`imageId`=in_imageId,
 				`textRawDraftContentState`=in_textRawDraftContentState
 				WHERE id=in_existingArticleId;
 			SET stored_articleId := in_existingArticleId;

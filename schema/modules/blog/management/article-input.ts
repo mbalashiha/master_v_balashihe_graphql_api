@@ -24,6 +24,8 @@ export const BlogManagementModule = createModule({
         orderNumber: Int
         blogCategoryId: ID
         existingArticleId: ID
+        renderHtml: String
+        imageId: ID
       }
       type DeleteArticleResponse {
         error: String
@@ -119,7 +121,12 @@ export const BlogManagementModule = createModule({
         }
         const { article } = variables;
         const articleId = article.existingArticleId || null;
+
         try {
+          const { renderHtml, imageId } = article;
+          if ((renderHtml || "").trim().length < 6){
+            throw new Error ('No correct renderHtml for article.');
+          }
           let sqlResult = await db.excuteQuery({
             query: `call blog_save_article(
             $managerId,
@@ -132,7 +139,9 @@ export const BlogManagementModule = createModule({
             $orderNumber,
             $text,
             $textHtml,
-            $textRawDraftContentState
+            $textRawDraftContentState,
+            $renderHtml,
+            $imageId
             );`,
             variables: {
               managerId: context.manager.id,
@@ -148,6 +157,8 @@ export const BlogManagementModule = createModule({
               textHtml: article.textHtml || "" || null,
               textRawDraftContentState:
                 article.textRawDraftContentState || null,
+              renderHtml: renderHtml || null,
+              imageId: imageId || null,
             },
           });
           if (!sqlResult) {

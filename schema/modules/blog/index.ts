@@ -8,6 +8,7 @@ import { Console } from "console";
 import { normalizePriceCurrency } from "@src/utils/currency/converter";
 import { FullProductInput, ProductInput } from "@schema/types/indext";
 import { fullTextSearch } from "@src/sql/full-text-search";
+import { Schema } from "@root/schema/types/schema";
 const getFirst = async (notThisId: number | string) => {
   const rows = await db.excuteQuery({
     query: `SELECT 1 as itIsloop, id, title, handle FROM blog_article WHERE id = (SELECT MIN(id) FROM blog_article) And id != $articleId`,
@@ -70,6 +71,7 @@ export const blogArticlesModule = createModule({
         text: String
         textHtml: String
         textRawDraftContentState: String
+        renderHtml: String
         autoHandleSlug: String
         published: Boolean
         orderNumber: Int
@@ -80,6 +82,8 @@ export const blogArticlesModule = createModule({
         publishedAt: Date
         breadcrumbs: [Breadcrumb]
         navigation: BlogArticleNavigation
+        imageId: ID
+        image: Image
       }
       type BlogArticlesConnection {
         pageInfo: PageInfo
@@ -185,6 +189,25 @@ export const blogArticlesModule = createModule({
     },
     BlogArticleNavigation: {},
     BlogArticle: {
+      image: async (
+        parent: Schema.BlogArticle,
+        variables: any,
+        _ctx: any,
+        info: GraphQLResolveInfo
+      ) => {
+        if (!parent.imageId) {
+          return null;
+        }
+        const rows = await db.excuteQuery({
+          query: `select * from image where imageId=$imageId`,
+          variables: parent,
+        });
+        if (rows && rows[0] && rows[0].imgSrc) {
+          return rows[0];
+        } else {
+          return null;
+        }
+      },
       navigation: async (
         parent: { id: number | string },
         variables: any,

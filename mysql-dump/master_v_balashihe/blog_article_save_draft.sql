@@ -24,7 +24,8 @@ CREATE PROCEDURE `blog_article_save_draft`(
 	IN `in_autoHandleSlug` TEXT,
 	IN `in_blogCategoryId` TEXT,
 	IN `in_published` TEXT,
-	IN `in_orderNumber` TEXT
+	IN `in_orderNumber` TEXT,
+	IN `in_imageId` TEXT
 )
 BEGIN
 	DECLARE stored_draftArticleId BINARY(16) DEFAULT Null;
@@ -36,6 +37,7 @@ BEGIN
 	Set in_blogCategoryId := If(in_blogCategoryId='' OR in_blogCategoryId IS NULL,NULL, in_blogCategoryId);
 	Set in_published := If(in_published='' OR in_published IS NULL,NULL, in_published);
 	Set in_orderNumber := If(in_orderNumber='' OR in_orderNumber IS NULL,NULL, in_orderNumber);
+	Set in_imageId := If(in_imageId='' OR in_imageId IS NULL,NULL, in_imageId);
 					
 	SELECT draftArticleId INTO stored_draftArticleId FROM draft_blog_article d
 		WHERE in_managerId=d.managerId AND d.isDraftSaved IS NULL And
@@ -45,7 +47,8 @@ BEGIN
 				IFNULL(in_blogCategoryId, '')=IFNULL(d.blogCategoryId,'') And
 				IFNULL(in_published,'')=IFNULL(d.published,'') And
 				IFNULL(in_orderNumber,'')=IFNULL(d.orderNumber,'') And
-				IFNULL(in_existingArticleId,'')=IFNULL(d.existingArticleId,'');
+				IFNULL(in_existingArticleId,'')=IFNULL(d.existingArticleId,'') And
+				IFNULL(in_imageId,'')=IFNULL(d.imageId,'');
 	
 	If stored_draftArticleId IS NOT null
 	Then
@@ -56,7 +59,7 @@ BEGIN
 				IFNULL(in_existingArticleId,'')=IFNULL(d.existingArticleId,'');
 		If stored_draftArticleId IS Null
 		Then
-			INSERT INTO draft_blog_article(existingArticleId, managerId, title, handle, autoHandleSlug, blogCategoryId, published, orderNumber)
+			INSERT INTO draft_blog_article(existingArticleId, managerId, title, handle, autoHandleSlug, blogCategoryId, published, orderNumber, imageId)
 				VALUES(				
 					in_existingArticleId,
 					in_managerId,
@@ -65,7 +68,8 @@ BEGIN
 					in_autoHandleSlug,
 					in_blogCategoryId,
 					in_published,
-					in_orderNumber
+					in_orderNumber,
+					in_imageId
 				);
 			SET stored_draftArticleId := @last_draftArticleId;
 			SELECT 'Draft has been created' AS message, Lower(Hex(stored_draftArticleId)) AS draftArticleId;
@@ -76,7 +80,8 @@ BEGIN
 				autoHandleSlug=in_autoHandleSlug,
 				blogCategoryId=in_blogCategoryId,
 				published=in_published,
-				orderNumber=in_orderNumber
+				orderNumber=in_orderNumber,
+				imageId=in_imageId
 				WHERE draftArticleId=stored_draftArticleId;
 			SELECT 'Draft was updated' AS message, Lower(Hex(stored_draftArticleId)) AS draftArticleId;
 		END IF;

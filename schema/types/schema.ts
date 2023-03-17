@@ -12,6 +12,7 @@ export namespace Schema {
     orderNumber: Int;
     blogCategoryId: ID;
     existingArticleId: ID;
+    imageId: ID;
   }
   export interface ArticleTextDraftInput {
     id: ID;
@@ -59,6 +60,8 @@ export namespace Schema {
     updatedAt: Date;
     publishedAt: Date;
     breadcrumbs: Breadcrumb[];
+    imageId: ID;
+    image: Image;
   }
   export interface ArticleInput {
     existingArticleId: ID;
@@ -69,9 +72,11 @@ export namespace Schema {
     text: String;
     textHtml: String;
     textRawDraftContentState: String;
+    renderHtml: String;
     published: Boolean;
     orderNumber: Int;
     blogCategoryId: ID;
+    imageId: ID | null;
   }
   export interface ArticleDraft {
     draftArticleId: ID;
@@ -81,6 +86,7 @@ export namespace Schema {
     text: string;
     textHtml: string;
     textRawDraftContentState: string | null;
+    imageId: ID | null;
     published: boolean;
     orderNumber: number;
     blogCategoryId: ID;

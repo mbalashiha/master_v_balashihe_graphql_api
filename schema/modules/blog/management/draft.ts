@@ -28,6 +28,8 @@ export const BlogArticleDraftModule = createModule({
         publishedAt: Date
         existingArticleId: ID
         existingArticle: BlogArticle
+        imageId: ID
+        image: Image
       }
       input ArticleDraftInput {
         id: ID
@@ -38,6 +40,7 @@ export const BlogArticleDraftModule = createModule({
         orderNumber: Int
         blogCategoryId: ID
         existingArticleId: ID
+        imageId: ID
       }
       input ArticleTextDraftInput {
         id: ID
@@ -91,6 +94,25 @@ export const BlogArticleDraftModule = createModule({
       },
     },
     ArticleDraft: {
+      image: async (
+        parent: Schema.BlogArticle,
+        variables: any,
+        _ctx: any,
+        info: GraphQLResolveInfo
+      ) => {
+        if (!parent.imageId) {
+          return null;
+        }
+        const rows = await db.excuteQuery({
+          query: `select * from image where imageId=$imageId`,
+          variables: parent,
+        });
+        if (rows && rows[0] && rows[0].imgSrc) {
+          return rows[0];
+        } else {
+          return null;
+        }
+      },
       category: async (
         parent: Schema.ArticleDraft,
         variables: void,
@@ -142,7 +164,8 @@ export const BlogArticleDraftModule = createModule({
             $autoHandleSlug,
             $blogCategoryId,
             $published,
-            $orderNumber
+            $orderNumber,
+            $imageId
             );`,
             variables: {
               managerId: context.manager.id,
@@ -155,6 +178,7 @@ export const BlogArticleDraftModule = createModule({
               blogCategoryId: articleDraft.blogCategoryId || null,
               published: articleDraft.published ? 1 : null,
               orderNumber: articleDraft.orderNumber || null,
+              imageId: articleDraft.imageId || null,
             },
           });
           const row = (sqlResult[0] && sqlResult[0][0]) || {};
