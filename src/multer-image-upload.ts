@@ -173,6 +173,14 @@ export const uploadResponseHandler = async function (
             insertRowDataPacket;
           if (insertRowDataPacket && insertRowDataPacket.insertId) {
             imageId = insertRowDataPacket.insertId;
+          } else {
+            const rows = await db.excuteQuery({
+              query: `select imageId from image where imgSrc=$imgSrc`,
+              variables: {
+                imgSrc,
+              },
+            });
+            imageId = (rows && rows[0] && rows[0].imageId) || null;
           }
         } catch (e: any) {
           if (e) {
@@ -180,7 +188,9 @@ export const uploadResponseHandler = async function (
             console.error(e.stack || e.message || e);
           }
         }
-        result.push({ fieldname, imgSrc, width, height, imageId });
+        if (imageId) {
+          result.push({ fieldname, imgSrc, width, height, imageId });
+        }
       }
     } catch (e: any) {
       if (e) {
