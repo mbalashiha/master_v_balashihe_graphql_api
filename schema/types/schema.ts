@@ -2,17 +2,20 @@ export namespace Schema {
   export type ID = String | number;
   export type Int = number;
   export type Float = number;
+  type Boolean = boolean;
   type String = string;
   export interface ArticleDraftInput {
     id: ID;
     title: String;
     handle: String;
     autoHandleSlug: String;
-    published: Boolean;
     orderNumber: Int;
     blogCategoryId: ID;
     existingArticleId: ID;
     imageId: ID;
+    unPublished: Boolean;
+    notSearchable: Boolean;
+    notInList: Boolean;
   }
   export interface ArticleTextDraftInput {
     id: ID;
@@ -49,10 +52,10 @@ export namespace Schema {
     id: ID;
     title: string;
     handle: string;
+    absURL: string;
     text: string;
     textHtml: string;
     textRawDraftContentState: string | null;
-    published: boolean;
     orderNumber: number;
     blogCategoryId: ID;
     category: CategoryId;
@@ -62,6 +65,9 @@ export namespace Schema {
     breadcrumbs: Breadcrumb[];
     imageId: ID;
     image: Image;
+    unPublished: Boolean;
+    notSearchable: Boolean;
+    notInList: Boolean;
   }
   export interface ArticleInput {
     existingArticleId: ID;
@@ -69,14 +75,17 @@ export namespace Schema {
     title: String;
     handle: String;
     autoHandleSlug: String;
+    absURL: String;
     text: String;
     textHtml: String;
     textRawDraftContentState: String;
     renderHtml: String;
-    published: Boolean;
     orderNumber: Int;
     blogCategoryId: ID;
     imageId: ID | null;
+    unPublished: Boolean;
+    notSearchable: Boolean;
+    notInList: Boolean;
   }
   export interface ArticleDraft {
     draftArticleId: ID;
@@ -87,7 +96,6 @@ export namespace Schema {
     textHtml: string;
     textRawDraftContentState: string | null;
     imageId: ID | null;
-    published: boolean;
     orderNumber: number;
     blogCategoryId: ID;
     category: CategoryId;
@@ -96,6 +104,9 @@ export namespace Schema {
     publishedAt: Date;
     existingArticleId: ID | null;
     existingArticle: BlogArticle | null;
+    unPublished: Boolean;
+    notSearchable: Boolean;
+    notInList: Boolean;
   }
   export interface BlogArticlesConnection {
     nodes: BlogArticle[];

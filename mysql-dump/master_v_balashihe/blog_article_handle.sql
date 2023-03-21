@@ -14,10 +14,10 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
--- Дамп структуры для представление master_v_balashihe.null_draft_blog_article
+-- Дамп структуры для представление master_v_balashihe.blog_article_handle
 -- Удаление временной таблицы и создание окончательной структуры представления
-DROP TABLE IF EXISTS `null_draft_blog_article`;
-CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `null_draft_blog_article` AS select NULL AS `id`,NULL AS `draftArticleId`,if(`a`.`handle` = `a`.`autoHandleSlug`,NULL,`a`.`handle`) AS `handle`,`a`.`absURL` AS `absURL`,`a`.`title` AS `title`,`a`.`autoHandleSlug` AS `autoHandleSlug`,`a`.`blogCategoryId` AS `blogCategoryId`,`a`.`text` AS `text`,`a`.`textHtml` AS `textHtml`,`a`.`textRawDraftContentState` AS `textRawDraftContentState`,`a`.`createdAt` AS `createdAt`,`a`.`updatedAt` AS `updatedAt`,`a`.`publishedAt` AS `publishedAt`,`a`.`unPublished` AS `unPublished`,`a`.`notSearchable` AS `notSearchable`,`a`.`notInList` AS `notInList`,`a`.`orderNumber` AS `orderNumber`,`a`.`managerId` AS `managerId`,NULL AS `isDraftSaved`,`a`.`id` AS `existingArticleId`,`a`.`imageId` AS `imageId` from `blog_article_handle` `a`;
+DROP TABLE IF EXISTS `blog_article_handle`;
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `blog_article_handle` AS select `a`.`id` AS `id`,`a`.`title` AS `title`,`a`.`autoHandleSlugId` AS `autoHandleSlugId`,`a`.`handleId` AS `handleId`,`a`.`absURLid` AS `absURLid`,`a`.`blogCategoryId` AS `blogCategoryId`,`a`.`text` AS `text`,`a`.`textHtml` AS `textHtml`,`a`.`renderHtml` AS `renderHtml`,`a`.`textRawDraftContentState` AS `textRawDraftContentState`,`a`.`imageId` AS `imageId`,`a`.`createdAt` AS `createdAt`,`a`.`updatedAt` AS `updatedAt`,`a`.`publishedAt` AS `publishedAt`,`a`.`unPublished` AS `unPublished`,`a`.`notSearchable` AS `notSearchable`,`a`.`notInList` AS `notInList`,`a`.`orderNumber` AS `orderNumber`,`a`.`createdByManagerId` AS `createdByManagerId`,`a`.`managerId` AS `managerId`,`p1`.`handle` AS `handle`,`p2`.`handle` AS `autoHandleSlug`,`p3`.`handle` AS `absURL` from (((`blog_article` `a` left join `page_handle` `p1` on(`p1`.`id` = `a`.`handleId`)) left join `page_handle` `p2` on(`p2`.`id` = `a`.`autoHandleSlugId`)) left join `page_handle` `p3` on(`p3`.`id` = `a`.`absURLid`));
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

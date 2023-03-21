@@ -17,10 +17,13 @@ export const BlogManagementModule = createModule({
         title: String
         handle: String
         autoHandleSlug: String
+        absURL: String
         text: String
         textHtml: String
         textRawDraftContentState: String
-        published: Boolean
+        unPublished: Boolean
+        notSearchable: Boolean
+        notInList: Boolean
         orderNumber: Int
         blogCategoryId: ID
         existingArticleId: ID
@@ -123,9 +126,13 @@ export const BlogManagementModule = createModule({
         const articleId = article.existingArticleId || null;
 
         try {
+          article.text = (article.text || "").trim();
+          if (article.text && !article.textHtml) {
+            throw new Error("Has text but no textHtml. Impossible!");
+          }
           const { renderHtml, imageId } = article;
-          if ((renderHtml || "").trim().length < 6){
-            throw new Error ('No correct renderHtml for article.');
+          if ((renderHtml || "").trim().length < 6) {
+            throw new Error("No correct renderHtml for article.");
           }
           let sqlResult = await db.excuteQuery({
             query: `call blog_save_article(
@@ -134,14 +141,17 @@ export const BlogManagementModule = createModule({
             $title,
             $handle,
             $autoHandleSlug,
+            $absURL,
             $blogCategoryId,
-            $published,
             $orderNumber,
             $text,
             $textHtml,
             $textRawDraftContentState,
             $renderHtml,
-            $imageId
+            $imageId,
+            $unPublished,
+            $notSearchable,
+            $notInList
             );`,
             variables: {
               managerId: context.manager.id,
@@ -150,15 +160,18 @@ export const BlogManagementModule = createModule({
                 (article.title || "").trim().replace(/\s+/gim, " ") || null,
               handle: article.handle || null,
               autoHandleSlug: article.autoHandleSlug || null,
+              absURL: article.absURL || null,
               blogCategoryId: article.blogCategoryId || null,
-              published: article.published ? 1 : null,
               orderNumber: article.orderNumber || null,
               text: (article.text || "").replace(/\s+/gim, " ") || null,
-              textHtml: article.textHtml || "" || null,
+              textHtml: article.textHtml || null,
               textRawDraftContentState:
                 article.textRawDraftContentState || null,
               renderHtml: renderHtml || null,
               imageId: imageId || null,
+              unPublished: article.unPublished || null,
+              notSearchable: article.notSearchable || null,
+              notInList: article.notInList || null,
             },
           });
           if (!sqlResult) {

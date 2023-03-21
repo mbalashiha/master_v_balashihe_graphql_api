@@ -23,9 +23,11 @@ CREATE PROCEDURE `blog_article_save_draft`(
 	IN `in_handle` TEXT,
 	IN `in_autoHandleSlug` TEXT,
 	IN `in_blogCategoryId` TEXT,
-	IN `in_published` TEXT,
 	IN `in_orderNumber` TEXT,
-	IN `in_imageId` TEXT
+	IN `in_imageId` TEXT,
+	IN `in_unPublished` TEXT,
+	IN `in_notSearchable` TEXT,
+	IN `in_notInList` TEXT
 )
 BEGIN
 	DECLARE stored_draftArticleId BINARY(16) DEFAULT Null;
@@ -35,7 +37,9 @@ BEGIN
 	Set in_handle := If(in_handle='' OR in_handle IS NULL,NULL,TRIM(in_handle));
 	SET in_autoHandleSlug := If(in_autoHandleSlug='' OR in_autoHandleSlug IS NULL,NULL,TRIM(in_autoHandleSlug));
 	Set in_blogCategoryId := If(in_blogCategoryId='' OR in_blogCategoryId IS NULL,NULL, in_blogCategoryId);
-	Set in_published := If(in_published='' OR in_published IS NULL,NULL, in_published);
+	Set in_unPublished := If(in_unPublished='' OR in_unPublished IS NULL,NULL, in_unPublished);
+	Set in_notSearchable := If(in_notSearchable='' OR in_notSearchable IS NULL,NULL, in_notSearchable);
+	Set in_notInList := If(in_notInList='' OR in_notInList IS NULL,NULL, in_notInList);
 	Set in_orderNumber := If(in_orderNumber='' OR in_orderNumber IS NULL,NULL, in_orderNumber);
 	Set in_imageId := If(in_imageId='' OR in_imageId IS NULL,NULL, in_imageId);
 					
@@ -45,7 +49,9 @@ BEGIN
 				IFNULL(in_handle, '')=IFNULL(d.handle,'') and
 				IFNULL(in_autoHandleSlug, '')=IFNULL(d.autoHandleSlug,'') And
 				IFNULL(in_blogCategoryId, '')=IFNULL(d.blogCategoryId,'') And
-				IFNULL(in_published,'')=IFNULL(d.published,'') And
+				IFNULL(in_unPublished,'')=IFNULL(d.unPublished,'') And
+				IFNULL(in_notSearchable,'')=IFNULL(d.notSearchable,'') And
+				IFNULL(in_notInList,'')=IFNULL(d.notInList,'') And
 				IFNULL(in_orderNumber,'')=IFNULL(d.orderNumber,'') And
 				IFNULL(in_existingArticleId,'')=IFNULL(d.existingArticleId,'') And
 				IFNULL(in_imageId,'')=IFNULL(d.imageId,'');
@@ -59,7 +65,11 @@ BEGIN
 				IFNULL(in_existingArticleId,'')=IFNULL(d.existingArticleId,'');
 		If stored_draftArticleId IS Null
 		Then
-			INSERT INTO draft_blog_article(existingArticleId, managerId, title, handle, autoHandleSlug, blogCategoryId, published, orderNumber, imageId)
+			INSERT INTO draft_blog_article(existingArticleId, managerId, title, handle, autoHandleSlug, blogCategoryId, 
+			unPublished, 
+			notSearchable,
+			notInList,
+			orderNumber, imageId)
 				VALUES(				
 					in_existingArticleId,
 					in_managerId,
@@ -67,7 +77,9 @@ BEGIN
 					in_handle,
 					in_autoHandleSlug,
 					in_blogCategoryId,
-					in_published,
+			in_unPublished, 
+			in_notSearchable,
+			in_notInList,
 					in_orderNumber,
 					in_imageId
 				);
@@ -79,7 +91,9 @@ BEGIN
 				handle=in_handle,
 				autoHandleSlug=in_autoHandleSlug,
 				blogCategoryId=in_blogCategoryId,
-				published=in_published,
+				unPublished=in_unPublished,
+				notSearchable=in_notSearchable,
+				notInList=in_notInList,
 				orderNumber=in_orderNumber,
 				imageId=in_imageId
 				WHERE draftArticleId=stored_draftArticleId;

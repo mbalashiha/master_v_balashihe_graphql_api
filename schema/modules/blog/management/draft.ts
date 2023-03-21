@@ -16,10 +16,10 @@ export const BlogArticleDraftModule = createModule({
         title: String
         handle: String
         autoHandleSlug: String
+        absURL: String
         text: String
         textHtml: String
         textRawDraftContentState: String
-        published: Boolean
         orderNumber: Int
         blogCategoryId: ID
         category: CategoryId
@@ -30,17 +30,23 @@ export const BlogArticleDraftModule = createModule({
         existingArticle: BlogArticle
         imageId: ID
         image: Image
+        unPublished: Boolean
+        notSearchable: Boolean
+        notInList: Boolean
       }
       input ArticleDraftInput {
         id: ID
         title: String
         handle: String
         autoHandleSlug: String
-        published: Boolean
+        absURL: String
         orderNumber: Int
         blogCategoryId: ID
         existingArticleId: ID
         imageId: ID
+        unPublished: Boolean
+        notSearchable: Boolean
+        notInList: Boolean
       }
       input ArticleTextDraftInput {
         id: ID
@@ -163,9 +169,11 @@ export const BlogArticleDraftModule = createModule({
             $handle,
             $autoHandleSlug,
             $blogCategoryId,
-            $published,
             $orderNumber,
-            $imageId
+            $imageId,            
+            $unPublished,
+            $notSearchable,
+            $notInList
             );`,
             variables: {
               managerId: context.manager.id,
@@ -176,9 +184,11 @@ export const BlogArticleDraftModule = createModule({
               handle: articleDraft.handle || null,
               autoHandleSlug: articleDraft.autoHandleSlug || null,
               blogCategoryId: articleDraft.blogCategoryId || null,
-              published: articleDraft.published ? 1 : null,
               orderNumber: articleDraft.orderNumber || null,
               imageId: articleDraft.imageId || null,
+              unPublished: articleDraft.unPublished || null,
+              notSearchable: articleDraft.notSearchable || null,
+              notInList: articleDraft.notInList || null,
             },
           });
           const row = (sqlResult[0] && sqlResult[0][0]) || {};
@@ -209,6 +219,7 @@ export const BlogArticleDraftModule = createModule({
         const { articleTextDraft } = variables;
         try {
           const { articleTextDraft } = variables;
+          articleTextDraft.text = (articleTextDraft.text || "").trim();
           if (articleTextDraft.text && !articleTextDraft.textHtml) {
             throw new Error("Has text but no textHtml. Impossible!");
           }
@@ -223,8 +234,8 @@ export const BlogArticleDraftModule = createModule({
             variables: {
               managerId: context.manager.id,
               existingArticleId: articleTextDraft.existingArticleId || null,
-              text: articleTextDraft.text || "" || null,
-              textHtml: articleTextDraft.textHtml || "" || null,
+              text: articleTextDraft.text || null,
+              textHtml: articleTextDraft.textHtml || null,
               textRawDraftContentState:
                 articleTextDraft.textRawDraftContentState || null,
             },

@@ -49,7 +49,7 @@ export const ManagementArticlesCardsModule = createModule({
           if (!search) {
             const articles: any = await db.excuteQuery({
               query:
-                "select id, handle, title, createdAt, null as fragment, null as score from blog_article Order By createdAt Desc, updatedAt Desc",
+                "select id, Coalesce(handle, title, id) as handle, title, createdAt, null as fragment, null as score from blog_article_handle Order By createdAt Desc, updatedAt Desc",
               variables: [offset, limit],
             });
             return articles;
@@ -57,14 +57,14 @@ export const ManagementArticlesCardsModule = createModule({
             return await fullTextSearch({
               search,
               naturalLanguageModeQuery: `
-            select id, handle, title, createdAt, text as fragment,
+            select id, Coalesce(handle, title, id) as handle, title, createdAt, text as fragment,
                   MATCH (title,text) AGAINST ($search IN NATURAL LANGUAGE MODE) as score
-              from blog_article 
+              from blog_article_handle 
                 WHERE MATCH (title,text) AGAINST ($search IN NATURAL LANGUAGE MODE)`,
               booleanModeQuery: `
-            select id, handle, title, createdAt, text as fragment,
+            select id, Coalesce(handle, title, id) as handle, title, createdAt, text as fragment,
                   MATCH (title,text) AGAINST ($search IN BOOLEAN MODE) as score
-              from blog_article 
+              from blog_article_handle 
                 WHERE MATCH (title,text) AGAINST ($search IN BOOLEAN MODE)`,
             });
           }

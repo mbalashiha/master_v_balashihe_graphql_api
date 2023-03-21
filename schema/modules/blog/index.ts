@@ -73,7 +73,6 @@ export const blogArticlesModule = createModule({
         textRawDraftContentState: String
         renderHtml: String
         autoHandleSlug: String
-        published: Boolean
         orderNumber: Int
         blogCategoryId: ID
         category: CategoryId
@@ -84,6 +83,9 @@ export const blogArticlesModule = createModule({
         navigation: BlogArticleNavigation
         imageId: ID
         image: Image
+        unPublished: Boolean
+        notSearchable: Boolean
+        notInList: Boolean
       }
       type BlogArticlesConnection {
         pageInfo: PageInfo

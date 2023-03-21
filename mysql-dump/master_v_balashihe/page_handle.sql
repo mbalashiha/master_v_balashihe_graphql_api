@@ -14,10 +14,21 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
--- Дамп структуры для представление master_v_balashihe.null_draft_blog_article
--- Удаление временной таблицы и создание окончательной структуры представления
-DROP TABLE IF EXISTS `null_draft_blog_article`;
-CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `null_draft_blog_article` AS select NULL AS `id`,NULL AS `draftArticleId`,if(`a`.`handle` = `a`.`autoHandleSlug`,NULL,`a`.`handle`) AS `handle`,`a`.`absURL` AS `absURL`,`a`.`title` AS `title`,`a`.`autoHandleSlug` AS `autoHandleSlug`,`a`.`blogCategoryId` AS `blogCategoryId`,`a`.`text` AS `text`,`a`.`textHtml` AS `textHtml`,`a`.`textRawDraftContentState` AS `textRawDraftContentState`,`a`.`createdAt` AS `createdAt`,`a`.`updatedAt` AS `updatedAt`,`a`.`publishedAt` AS `publishedAt`,`a`.`unPublished` AS `unPublished`,`a`.`notSearchable` AS `notSearchable`,`a`.`notInList` AS `notInList`,`a`.`orderNumber` AS `orderNumber`,`a`.`managerId` AS `managerId`,NULL AS `isDraftSaved`,`a`.`id` AS `existingArticleId`,`a`.`imageId` AS `imageId` from `blog_article_handle` `a`;
+-- Дамп структуры для таблица master_v_balashihe.page_handle
+CREATE TABLE IF NOT EXISTS `page_handle` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `handle` varchar(1024) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uniq_handle` (`handle`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Дамп данных таблицы master_v_balashihe.page_handle: ~3 rows (приблизительно)
+INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
+	(2, 'remont-materinskih-plat-v-balashihe-i-moskovskoj-oblasti');
+INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
+	(1, 'remont-noutbukov-v-balashihe-v-den-obrasheniya-u-vas-doma-ili-v-ofisnom-centre');
+INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
+	(3, 'sdfsdfsd');
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
