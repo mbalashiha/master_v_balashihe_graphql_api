@@ -27,7 +27,8 @@ CREATE PROCEDURE `blog_article_save_draft`(
 	IN `in_imageId` TEXT,
 	IN `in_unPublished` TEXT,
 	IN `in_notSearchable` TEXT,
-	IN `in_notInList` TEXT
+	IN `in_notInList` TEXT,
+	IN `in_absURL` TEXT
 )
 BEGIN
 	DECLARE stored_draftArticleId BINARY(16) DEFAULT Null;
@@ -35,6 +36,7 @@ BEGIN
 	Set in_managerId := If(in_managerId='' OR in_managerId IS NULL,NULL, in_managerId);
 	Set in_title := If(in_title='' OR in_title IS NULL,NULL,TRIM(in_title));
 	Set in_handle := If(in_handle='' OR in_handle IS NULL,NULL,TRIM(in_handle));
+	Set in_absURL := If(in_absURL='' OR in_absURL IS NULL,NULL,TRIM(in_absURL));	
 	SET in_autoHandleSlug := If(in_autoHandleSlug='' OR in_autoHandleSlug IS NULL,NULL,TRIM(in_autoHandleSlug));
 	Set in_blogCategoryId := If(in_blogCategoryId='' OR in_blogCategoryId IS NULL,NULL, in_blogCategoryId);
 	Set in_unPublished := If(in_unPublished='' OR in_unPublished IS NULL,NULL, in_unPublished);
@@ -47,6 +49,7 @@ BEGIN
 		WHERE in_managerId=d.managerId AND d.isDraftSaved IS NULL And
 				IFNULL(in_title, '')=IFNULL(d.title,'') And
 				IFNULL(in_handle, '')=IFNULL(d.handle,'') and
+				IFNULL(in_absURL, '')=IFNULL(d.absURL,'') and
 				IFNULL(in_autoHandleSlug, '')=IFNULL(d.autoHandleSlug,'') And
 				IFNULL(in_blogCategoryId, '')=IFNULL(d.blogCategoryId,'') And
 				IFNULL(in_unPublished,'')=IFNULL(d.unPublished,'') And
@@ -65,7 +68,7 @@ BEGIN
 				IFNULL(in_existingArticleId,'')=IFNULL(d.existingArticleId,'');
 		If stored_draftArticleId IS Null
 		Then
-			INSERT INTO draft_blog_article(existingArticleId, managerId, title, handle, autoHandleSlug, blogCategoryId, 
+			INSERT INTO draft_blog_article(existingArticleId, managerId, title, handle, absURL, autoHandleSlug, blogCategoryId, 
 			unPublished, 
 			notSearchable,
 			notInList,
@@ -75,6 +78,7 @@ BEGIN
 					in_managerId,
 					in_title,
 					in_handle,
+					in_absURL,
 					in_autoHandleSlug,
 					in_blogCategoryId,
 			in_unPublished, 
@@ -89,6 +93,7 @@ BEGIN
 			UPDATE draft_blog_article SET 
 				title=in_title,
 				handle=in_handle,
+				absURL=in_absURL,
 				autoHandleSlug=in_autoHandleSlug,
 				blogCategoryId=in_blogCategoryId,
 				unPublished=in_unPublished,

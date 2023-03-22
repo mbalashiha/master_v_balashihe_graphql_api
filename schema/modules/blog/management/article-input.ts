@@ -169,9 +169,9 @@ export const BlogManagementModule = createModule({
                 article.textRawDraftContentState || null,
               renderHtml: renderHtml || null,
               imageId: imageId || null,
-              unPublished: article.unPublished || null,
-              notSearchable: article.notSearchable || null,
-              notInList: article.notInList || null,
+              unPublished: article.unPublished ? 1 : null,
+              notSearchable: article.notSearchable ? 1 : null,
+              notInList: article.notInList ? 1 : null,
             },
           });
           if (!sqlResult) {

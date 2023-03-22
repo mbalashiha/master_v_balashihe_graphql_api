@@ -11,26 +11,26 @@ import { fullTextSearch } from "@src/sql/full-text-search";
 import { Schema } from "@root/schema/types/schema";
 const getFirst = async (notThisId: number | string) => {
   const rows = await db.excuteQuery({
-    query: `SELECT 1 as itIsloop, id, title, handle FROM blog_article WHERE id = (SELECT MIN(id) FROM blog_article) And id != $articleId`,
+    query: `SELECT 1 as itIsloop, id, title, handle FROM blog_article_handle WHERE id = (SELECT MIN(id) FROM blog_article) And id != $articleId`,
     variables: { articleId: notThisId },
   });
   return rows[0] || { itIsloop: 1, id: null, title: "", handle: "" };
 };
 const getLast = async (notThisId: number | string) => {
   const rows = await db.excuteQuery({
-    query: `SELECT 1 as itIsloop, id, title, handle FROM blog_article WHERE id = (SELECT MAX(id) FROM blog_article) And id != $articleId`,
+    query: `SELECT 1 as itIsloop, id, title, handle FROM blog_article_handle WHERE id = (SELECT MAX(id) FROM blog_article) And id != $articleId`,
     variables: { articleId: notThisId },
   });
   return rows[0] || { itIsloop: 1, id: null, title: "", handle: "" };
 };
 const getPrev = (id: number | string) =>
   db.excuteQuery({
-    query: `SELECT null as itIsloop, id, title, handle FROM blog_article WHERE id = (SELECT MAX(id) FROM blog_article WHERE id < $articleId)`,
+    query: `SELECT null as itIsloop, id, title, handle FROM blog_article_handle WHERE id = (SELECT MAX(id) FROM blog_article WHERE id < $articleId)`,
     variables: { articleId: id },
   });
 const getNext = (id: number | string) =>
   db.excuteQuery({
-    query: `SELECT null as itIsloop, id, title, handle FROM blog_article WHERE id = (SELECT MIN(id) FROM blog_article WHERE id > $articleId)`,
+    query: `SELECT null as itIsloop, id, title, handle FROM blog_article_handle WHERE id = (SELECT MIN(id) FROM blog_article WHERE id > $articleId)`,
     variables: { articleId: id },
   });
 
@@ -68,6 +68,7 @@ export const blogArticlesModule = createModule({
         id: ID
         title: String
         handle: String
+        absURL: String
         text: String
         textHtml: String
         textRawDraftContentState: String
@@ -106,7 +107,6 @@ export const blogArticlesModule = createModule({
           offset: Int
           limit: Int
         ): BlogArticlesConnection
-        blogArticleByHandle(handle: String): BlogArticle
         articlesPathes: PathHandlesRespose!
         articlesCards(
           search: String
@@ -125,10 +125,16 @@ export const blogArticlesModule = createModule({
         _ctx: any,
         info: GraphQLResolveInfo
       ) => {
-        const articles: any = await db.excuteQuery({
-          query: "select handle from blog_article",
-        });
-        return articles;
+        try {
+          const articles: any = await db.excuteQuery({
+            query: "select handle from blog_article_handle",
+          });
+          return articles;
+        } catch (e: any) {
+          console.error(e.stack || e.message || e);
+          debugger;
+          throw e;
+        }
       },
     },
     BlogArticlesConnection: {
@@ -162,8 +168,10 @@ export const blogArticlesModule = createModule({
           const limit = variables.limit || parent.limit || 250;
           if (!search) {
             const articles: any = await db.excuteQuery({
-              query:
-                "select id, handle, title, createdAt, null as fragment, null as score from blog_article Order By createdAt Desc, updatedAt Desc",
+              query: `select id, handle, title, createdAt, null as fragment, null as score 
+                  from blog_article_handle   
+                    Where notInList is NULL And unPublished is NULL
+                    Order By createdAt Desc, updatedAt Desc`,
               variables: [offset, limit],
             });
             return articles;
@@ -173,13 +181,17 @@ export const blogArticlesModule = createModule({
               naturalLanguageModeQuery: `
             select id, handle, title, createdAt, text as fragment,
                   MATCH (title,text) AGAINST ($search IN NATURAL LANGUAGE MODE) as score
-              from blog_article 
-                WHERE MATCH (title,text) AGAINST ($search IN NATURAL LANGUAGE MODE)`,
+              from blog_article_handle 
+                WHERE 
+                  unPublished is NULL And notSearchable is NULL And 
+                  MATCH (title,text) AGAINST ($search IN NATURAL LANGUAGE MODE)`,
               booleanModeQuery: `
             select id, handle, title, createdAt, text as fragment,
                   MATCH (title,text) AGAINST ($search IN BOOLEAN MODE) as score
-              from blog_article 
-                WHERE MATCH (title,text) AGAINST ($search IN BOOLEAN MODE)`,
+              from blog_article_handle  
+                WHERE 
+                  unPublished is NULL And notSearchable is NULL And 
+                  MATCH (title,text) AGAINST ($search IN BOOLEAN MODE)`,
             });
           }
         } catch (e: any) {
@@ -290,50 +302,50 @@ export const blogArticlesModule = createModule({
         _ctx: any,
         info: GraphQLResolveInfo
       ) => {
-        if (!parent.productId) {
-          throw new Error("Product breadcrumbs: no parent.productId");
-        }
-        try {
-          const rows: any = await db.excuteQuery({
-            query: `select p.*, cb.breadcrumbs, cb.uri_pathes from product p
-            Left Join product_category_breadcrumbs cb On cb.id=p.product_category_id
-              Where p.productId = $productId`,
-            variables: parent,
-          });
-          const product = rows[0];
-          const names = (product.breadcrumbs || "").split("/");
-          const handles = (product.uri_pathes || "").split(";");
-          const breadcrumbs: Array<{
-            name: string;
-            handle: string;
-            type?: string;
-          }> = [];
-          for (let i = 0; i < names.length; i++) {
-            if (!names[i] || !handles[i]) {
-              throw new Error(
-                "Incorrect breadcrumbs with names[i]: " +
-                  typeof names[i] +
-                  " and handles[i]: " +
-                  typeof handles[i]
-              );
-            }
-            breadcrumbs.push({
-              name: names[i],
-              handle: handles[i],
-              type: "product_category",
-            });
-          }
-          breadcrumbs.push({
-            name: product.title,
-            handle: product.handle,
-            type: "product",
-          });
-          return breadcrumbs;
-        } catch (e: any) {
-          console.error(e.stack || e.message || e);
-          debugger;
-          throw e;
-        }
+        // if (!parent.productId) {
+        //   throw new Error("Product breadcrumbs: no parent.productId");
+        // }
+        // try {
+        //   const rows: any = await db.excuteQuery({
+        //     query: `select p.*, cb.breadcrumbs, cb.uri_pathes from product p
+        //     Left Join product_category_breadcrumbs cb On cb.id=p.product_category_id
+        //       Where p.productId = $productId`,
+        //     variables: parent,
+        //   });
+        //   const product = rows[0];
+        //   const names = (product.breadcrumbs || "").split("/");
+        //   const handles = (product.uri_pathes || "").split(";");
+        //   const breadcrumbs: Array<{
+        //     name: string;
+        //     handle: string;
+        //     type?: string;
+        //   }> = [];
+        //   for (let i = 0; i < names.length; i++) {
+        //     if (!names[i] || !handles[i]) {
+        //       throw new Error(
+        //         "Incorrect breadcrumbs with names[i]: " +
+        //           typeof names[i] +
+        //           " and handles[i]: " +
+        //           typeof handles[i]
+        //       );
+        //     }
+        //     breadcrumbs.push({
+        //       name: names[i],
+        //       handle: handles[i],
+        //       type: "product_category",
+        //     });
+        //   }
+        //   breadcrumbs.push({
+        //     name: product.title,
+        //     handle: product.handle,
+        //     type: "product",
+        //   });
+        //   return breadcrumbs;
+        // } catch (e: any) {
+        //   console.error(e.stack || e.message || e);
+        //   debugger;
+        //   throw e;
+        // }
       },
       BlogCategory: {
         articlesCount: async (
@@ -386,19 +398,6 @@ export const blogArticlesModule = createModule({
         ) => {
           return { ..._, ...variables };
         },
-        blogArticleByHandle: async (
-          _: any,
-          variables: { handle: any },
-          _ctx: any,
-          info: GraphQLResolveInfo
-        ) => {
-          const { handle } = variables;
-          const products: any = await db.excuteQuery({
-            query: "select * from product_view where handle=?",
-            variables: [handle],
-          });
-          return products[0];
-        },
         articles: async (
           _: any,
           variables: any,
@@ -440,11 +439,18 @@ export const blogArticlesModule = createModule({
         _ctx: any,
         info: GraphQLResolveInfo
       ) => {
-        let rows = await db.query(`select * from blog_article where handle=?`, [
-          variables.handle,
-        ]);
-        let result = rows && rows[0];
-        return { ...parent, ...variables, ...result };
+        try {
+          let rows = await db.query(
+            `select * from blog_article_handle where handle=?`,
+            [variables.handle]
+          );
+          let result = rows && rows[0];
+          return { ...parent, ...variables, ...result };
+        } catch (e: any) {
+          console.error(e.stack || e.message || e);
+          debugger;
+          throw e;
+        }
       },
     },
   },

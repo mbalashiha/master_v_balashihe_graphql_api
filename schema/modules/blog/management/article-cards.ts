@@ -48,8 +48,9 @@ export const ManagementArticlesCardsModule = createModule({
           const limit = variables.limit || parent.limit || 250;
           if (!search) {
             const articles: any = await db.excuteQuery({
-              query:
-                "select id, Coalesce(handle, title, id) as handle, title, createdAt, null as fragment, null as score from blog_article_handle Order By createdAt Desc, updatedAt Desc",
+              query: `select id, Coalesce(handle, title, id) as handle, title, createdAt, null as fragment, null as score 
+                    from blog_article_handle 
+                    Order By createdAt Desc, updatedAt Desc`,
               variables: [offset, limit],
             });
             return articles;

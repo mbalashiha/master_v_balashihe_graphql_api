@@ -8,6 +8,7 @@ export namespace Schema {
     id: ID;
     title: String;
     handle: String;
+    absURL: String;
     autoHandleSlug: String;
     orderNumber: Int;
     blogCategoryId: ID;

@@ -173,7 +173,8 @@ export const BlogArticleDraftModule = createModule({
             $imageId,            
             $unPublished,
             $notSearchable,
-            $notInList
+            $notInList,
+            $absURL
             );`,
             variables: {
               managerId: context.manager.id,
@@ -186,9 +187,10 @@ export const BlogArticleDraftModule = createModule({
               blogCategoryId: articleDraft.blogCategoryId || null,
               orderNumber: articleDraft.orderNumber || null,
               imageId: articleDraft.imageId || null,
-              unPublished: articleDraft.unPublished || null,
-              notSearchable: articleDraft.notSearchable || null,
-              notInList: articleDraft.notInList || null,
+              unPublished: articleDraft.unPublished ? 1 : null,
+              notSearchable: articleDraft.notSearchable ? 1 : null,
+              notInList: articleDraft.notInList ? 1 : null,
+              absURL: articleDraft.absURL || null,
             },
           });
           const row = (sqlResult[0] && sqlResult[0][0]) || {};
