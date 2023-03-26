@@ -50,6 +50,7 @@ export const BlogManagementModule = createModule({
       }
       type Query {
         managementGetArticles(search: String): [BlogArticle]!
+        managementCheckArticle(title: String, handle: String): BlogArticle
       }
     `,
   ],
@@ -110,6 +111,23 @@ export const BlogManagementModule = createModule({
           variables: [],
         });
         return rows;
+      },
+      managementCheckArticle: async (
+        parent: void,
+        variables: { title: string; handle: string },
+        context: GraphqlContext,
+        info: GraphQLResolveInfo
+      ) => {
+        const { title, handle } = variables;
+        if (!context.manager || !context.manager.id) {
+          throw new Error("Manager Unauthorized");
+        }
+        const rows = await db.excuteQuery({
+          query:
+            "select * from blog_article_handle where title=$title Or handle=$handle",
+          variables: { title: title || null, handle: handle || null },
+        });
+        return (rows && rows[0]) || null;
       },
     },
     Mutation: {
@@ -190,13 +208,20 @@ export const BlogManagementModule = createModule({
             success: Boolean(row.success),
           };
         } catch (e: any) {
-          console.log(article);
-          console.error(e.stack || e.message);
-          debugger;
+          console.error(e.stack || e.message || e.stack || e);
+          let errorMessage = e.message || e.stack || e;
+          // const m = errorMessage.match(
+          //   /ER_DUP_ENTRY\:\s+Duplicate entry\s+'([^\'\"]+)'/im
+          // );
+          // if (m && m[1]) {
+          //   const duplicateTitle = m[1];
+          //   errorMessage = `Статья и именем "${duplicateTitle}" уже существует. Перейти к редактированию существующей статьи?`;
+          //   // await db.excuteQuery({query: "select id from blog_article_handle Where title=$title Or handle=$handle"})
+          // }
           return {
             articleId,
             success: false,
-            error: e.stack || e.message || e,
+            error: errorMessage,
           };
         }
       },

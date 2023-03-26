@@ -20,9 +20,9 @@ CREATE TABLE IF NOT EXISTS `page_handle` (
   `handle` varchar(1024) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `uniq_handle` (`handle`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Дамп данных таблицы master_v_balashihe.page_handle: ~12 rows (приблизительно)
+-- Дамп данных таблицы master_v_balashihe.page_handle: ~13 rows (приблизительно)
 INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
 	(12, '/dfsdfdsfsfwerwer');
 INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
@@ -37,6 +37,8 @@ INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
 	(8, 'kompyuternye-sistemnye-bloki-v-balashihe-remont-pk');
 INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
 	(9, 'master-po-remontu-kompyuterov-s-horoshimi-otzyvami-v-balashihe-master-s-vyezdom-na-dom-ili-v-ofise-ryadom-s-centrom-goroda-balashiha');
+INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
+	(14, 'master-po-remontu-kompyuterov-udalit-virusy-v-kompyutere-po-nizkoj-cene-ili-udalit-virusy-samomu');
 INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
 	(2, 'remont-materinskih-plat-v-balashihe-i-moskovskoj-oblasti');
 INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
