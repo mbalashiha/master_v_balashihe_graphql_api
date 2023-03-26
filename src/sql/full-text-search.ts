@@ -29,27 +29,36 @@ const normalizeNumber = (val: number, max: number, min: number): number =>
 
 export const fullTextSearch = async ({
   search,
+  offset,
+  limit,
   naturalLanguageModeQuery,
   booleanModeQuery,
 }: {
   search: string;
+  offset: number;
+  limit: number | null;
   naturalLanguageModeQuery: string;
   booleanModeQuery: string;
 }) => {
+  const offsetLimitString = limit ? ` LIMIT $limit OFFSET $offset` : ``;
+  if (offsetLimitString) {
+    naturalLanguageModeQuery += offsetLimitString;
+    booleanModeQuery += offsetLimitString;
+  }
   const originalSearchParam = search;
   const isBooleanMode = checkIsBooleanModeTextQuery(search);
   const resultArray = [];
   if (!isBooleanMode) {
     const articles: any = await db.excuteQuery({
       query: naturalLanguageModeQuery,
-      variables: { search },
+      variables: { offset, limit, search },
     });
     resultArray.push(...articles);
   } else {
     try {
       const articles: any = await db.excuteQuery({
         query: booleanModeQuery,
-        variables: { search },
+        variables: { offset, limit, search },
       });
       resultArray.push(...articles);
     } catch (e: any) {}
@@ -63,7 +72,7 @@ export const fullTextSearch = async ({
       .join(" ");
     const articles: any = await db.excuteQuery({
       query: booleanModeQuery,
-      variables: { search: searchAttempt },
+      variables: { offset, limit, search: searchAttempt },
     });
     resultArray.push(...articles);
   }
@@ -75,7 +84,7 @@ export const fullTextSearch = async ({
       .join(" ");
     const articles: any = await db.excuteQuery({
       query: booleanModeQuery,
-      variables: { search: searchAttempt },
+      variables: { offset, limit, search: searchAttempt },
     });
     resultArray.push(...articles);
   }
@@ -83,7 +92,7 @@ export const fullTextSearch = async ({
     try {
       const articles: any = await db.excuteQuery({
         query: naturalLanguageModeQuery,
-        variables: { search: originalSearchParam },
+        variables: { offset, limit, search: originalSearchParam },
       });
       resultArray.push(...articles);
     } catch (e: any) {}

@@ -14,7 +14,7 @@ export const ManagementArticlesCardsModule = createModule({
     gql`
       type ManagementArticlesCards {
         search: String
-        nodes: [ArticleCard]!
+        nodes(offset: Int, limit: Int): [ArticleCard]!
       }
       type Query {
         managementArticlesCards(
@@ -45,18 +45,25 @@ export const ManagementArticlesCardsModule = createModule({
         try {
           let search = variables.search || parent.search || "";
           const offset = variables.offset || parent.offset || 0;
-          const limit = variables.limit || parent.limit || 250;
+          const limit = variables.limit || parent.limit || null;
           if (!search) {
-            const articles: any = await db.excuteQuery({
-              query: `select id, Coalesce(handle, title, id) as handle, title, createdAt, null as fragment, null as score 
+            const offsetLimitString = limit
+              ? ` LIMIT $limit OFFSET $offset`
+              : ``;
+            const articles = await db.excuteQuery({
+              query:
+                `select id, Coalesce(handle, title, id) as handle, title, createdAt, null as fragment, null as score 
                     from blog_article_handle 
-                    Order By createdAt Desc, updatedAt Desc`,
-              variables: [offset, limit],
+                    Order By createdAt Desc, updatedAt Desc ` +
+                offsetLimitString,
+              variables: { offset, limit },
             });
             return articles;
           } else {
             return await fullTextSearch({
               search,
+              offset,
+              limit,
               naturalLanguageModeQuery: `
             select id, Coalesce(handle, title, id) as handle, title, createdAt, text as fragment,
                   MATCH (title,text) AGAINST ($search IN NATURAL LANGUAGE MODE) as score

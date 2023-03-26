@@ -149,7 +149,7 @@ export const blogArticlesModule = createModule({
         let limit = variables.limit || parent.limit || 250;
         const articles: any = await db.excuteQuery({
           query:
-            "select * from blog_article Order By createdAt Desc, updatedAt Desc",
+            "select * from blog_article_handle Order By createdAt Desc, updatedAt Desc",
           variables: [offset, limit],
         });
         return articles;
@@ -165,19 +165,26 @@ export const blogArticlesModule = createModule({
         try {
           let search = parent.search || "";
           const offset = variables.offset || parent.offset || 0;
-          const limit = variables.limit || parent.limit || 250;
+          const limit = variables.limit || parent.limit || null;
           if (!search) {
+            const offsetLimitString = limit
+              ? ` LIMIT $limit OFFSET $offset`
+              : ``;
             const articles: any = await db.excuteQuery({
-              query: `select id, handle, title, createdAt, null as fragment, null as score 
+              query:
+                `select id, handle, title, createdAt, null as fragment, null as score 
                   from blog_article_handle   
                     Where notInList is NULL And unPublished is NULL
-                    Order By createdAt Desc, updatedAt Desc`,
-              variables: [offset, limit],
+                    Order By createdAt Desc, updatedAt Desc ` +
+                offsetLimitString,
+              variables: { offset, limit },
             });
             return articles;
           } else {
             return await fullTextSearch({
               search,
+              offset,
+              limit,
               naturalLanguageModeQuery: `
             select id, handle, title, createdAt, text as fragment,
                   MATCH (title,text) AGAINST ($search IN NATURAL LANGUAGE MODE) as score
