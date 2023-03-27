@@ -101,13 +101,13 @@ export const BlogManagementModule = createModule({
         context: GraphqlContext,
         info: GraphQLResolveInfo
       ) => {
-        const { search } = variables;
+        // const { search } = variables;
 
         if (!context.manager || !context.manager.id) {
           throw new Error("Manager Unauthorized");
         }
         const rows = await db.excuteQuery({
-          query: "select * from blog_article",
+          query: "select * from blog_article_handle",
           variables: [],
         });
         return rows;
