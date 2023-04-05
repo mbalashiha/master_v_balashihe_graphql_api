@@ -66,7 +66,7 @@ BEGIN
 	Then
 			SELECT handle INTO test_handle FROM blog_article_handle
 				WHERE id=in_existingArticleId;
-			IF test_handle IS NOT NULL AND test_handle != '' AND TRIM(test_handle) != ''
+			IF test_handle IS NOT NULL AND TRIM(test_handle) != ''
 			Then 
 				SET in_handle := test_handle;
 			END IF;
