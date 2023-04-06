@@ -20,9 +20,11 @@ CREATE TABLE IF NOT EXISTS `page_handle` (
   `handle` varchar(1024) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `uniq_handle` (`handle`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Дамп данных таблицы master_v_balashihe.page_handle: ~14 rows (приблизительно)
+-- Дамп данных таблицы master_v_balashihe.page_handle: ~13 rows (приблизительно)
+INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
+	(17, '/');
 INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
 	(12, '/dfsdfdsfsfwerwer');
 INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES

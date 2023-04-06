@@ -11,26 +11,29 @@ import { fullTextSearch } from "@src/sql/full-text-search";
 import { Schema } from "@root/schema/types/schema";
 const getFirst = async (notThisId: number | string) => {
   const rows = await db.excuteQuery({
-    query: `SELECT 1 as itIsloop, id, title, handle FROM blog_article_handle WHERE id = (SELECT MIN(id) FROM blog_article) And id != $articleId`,
+    query: `SELECT 1 as itIsloop, id, title, handle FROM blog_article_handle WHERE absURL is NULL AND id = (SELECT MIN(id) FROM blog_article_handle Where absURL is NULL) And id != $articleId`,
     variables: { articleId: notThisId },
   });
   return rows[0] || { itIsloop: 1, id: null, title: "", handle: "" };
 };
 const getLast = async (notThisId: number | string) => {
   const rows = await db.excuteQuery({
-    query: `SELECT 1 as itIsloop, id, title, handle FROM blog_article_handle WHERE id = (SELECT MAX(id) FROM blog_article) And id != $articleId`,
+    query: `SELECT 1 as itIsloop, id, title, handle FROM blog_article_handle 
+        WHERE absURL is NULL AND id = (SELECT MAX(id) FROM blog_article_handle Where absURL is NULL) And id != $articleId`,
     variables: { articleId: notThisId },
   });
   return rows[0] || { itIsloop: 1, id: null, title: "", handle: "" };
 };
 const getPrev = (id: number | string) =>
   db.excuteQuery({
-    query: `SELECT null as itIsloop, id, title, handle FROM blog_article_handle WHERE id = (SELECT MAX(id) FROM blog_article WHERE id < $articleId)`,
+    query: `SELECT null as itIsloop, id, title, handle FROM blog_article_handle 
+        WHERE absURL is NULL AND id = (SELECT MAX(id) FROM blog_article_handle WHERE absURL is NULL AND id < $articleId)`,
     variables: { articleId: id },
   });
 const getNext = (id: number | string) =>
   db.excuteQuery({
-    query: `SELECT null as itIsloop, id, title, handle FROM blog_article_handle WHERE id = (SELECT MIN(id) FROM blog_article WHERE id > $articleId)`,
+    query: `SELECT null as itIsloop, id, title, handle FROM blog_article_handle 
+        WHERE absURL is NULL AND id = (SELECT MIN(id) FROM blog_article_handle WHERE absURL is NULL AND id > $articleId)`,
     variables: { articleId: id },
   });
 
@@ -49,6 +52,8 @@ export const blogArticlesModule = createModule({
         id: ID
         title: String!
         handle: String!
+        absURL: String
+        displayingPageHandle: String
         createdAt: Date!
         score: Float
         fragment: String
@@ -68,6 +73,7 @@ export const blogArticlesModule = createModule({
         id: ID
         title: String
         handle: String
+        displayingPageHandle: String
         absURL: String
         text: String
         textHtml: String
@@ -114,6 +120,7 @@ export const blogArticlesModule = createModule({
           limit: Int
         ): ArticlesCardsConnection!
         articleByHandle(handle: String): BlogArticle
+        articleByAbsUrl(absURL: String): BlogArticle
       }
     `,
   ],
@@ -172,7 +179,7 @@ export const blogArticlesModule = createModule({
               : ``;
             const articles: any = await db.excuteQuery({
               query:
-                `select id, handle, title, createdAt, null as fragment, null as score 
+                `select id, Coalesce(displayingPageHandle, handle, title, id) as handle, absURL, displayingPageHandle, title, createdAt, null as fragment, null as score 
                   from blog_article_handle   
                     Where notInList is NULL And unPublished is NULL
                     Order By createdAt Desc, updatedAt Desc ` +
@@ -186,14 +193,14 @@ export const blogArticlesModule = createModule({
               offset,
               limit,
               naturalLanguageModeQuery: `
-            select id, handle, title, createdAt, text as fragment,
+            select id, Coalesce(displayingPageHandle, handle, title, id) as handle, absURL, displayingPageHandle, title, createdAt, text as fragment,
                   MATCH (title,text) AGAINST ($search IN NATURAL LANGUAGE MODE) as score
               from blog_article_handle 
                 WHERE 
                   unPublished is NULL And notSearchable is NULL And 
                   MATCH (title,text) AGAINST ($search IN NATURAL LANGUAGE MODE)`,
               booleanModeQuery: `
-            select id, handle, title, createdAt, text as fragment,
+            select id, Coalesce(displayingPageHandle, handle, title, id) as handle, absURL, displayingPageHandle, title, createdAt, text as fragment,
                   MATCH (title,text) AGAINST ($search IN BOOLEAN MODE) as score
               from blog_article_handle  
                 WHERE 
@@ -450,6 +457,25 @@ export const blogArticlesModule = createModule({
           let rows = await db.query(
             `select * from blog_article_handle where handle=?`,
             [variables.handle]
+          );
+          let result = rows && rows[0];
+          return { ...parent, ...variables, ...result };
+        } catch (e: any) {
+          console.error(e.stack || e.message || e);
+          debugger;
+          throw e;
+        }
+      },
+      articleByAbsUrl: async (
+        parent: any,
+        variables: { absURL: string },
+        _ctx: any,
+        info: GraphQLResolveInfo
+      ) => {
+        try {
+          let rows = await db.query(
+            `select * from blog_article_handle where absURL=?`,
+            [variables.absURL]
           );
           let result = rows && rows[0];
           return { ...parent, ...variables, ...result };
