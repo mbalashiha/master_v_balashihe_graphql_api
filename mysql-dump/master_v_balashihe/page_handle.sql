@@ -20,11 +20,13 @@ CREATE TABLE IF NOT EXISTS `page_handle` (
   `handle` varchar(1024) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `uniq_handle` (`handle`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Дамп данных таблицы master_v_balashihe.page_handle: ~13 rows (приблизительно)
+-- Дамп данных таблицы master_v_balashihe.page_handle: ~14 rows (приблизительно)
 INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
 	(17, '/');
+INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
+	(18, '/computer-master-balashiha');
 INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
 	(12, '/dfsdfdsfsfwerwer');
 INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
@@ -39,6 +41,8 @@ INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
 	(15, 'chastnyj-kompyuternyj-master-mgtu-mirea-(rossijskij-tehnologicheskij-universitet)');
 INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
 	(16, 'dmitrij-chastnyj-kompyuternyj-master-mgtu-mirea-rossijskij-tehnologicheskij-universitet');
+INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
+	(19, 'dmitrij-kompyuternyj-master-v-balashihe-mgtu-mirea-rossijskij-tehnologicheskij-universitet');
 INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
 	(8, 'kompyuternye-sistemnye-bloki-v-balashihe-remont-pk');
 INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
