@@ -67,28 +67,48 @@ BEGIN
 		WHERE in_managerId=d.managerId AND d.isDraftSaved IS NULL And
 				IFNULL(in_existingArticleId,'')=IFNULL(d.existingArticleId,'');
 		If stored_draftArticleId IS Null
-		Then
-			INSERT INTO draft_blog_article(existingArticleId, managerId, title, handle, absURL, autoHandleSlug, blogCategoryId, 
-			unPublished, 
-			notSearchable,
-			notInList,
-			orderNumber, imageId)
-				VALUES(				
-					in_existingArticleId,
-					in_managerId,
-					in_title,
-					in_handle,
-					in_absURL,
-					in_autoHandleSlug,
-					in_blogCategoryId,
-			in_unPublished, 
-			in_notSearchable,
-			in_notInList,
-					in_orderNumber,
-					in_imageId
-				);
-			SET stored_draftArticleId := @last_draftArticleId;
-			SELECT 'Draft has been created' AS message, Lower(Hex(stored_draftArticleId)) AS draftArticleId;
+		Then 			
+			IF in_existingArticleId is not NULL 
+					And Exists(
+									SELECT 1 FROM blog_article_handle d
+										WHERE 
+										d.id=in_existingArticleId And
+										IFNULL(in_title, '')=IFNULL(d.title,'') And
+										IFNULL(in_handle, '')=IFNULL(d.handle,'') and
+										IFNULL(in_absURL, '')=IFNULL(d.absURL,'') and
+										IFNULL(in_autoHandleSlug, '')=IFNULL(d.autoHandleSlug,'') And
+										IFNULL(in_blogCategoryId, '')=IFNULL(d.blogCategoryId,'') And
+										IFNULL(in_unPublished,'')=IFNULL(d.unPublished,'') And
+										IFNULL(in_notSearchable,'')=IFNULL(d.notSearchable,'') And
+										IFNULL(in_notInList,'')=IFNULL(d.notInList,'') And
+										IFNULL(in_orderNumber,'')=IFNULL(d.orderNumber,'') And
+										IFNULL(in_imageId,'')=IFNULL(d.imageId,'')
+									)
+			Then
+				SELECT 'No need to create draft' AS message, null AS draftArticleId;			
+			Else
+				INSERT INTO draft_blog_article(existingArticleId, managerId, title, handle, absURL, autoHandleSlug, blogCategoryId, 
+				unPublished, 
+				notSearchable,
+				notInList,
+				orderNumber, imageId)
+					VALUES(				
+						in_existingArticleId,
+						in_managerId,
+						in_title,
+						in_handle,
+						in_absURL,
+						in_autoHandleSlug,
+						in_blogCategoryId,
+				in_unPublished, 
+				in_notSearchable,
+				in_notInList,
+						in_orderNumber,
+						in_imageId
+					);
+				SET stored_draftArticleId := @last_draftArticleId;
+				SELECT 'Draft has been created' AS message, Lower(Hex(stored_draftArticleId)) AS draftArticleId;
+			END IF;
 		Else
 			UPDATE draft_blog_article SET 
 				title=in_title,

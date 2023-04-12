@@ -51,6 +51,45 @@ export default async function selectArticleDraft({
     } else {
       result = rows[0];
     }
+    if (result && result.id && result.existingArticleId) {
+      const rows = await db.excuteQuery({
+        query: "select * from blog_article_handle Where id=?",
+        variables: [result.existingArticleId],
+      });
+      const existingArticle = rows && rows[0];
+      if (
+        existingArticle &&
+        existingArticle.blogCategoryId == result.blogCategoryId &&
+        existingArticle.title == result.title &&
+        existingArticle.autoHandleSlug == result.autoHandleSlug &&
+        existingArticle.handle == result.handle &&
+        existingArticle.absURL == result.absURL &&
+        existingArticle.text == result.text &&
+        existingArticle.textHtml == result.textHtml &&
+        existingArticle.imageId == result.imageId &&
+        existingArticle.orderNumber == result.orderNumber &&
+        Boolean(existingArticle.notInList) == Boolean(result.notInList) &&
+        Boolean(existingArticle.notSearchable) ==
+          Boolean(result.notSearchable) &&
+        Boolean(existingArticle.unPublished) == Boolean(result.unPublished)
+      ) {
+        try {
+          const delRes = await db.excuteQuery({
+            query: `delete from draft_blog_article where draftArticleId=$draftArticleId`,
+            variables: {
+              draftArticleId: result.draftArticleId,
+            },
+          });
+          // console.log("delete Result:", delRes);
+        } catch (e: any) {
+          console.error("delete Result error:", e.stack || e.message);
+          debugger;
+        }
+        result.id = null;
+        result.draftArticleId = null;
+      }
+      result.existingArticle = existingArticle;
+    }
     return result;
   } catch (e: any) {
     console.error(e.stack || e.message || e);

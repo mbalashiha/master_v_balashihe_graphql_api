@@ -135,9 +135,12 @@ export const BlogArticleDraftModule = createModule({
       ) => {
         let rows;
         try {
+          if (parent.existingArticle) {
+            return parent.existingArticle;
+          }
           if (parent.existingArticleId) {
             rows = await db.excuteQuery({
-              query: "select * from blog_article Where id=?",
+              query: "select * from blog_article_handle Where id=?",
               variables: [parent.existingArticleId],
             });
           }

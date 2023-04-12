@@ -41,16 +41,28 @@ BEGIN
 				IFNULL(in_existingArticleId,'')=IFNULL(d.existingArticleId,'');
 		If stored_draftArticleId IS Null
 		Then
-			INSERT INTO draft_blog_article(existingArticleId, managerId, `text`, textHtml, textRawDraftContentState)
-				VALUES(
-					If(in_existingArticleId='' OR in_existingArticleId IS NULL,NULL, in_existingArticleId),
-					If(in_managerId='' OR in_managerId IS NULL,NULL, in_managerId),
-					If(in_text='' OR in_text IS NULL,NULL,TRIM(in_text)),
-					If(in_textHtml='' OR in_textHtml IS NULL,NULL,TRIM(in_textHtml)),
-					If(in_textRawDraftContentState='' OR in_textRawDraftContentState IS NULL,NULL,TRIM(in_textRawDraftContentState))
-				);
-			SET stored_draftArticleId := @last_draftArticleId;
-			SELECT 'Draft has been created' AS message, Lower(Hex(stored_draftArticleId)) AS draftArticleId;
+				IF in_existingArticleId is not NULL 
+					And Exists(
+									SELECT 1 FROM blog_article_handle d
+										WHERE 
+										d.id=in_existingArticleId And
+										IFNULL(in_text,'')=IFNULL(d.`text`,'') And										
+										IFNULL(in_textHtml,'')=IFNULL(d.`textHtml`,'')
+									)
+			Then
+				SELECT 'No need to create draft' AS message, null AS draftArticleId;	
+			ELSE 	
+				INSERT INTO draft_blog_article(existingArticleId, managerId, `text`, textHtml, textRawDraftContentState)
+					VALUES(
+						If(in_existingArticleId='' OR in_existingArticleId IS NULL,NULL, in_existingArticleId),
+						If(in_managerId='' OR in_managerId IS NULL,NULL, in_managerId),
+						If(in_text='' OR in_text IS NULL,NULL,TRIM(in_text)),
+						If(in_textHtml='' OR in_textHtml IS NULL,NULL,TRIM(in_textHtml)),
+						If(in_textRawDraftContentState='' OR in_textRawDraftContentState IS NULL,NULL,TRIM(in_textRawDraftContentState))
+					);
+				SET stored_draftArticleId := @last_draftArticleId;
+				SELECT 'Draft has been created' AS message, Lower(Hex(stored_draftArticleId)) AS draftArticleId;
+			END IF;
 		Else
 			UPDATE draft_blog_article SET 
 				`text`=If(in_text='' OR in_text IS NULL,NULL,TRIM(in_text)),
