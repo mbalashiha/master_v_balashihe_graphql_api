@@ -73,7 +73,7 @@ export default async function selectArticleDraft({
           Boolean(result.notSearchable) &&
         Boolean(existingArticle.unPublished) == Boolean(result.unPublished)
       ) {
-        try {
+        /** try {
           const delRes = await db.excuteQuery({
             query: `delete from draft_blog_article where draftArticleId=$draftArticleId`,
             variables: {
@@ -84,7 +84,7 @@ export default async function selectArticleDraft({
         } catch (e: any) {
           console.error("delete Result error:", e.stack || e.message);
           debugger;
-        }
+        } **/
         result.id = null;
         result.draftArticleId = null;
       }
