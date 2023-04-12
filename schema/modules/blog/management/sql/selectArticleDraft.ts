@@ -80,11 +80,11 @@ export default async function selectArticleDraft({
               draftArticleId: result.draftArticleId,
             },
           });
-          // console.log("delete Result:", delRes);
+          console.log("delete Result:", delRes);
         } catch (e: any) {
           console.error("delete Result error:", e.stack || e.message);
           debugger;
-        } **/
+        } ** */
         result.id = null;
         result.draftArticleId = null;
       }
