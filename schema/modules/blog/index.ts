@@ -79,6 +79,7 @@ export const blogArticlesModule = createModule({
         textHtml: String
         textRawDraftContentState: String
         renderHtml: String
+        keyTextHtml: String
         autoHandleSlug: String
         orderNumber: Int
         blogCategoryId: ID

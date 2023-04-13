@@ -25,6 +25,11 @@ export namespace Schema {
     textRawDraftContentState: String;
     existingArticleId: ID;
   }
+  export interface ArticleKeyTextDraftInput {
+    id: ID;
+    keyTextHtml: String;
+    existingArticleId: ID;
+  }
   export interface Image {
     imageId: ID;
     imgSrc: string;
@@ -80,6 +85,7 @@ export namespace Schema {
     text: String;
     textHtml: String;
     textRawDraftContentState: String;
+    keyTextHtml: String;
     renderHtml: String;
     orderNumber: Int;
     blogCategoryId: ID;

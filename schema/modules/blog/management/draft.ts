@@ -20,6 +20,7 @@ export const BlogArticleDraftModule = createModule({
         text: String
         textHtml: String
         textRawDraftContentState: String
+        keyTextHtml: String
         orderNumber: Int
         blogCategoryId: ID
         category: CategoryId
@@ -55,6 +56,11 @@ export const BlogArticleDraftModule = createModule({
         textRawDraftContentState: String
         existingArticleId: ID
       }
+      input ArticleKeyTextDraftInput {
+        id: ID
+        keyTextHtml: String
+        existingArticleId: ID
+      }
       type ArticleDraftResponse {
         error: String
         message: String
@@ -68,6 +74,9 @@ export const BlogArticleDraftModule = createModule({
         saveArticleDraft(articleDraft: ArticleDraftInput): ArticleDraftResponse
         saveArticleTextDraft(
           articleTextDraft: ArticleTextDraftInput
+        ): ArticleDraftResponse
+        saveArticleKeyTextDraft(
+          articleKeyText: ArticleKeyTextDraftInput!
         ): ArticleDraftResponse
         deleteArticleDraft(id: ID!): ArticleDraftResponse
       }
@@ -270,6 +279,59 @@ export const BlogArticleDraftModule = createModule({
           };
         } catch (e: any) {
           console.error(articleTextDraft);
+          console.error(e.stack || e.message);
+          // debugger;
+          throw e;
+        }
+      },
+      saveArticleKeyTextDraft: async (
+        parent: void,
+        variables: { articleKeyText: Schema.ArticleKeyTextDraftInput },
+        context: { manager: { id: string | number } },
+        info: GraphQLResolveInfo
+      ) => {
+        if (!context.manager || !context.manager.id) {
+          throw new GraphQLError("Manager Unauthorized");
+        }
+        const { articleKeyText } = variables;
+        try {
+          let sqlResult = await db.excuteQuery({
+            query: `call blog_article_keyTextHtml_save_draft(
+              $managerId,
+              $existingArticleId,
+              $keyTextHtml
+            );`,
+            variables: {
+              managerId: context.manager.id,
+              existingArticleId: articleKeyText.existingArticleId || null,
+              keyTextHtml: articleKeyText.keyTextHtml || null,
+            },
+          });
+          if (!sqlResult) {
+            throw new Error("sql procedure result is undefined!");
+          }
+          const row = (sqlResult[0] && sqlResult[0][0]) || {};
+          let success = true;
+          let error = row.error || null;
+          let message = row.message || null;
+          if (!message) {
+            message = "No message from sql procedure!";
+            if (!error) {
+              error = message;
+            }
+          }
+          return {
+            success,
+            error,
+            message,
+            managerId: context.manager.id,
+            id: row.draftArticleId,
+            articleId: articleKeyText.existingArticleId || null,
+            existingArticleId: articleKeyText.existingArticleId || null,
+            ...row,
+          };
+        } catch (e: any) {
+          console.error(articleKeyText);
           console.error(e.stack || e.message);
           // debugger;
           throw e;

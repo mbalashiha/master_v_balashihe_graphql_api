@@ -21,6 +21,7 @@ export const BlogManagementModule = createModule({
         text: String
         textHtml: String
         textRawDraftContentState: String
+        keyTextHtml: String
         unPublished: Boolean
         notSearchable: Boolean
         notInList: Boolean
@@ -169,7 +170,8 @@ export const BlogManagementModule = createModule({
             $imageId,
             $unPublished,
             $notSearchable,
-            $notInList
+            $notInList,
+            $keyTextHtml
             );`,
             variables: {
               managerId: context.manager.id,
@@ -190,6 +192,7 @@ export const BlogManagementModule = createModule({
               unPublished: article.unPublished ? 1 : null,
               notSearchable: article.notSearchable ? 1 : null,
               notInList: article.notInList ? 1 : null,
+              keyTextHtml: article.keyTextHtml || null,
             },
           });
           if (!sqlResult) {
