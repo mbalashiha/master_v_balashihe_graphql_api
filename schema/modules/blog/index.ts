@@ -11,14 +11,14 @@ import { fullTextSearch } from "@src/sql/full-text-search";
 import { Schema } from "@root/schema/types/schema";
 const getFirst = async (notThisId: number | string) => {
   const rows = await db.excuteQuery({
-    query: `SELECT 1 as itIsloop, id, title, handle FROM blog_article_handle WHERE absURL is NULL AND id = (SELECT MIN(id) FROM blog_article_handle Where absURL is NULL) And id != $articleId`,
+    query: `SELECT 1 as itIsloop, id, title, handle, imageId FROM blog_article_handle WHERE absURL is NULL AND id = (SELECT MIN(id) FROM blog_article_handle Where absURL is NULL) And id != $articleId`,
     variables: { articleId: notThisId },
   });
   return rows[0] || { itIsloop: 1, id: null, title: "", handle: "" };
 };
 const getLast = async (notThisId: number | string) => {
   const rows = await db.excuteQuery({
-    query: `SELECT 1 as itIsloop, id, title, handle FROM blog_article_handle 
+    query: `SELECT 1 as itIsloop, id, title, handle, imageId FROM blog_article_handle 
         WHERE absURL is NULL AND id = (SELECT MAX(id) FROM blog_article_handle Where absURL is NULL) And id != $articleId`,
     variables: { articleId: notThisId },
   });
@@ -26,13 +26,13 @@ const getLast = async (notThisId: number | string) => {
 };
 const getPrev = (id: number | string) =>
   db.excuteQuery({
-    query: `SELECT null as itIsloop, id, title, handle FROM blog_article_handle 
+    query: `SELECT null as itIsloop, id, title, handle, imageId FROM blog_article_handle 
         WHERE absURL is NULL AND id = (SELECT MAX(id) FROM blog_article_handle WHERE absURL is NULL AND id < $articleId)`,
     variables: { articleId: id },
   });
 const getNext = (id: number | string) =>
   db.excuteQuery({
-    query: `SELECT null as itIsloop, id, title, handle FROM blog_article_handle 
+    query: `SELECT null as itIsloop, id, title, handle, imageId FROM blog_article_handle 
         WHERE absURL is NULL AND id = (SELECT MIN(id) FROM blog_article_handle WHERE absURL is NULL AND id > $articleId)`,
     variables: { articleId: id },
   });
@@ -57,11 +57,15 @@ export const blogArticlesModule = createModule({
         createdAt: Date!
         score: Float
         fragment: String
+        image: Image
+        imageId: ID
       }
       type NavigationItem {
         id: ID
         title: String!
         handle: String
+        image: Image
+        imageId: ID
         itIsloop: Boolean
       }
       type BlogArticleNavigation {
@@ -163,6 +167,48 @@ export const blogArticlesModule = createModule({
         return articles;
       },
     },
+    NavigationItem: {
+      image: async (
+        parent: Schema.BlogArticle,
+        variables: any,
+        _ctx: any,
+        info: GraphQLResolveInfo
+      ) => {
+        if (!parent.imageId) {
+          return null;
+        }
+        const rows = await db.excuteQuery({
+          query: `select * from image where imageId=$imageId`,
+          variables: parent,
+        });
+        if (rows && rows[0] && rows[0].imgSrc) {
+          return rows[0];
+        } else {
+          return null;
+        }
+      },
+    },
+    ArticleCard: {
+      image: async (
+        parent: Schema.BlogArticle,
+        variables: any,
+        _ctx: any,
+        info: GraphQLResolveInfo
+      ) => {
+        if (!parent.imageId) {
+          return null;
+        }
+        const rows = await db.excuteQuery({
+          query: `select * from image where imageId=$imageId`,
+          variables: parent,
+        });
+        if (rows && rows[0] && rows[0].imgSrc) {
+          return rows[0];
+        } else {
+          return null;
+        }
+      },
+    },
     ArticlesCardsConnection: {
       nodes: async (
         parent: { search?: string; offset?: number; limit?: number },
@@ -180,7 +226,7 @@ export const blogArticlesModule = createModule({
               : ``;
             const articles: any = await db.excuteQuery({
               query:
-                `select id, Coalesce(displayingPageHandle, handle, title, id) as handle, absURL, displayingPageHandle, title, createdAt, null as fragment, null as score 
+                `select id, imageId, Coalesce(displayingPageHandle, handle, title, id) as handle, absURL, displayingPageHandle, title, createdAt, null as fragment, null as score 
                   from blog_article_handle   
                     Where notInList is NULL And unPublished is NULL
                     Order By createdAt Desc, updatedAt Desc ` +
@@ -194,14 +240,14 @@ export const blogArticlesModule = createModule({
               offset,
               limit,
               naturalLanguageModeQuery: `
-            select id, Coalesce(displayingPageHandle, handle, title, id) as handle, absURL, displayingPageHandle, title, createdAt, text as fragment,
+            select id, imageId, Coalesce(displayingPageHandle, handle, title, id) as handle, absURL, displayingPageHandle, title, createdAt, text as fragment,
                   MATCH (title,text) AGAINST ($search IN NATURAL LANGUAGE MODE) as score
               from blog_article_handle 
                 WHERE 
                   unPublished is NULL And notSearchable is NULL And 
                   MATCH (title,text) AGAINST ($search IN NATURAL LANGUAGE MODE)`,
               booleanModeQuery: `
-            select id, Coalesce(displayingPageHandle, handle, title, id) as handle, absURL, displayingPageHandle, title, createdAt, text as fragment,
+            select id, imageId, Coalesce(displayingPageHandle, handle, title, id) as handle, absURL, displayingPageHandle, title, createdAt, text as fragment,
                   MATCH (title,text) AGAINST ($search IN BOOLEAN MODE) as score
               from blog_article_handle  
                 WHERE 

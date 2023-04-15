@@ -49,7 +49,7 @@ export const ManagementArticlesCardsModule = createModule({
               : ``;
             const articles = await db.excuteQuery({
               query:
-                `select id, Coalesce(displayingPageHandle, handle, title, id) as handle, absURL, displayingPageHandle, title, createdAt, null as fragment, null as score 
+                `select id, imageId, Coalesce(displayingPageHandle, handle, title, id) as handle, absURL, displayingPageHandle, title, createdAt, null as fragment, null as score 
                     from blog_article_handle 
                     Order By createdAt Desc, updatedAt Desc ` +
                 offsetLimitString,
@@ -62,12 +62,12 @@ export const ManagementArticlesCardsModule = createModule({
               offset,
               limit,
               naturalLanguageModeQuery: `
-            select id, Coalesce(displayingPageHandle, handle, title, id) as handle, absURL, displayingPageHandle, title, createdAt, text as fragment,
+            select id, imageId, Coalesce(displayingPageHandle, handle, title, id) as handle, absURL, displayingPageHandle, title, createdAt, text as fragment,
                   MATCH (title,text) AGAINST ($search IN NATURAL LANGUAGE MODE) as score
               from blog_article_handle 
                 WHERE MATCH (title,text) AGAINST ($search IN NATURAL LANGUAGE MODE)`,
               booleanModeQuery: `
-            select id, Coalesce(displayingPageHandle, handle, title, id) as handle, absURL, displayingPageHandle, title, createdAt, text as fragment,
+            select id, imageId, Coalesce(displayingPageHandle, handle, title, id) as handle, absURL, displayingPageHandle, title, createdAt, text as fragment,
                   MATCH (title,text) AGAINST ($search IN BOOLEAN MODE) as score
               from blog_article_handle 
                 WHERE MATCH (title,text) AGAINST ($search IN BOOLEAN MODE)`,
