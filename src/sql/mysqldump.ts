@@ -4,6 +4,7 @@ import path from "path";
 import fs from "fs";
 import fsa from "fs/promises";
 import fse from "fs-extra";
+import delay from "delay";
 const mysqldumpExePathes = [
   "/usr/bin/mysqldump",
   `C:\\Program Files\\MariaDB 10.10\\bin\\mysqldump.exe`,
@@ -17,6 +18,10 @@ const mysqlExePathes = [
 
 const root_user_name = process.env["SUPER_SECRET_MYSQL_USER"] || "";
 const root_user_password = process.env["SUPER_SECRET_MYSQL_PASS"] || "";
+const MYSQL_HOST = process.env["MYSQL_HOST"] || "";
+const MYSQL_DB = process.env["MYSQL_DB"] || "";
+const MYSQL_USER = process.env["MYSQL_USER"] || "";
+const MYSQL_PASS = process.env["MYSQL_PASS"] || "";
 
 const path_to_dump_dir = path.resolve("mysql-full-dump");
 
@@ -26,9 +31,11 @@ const getFirstExistingPath = async (pathes: Array<string>): Promise<string> => {
       if (await fse.pathExists(tryPath)) {
         return tryPath;
       }
-    } catch (e) { }
+    } catch (e) {}
   }
-  throw new Error('No one file path exists from array: ' + JSON.stringify(pathes, null, 2));
+  throw new Error(
+    "No one file path exists from array: " + JSON.stringify(pathes, null, 2)
+  );
 };
 const getMysqldumpExePath = () => {
   return getFirstExistingPath(mysqldumpExePathes);
@@ -75,6 +82,21 @@ export const spawnAsync = (
     });
   });
 export const spawnMysqldump = async () => {
+  let machineIP: string;
+  try {
+    machineIP = await spawnAsync(`hostname`, ["-I"]);
+  } catch (e: any) {
+    machineIP = "";
+    console.error(
+      "\n\nError while checking machine network ip:",
+      e.stack || e.message || e,
+      "\n\n"
+    );
+  }
+  const TARGET_MYSQL_HOST =
+    !MYSQL_HOST || (machineIP && machineIP === MYSQL_HOST)
+      ? "localhost"
+      : MYSQL_HOST;
   const dateString = new Date().toISOString().split("T")[0];
   const getCurrentDayDumpFile = (databaseName: string) =>
     path.join(
@@ -92,21 +114,27 @@ export const spawnMysqldump = async () => {
   console.log(
     `\nmysqlExePath: "${mysqlExePath}", mysqldumpExePath: "${mysqldumpExePath}"`
   );
-  const text = await spawnAsync(mysqlExePath, [
-    "-u",
-    root_user_name,
-    "-p" + root_user_password,
-    "-e",
-    "SHOW DATABASES;",
-  ]);
-  const databaseList = text
-    .split("\n")
-    .map((el) => el.trim())
-    .filter((el, ind) => el && ind > 0);
-  console.log(databaseList);
-  for (const databaseName of databaseList) {
+  let text: string;
+  try {
+    text = await spawnAsync(mysqlExePath, [
+      "-h",
+      TARGET_MYSQL_HOST,
+      "-u",
+      root_user_name,
+      "-p" + root_user_password,
+      "-e",
+      "SHOW DATABASES;",
+    ]);
+  } catch (e: any) {
+    text = "";
+    console.error(e.stack || e.message || e, "\n");
+  }
+  if (!text) {
+    const databaseName = MYSQL_DB;
     try {
-      const currentDatabaseDumpFilepath = getCurrentDayDumpFile(databaseName);
+      const currentDatabaseDumpFilepath = getCurrentDayDumpFile(
+        databaseName + "__not_root_user"
+      );
       if (!(await fse.pathExists(currentDatabaseDumpFilepath))) {
         console.log(
           `---> ${databaseName}. processing database: ${databaseName}`
@@ -115,9 +143,11 @@ export const spawnMysqldump = async () => {
         await spawnAsync(
           mysqldumpExePath,
           [
+            "-h",
+            TARGET_MYSQL_HOST,
             "-u",
-            root_user_name,
-            "-p" + root_user_password,
+            MYSQL_USER,
+            "-p" + MYSQL_PASS,
             "--databases",
             databaseName,
             "--hex-blob",
@@ -128,10 +158,55 @@ export const spawnMysqldump = async () => {
           ],
           fs.createWriteStream(currentDatabaseDumpFilepath)
         );
+        await delay(10);
+        if (await fse.pathExists(currentDatabaseDumpFilepath)) {
+          console.log(
+            `Database "${databaseName}" successfully dumped to file: "${currentDatabaseDumpFilepath}"`
+          );
+        }
       }
+      console.log("mysql database dumping finished!");
     } catch (e: any) {
-      console.error(`Error dumping database: ${databaseName}\n\n`);
+      console.error(`\n\nError dumping database: ${databaseName}\n\n`);
+      console.error(e.stack || e.message || e, "\n\n");
     }
+  } else {
+    const databaseList = text
+      .split("\n")
+      .map((el) => el.trim())
+      .filter((el, ind) => el && ind > 0);
+    console.log(databaseList);
+    for (const databaseName of databaseList) {
+      try {
+        const currentDatabaseDumpFilepath = getCurrentDayDumpFile(databaseName);
+        if (!(await fse.pathExists(currentDatabaseDumpFilepath))) {
+          console.log(
+            `---> ${databaseName}. processing database: ${databaseName}`
+          );
+          await fse.mkdirp(path.dirname(currentDatabaseDumpFilepath));
+          await spawnAsync(
+            mysqldumpExePath,
+            [
+              "-h",
+              TARGET_MYSQL_HOST,
+              "-u",
+              root_user_name,
+              "-p" + root_user_password,
+              "--databases",
+              databaseName,
+              "--hex-blob",
+              // "--add-drop-trigger",
+              "--routines",
+              "--triggers",
+              "--single-transaction",
+            ],
+            fs.createWriteStream(currentDatabaseDumpFilepath)
+          );
+        }
+      } catch (e: any) {
+        console.error(`Error dumping database: ${databaseName}\n\n`);
+      }
+    }
+    console.log("mysql database dumping finished!");
   }
-  console.log("mysql database dumping finished!");
 };
