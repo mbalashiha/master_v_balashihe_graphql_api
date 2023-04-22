@@ -31,5 +31,5 @@
     }
   },
   "include": ["**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules", ".history", ".git"]
+  "exclude": ["production-build.js", "node_modules", ".history", ".git"]
 }

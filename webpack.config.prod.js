@@ -13,8 +13,10 @@ module.exports = {
   mode: "production",
   watch: false,
   output: {
-    path: path.resolve(__dirname, "production", "build"),
-    filename: "index.js",
+    path: path.resolve(
+      __dirname,
+    ),
+    filename: "production-build.js",
   },
   module: {
     rules: [

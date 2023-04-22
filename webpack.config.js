@@ -62,8 +62,9 @@ module.exports = {
       "/build",
       "/build/**",
       "*.cache.json",
-      "/production/build",
-      "/production/build/**",
+      "/production/master_v_balashihe_graphql_api",
+      "/production/master_v_balashihe_graphql_api/**",
+      "/production-build.js",
     ],
   },
 };

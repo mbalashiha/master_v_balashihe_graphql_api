@@ -4,6 +4,8 @@
 /build/**
 /production
 /production/**
+/production-build.js
+production-build.js
 /.history
 /.history/**
 /mysql-full-dump
@@ -14,3 +16,4 @@
 .env.*
 *.secret.sql
 .env.local
+/production-build.js
