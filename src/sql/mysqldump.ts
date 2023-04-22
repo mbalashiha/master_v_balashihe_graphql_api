@@ -67,12 +67,12 @@ export const spawnAsync = (
       // if (writeStream) {
       //   writeStream.close();
       // }
-      if (stderr) {
+      /** if (stderr) {
         console.error(stderr.trim());
-      }
-      if (stdout) {
+      } **/
+      /** if (stdout) {
         console.log(stdout.trim());
-      }
+      } **/
       if (code == 0) {
         resolve(stdout || stderr);
       } else {
@@ -85,6 +85,9 @@ export const spawnMysqldump = async () => {
   let machineIP: string;
   try {
     machineIP = await spawnAsync(`hostname`, ["-I"]);
+    if (machineIP) {
+      console.log("Machine IP:", machineIP);
+    }
   } catch (e: any) {
     machineIP = "";
     console.error(
@@ -107,12 +110,13 @@ export const spawnMysqldump = async () => {
   if (!root_user_password) {
     throw new Error("No root_user_password!");
   }
+  console.log("process cwd:", process.cwd());
   const [mysqlExePath, mysqldumpExePath] = await Promise.all([
     getMysqlExePath(),
     getMysqldumpExePath(),
   ]);
   console.log(
-    `\nmysqlExePath: "${mysqlExePath}", mysqldumpExePath: "${mysqldumpExePath}"`
+    `mysqlExePath: "${mysqlExePath}", mysqldumpExePath: "${mysqldumpExePath}"`
   );
   let text: string;
   try {
@@ -127,7 +131,7 @@ export const spawnMysqldump = async () => {
     ]);
   } catch (e: any) {
     text = "";
-    console.error(e.stack || e.message || e, "\n");
+    console.error(e.stack || e.message || e);
   }
   if (!text) {
     const databaseName = MYSQL_DB;
@@ -167,7 +171,7 @@ export const spawnMysqldump = async () => {
       }
       console.log("mysql database dumping finished!");
     } catch (e: any) {
-      console.error(`\n\nError dumping database: ${databaseName}\n\n`);
+      console.error(`\n\nError dumping database: ${databaseName}`);
       console.error(e.stack || e.message || e, "\n\n");
     }
   } else {

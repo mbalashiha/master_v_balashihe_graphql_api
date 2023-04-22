@@ -1,22 +1,54 @@
 import path from "path";
 import fs from "fs";
 import fse from "fs-extra";
+const LISTENING_PORT = process.env["LISTENING_PORT"];
+if (!LISTENING_PORT) {
+  throw new Error("LISTENING_PORT enviroment variable has not been set.");
+}
+const SITE_FOLDER_NAME = process.env["SITE_FOLDER_NAME"] || "";
+if (!SITE_FOLDER_NAME) {
+  throw new Error("SITE_FOLDER_NAME enviroment variable has not been set.");
+}
+if (process.env["NODE_ENV"] === "production") {
+  console.log("Running in production enviroment.");
+  process.chdir(__dirname);
+}
 (() => {
+  let siteFolder: string = "";
   try {
-    const subRoot = path.resolve(path.join(__dirname, "..", ".."));
-    const subRootFolders = fs
-      .readdirSync(subRoot)
-      .filter((folder) => !folder.endsWith("_api"))
-      .map((folder) => path.join(subRoot, folder))
-      .filter((folder) => fs.statSync(folder).isDirectory());
-    const siteFolder = subRootFolders[0];
-    const sitePublicFolder = path.join(siteFolder, "public");
-    const imageUploadFolder = path.join(sitePublicFolder, "image", "upload");
-    process.env["sitePublicFolder"] = sitePublicFolder;
-    process.env["imageUploadFolder"] = imageUploadFolder;
-    fse.mkdirpSync(imageUploadFolder);
+    let subRoot = __dirname;
+    while (!siteFolder) {
+      // console.log("testing folder:", subRoot);
+      const testFolder = path.join(subRoot, SITE_FOLDER_NAME);
+      if (fse.existsSync(testFolder) && fs.statSync(testFolder).isDirectory()) {
+        siteFolder = testFolder;
+        break;
+      } else {
+        const newSubFolder = path.resolve(path.join(subRoot, ".."));
+        if (newSubFolder === subRoot) {
+          break;
+        } else {
+          subRoot = newSubFolder;
+        }
+      }
+    }
+    if (siteFolder) {
+      const sitePublicFolder = path.join(siteFolder, "public");
+      const imageUploadFolder = path.join(sitePublicFolder, "image", "upload");
+      process.env["sitePublicFolder"] = sitePublicFolder;
+      process.env["imageUploadFolder"] = imageUploadFolder;
+      fse.mkdirpSync(imageUploadFolder);
+    }
   } catch (e: any) {
     console.error(e.stack || e.message || e);
+  } finally {
+    if (!siteFolder) {
+      console.error(
+        "Fatal error: Site folder (root folder for nginx server) cound not be found. Existing with error code 1."
+      );
+      console.error();
+      process.exit(1);
+    }
   }
 })();
 
@@ -194,9 +226,9 @@ app.use(
     };
   })
 );
-app.listen(4402, () => {
+app.listen(parseInt(LISTENING_PORT), () => {
   console.log(
-    "Running a GraphQL API server at http://localhost:4402/graphql/api"
+    `Running a GraphQL API server at http://localhost:${LISTENING_PORT}/graphql/api`
   );
   setTimeout(() => spawnMysqldump(), 10 * 1000);
 });

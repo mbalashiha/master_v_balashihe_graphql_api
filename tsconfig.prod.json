@@ -4,5 +4,6 @@
     "declaration": false,
     "sourceMap": false,
     "inlineSourceMap": false
-  }
+  },
+  "outDir": "./production/build"
 }

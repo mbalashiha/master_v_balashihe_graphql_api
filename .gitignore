@@ -8,9 +8,9 @@
 /.history/**
 /mysql-full-dump
 /mysql-full-dump/**
-.env.local
 /.git
 /.git/**
 .env
 .env.*
 *.secret.sql
+.env.local

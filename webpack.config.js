@@ -24,7 +24,7 @@ module.exports = {
     filename: "index.js",
   },
   resolve: {
-    extensions: [".ts", ".js", ".tsx", ".jsx"],
+    extensions: [".ts", ".js", ".tsx", ".jsx", ".json"],
     alias: { ...resolveTsconfigPathsToAlias() },
   },
   module: {
@@ -35,6 +35,9 @@ module.exports = {
         use: [
           {
             loader: "ts-loader",
+            options: {
+              configFile: "tsconfig.json",
+            },
           },
         ],
       },
@@ -50,11 +53,17 @@ module.exports = {
       },
     }),
     new Dotenv({
-      path: path.resolve(__dirname, "./.env.local"), // load this now instead of the ones in '.env'
+      path: path.resolve(__dirname, "./.env.local.env"), // load this now instead of the ones in '.env'
     }),
   ],
   watch: true,
   watchOptions: {
-    ignored: ["/build", "/build/**", "*.cache.json"],
+    ignored: [
+      "/build",
+      "/build/**",
+      "*.cache.json",
+      "/production/build",
+      "/production/build/**",
+    ],
   },
 };

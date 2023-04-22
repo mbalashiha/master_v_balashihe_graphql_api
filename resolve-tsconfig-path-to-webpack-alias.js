@@ -22,7 +22,6 @@ function resolveTsconfigPathsToAlias({
       webpackConfigBasePath,
       paths[item][0].replace("/*", "").replace("*", "")
     );
-
     aliases[key] = value;
   });
 

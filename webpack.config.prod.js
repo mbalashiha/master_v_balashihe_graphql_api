@@ -3,25 +3,18 @@ const path = require("path");
 const webpack = require("webpack");
 const nodeExternals = require("webpack-node-externals");
 const Dotenv = require("dotenv-webpack");
+const { merge } = require("webpack-merge");
 const resolveTsconfigPathsToAlias = require("./resolve-tsconfig-path-to-webpack-alias");
+const config = require("./webpack.config");
 
 module.exports = {
-  entry: "./src/index.ts",
+  ...config,
   devtool: false,
   mode: "production",
-  target: "node",
-  node: {
-    // Need this when working with express, otherwise the build fails
-    __dirname: false, // if you don't put this is, __dirname
-    __filename: false, // and __filename return blank or /
-  },
+  watch: false,
   output: {
-    path: path.resolve(__dirname, "production"),
+    path: path.resolve(__dirname, "production", "build"),
     filename: "index.js",
-  },
-  resolve: {
-    extensions: [".ts", ".js", ".tsx", ".jsx"],
-    alias: { ...resolveTsconfigPathsToAlias() },
   },
   module: {
     rules: [
@@ -31,16 +24,17 @@ module.exports = {
         use: [
           {
             loader: "ts-loader",
-            options: { configFile: "./tsconfig.prod.json" },
+            options: {
+              configFile: "tsconfig.prod.json",
+            },
           },
         ],
       },
     ],
   },
-  externals: [nodeExternals()],
   plugins: [
     new Dotenv({
-      path: path.resolve(__dirname, "./.env.local"), // load this now instead of the ones in '.env'
+      path: path.resolve(__dirname, "./.env.production.env"), // load this now instead of the ones in '.env'
     }),
   ],
 };
