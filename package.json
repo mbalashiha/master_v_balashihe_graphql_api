@@ -6,7 +6,8 @@
   "scripts": {
     "start:dev": "webpack",
     "run:dev": "nodemon --inspect=9934 build/index.js",
-    "build": "webpack --config webpack.config.prod.js"
+    "build": "webpack --config webpack.config.prod.js",
+    "start": "node production-build.js"
   },
   "nodemonConfig": {
     "ext": "ts,json,js,graphql,tsx,jsx"
