@@ -18,7 +18,7 @@ const mysqlExePathes = [
 
 const root_user_name = process.env["SUPER_SECRET_MYSQL_USER"] || "";
 const root_user_password = process.env["SUPER_SECRET_MYSQL_PASS"] || "";
-const MYSQL_HOST = process.env["MYSQL_HOST"] || "";
+const MYSQL_HOST = (process.env["MYSQL_HOST"] || "").trim();
 const MYSQL_DB = process.env["MYSQL_DB"] || "";
 const MYSQL_USER = process.env["MYSQL_USER"] || "";
 const MYSQL_PASS = process.env["MYSQL_PASS"] || "";
@@ -86,7 +86,8 @@ export const spawnMysqldump = async () => {
   try {
     machineIP = await spawnAsync(`hostname`, ["-I"]);
     if (machineIP) {
-      console.log("Machine IP:", machineIP);
+      machineIP = machineIP.trim();
+      // console.log("Machine IP:", machineIP);
     }
   } catch (e: any) {
     machineIP = "";
@@ -96,8 +97,10 @@ export const spawnMysqldump = async () => {
       "\n\n"
     );
   }
+  // console.log("machineIP:", machineIP);
+  // console.log("MYSQL_HOST:", MYSQL_HOST);
   const TARGET_MYSQL_HOST =
-    !MYSQL_HOST || (machineIP && machineIP === MYSQL_HOST)
+    !MYSQL_HOST || (machineIP && machineIP.trim() === (MYSQL_HOST || "").trim())
       ? "localhost"
       : MYSQL_HOST;
   const dateString = new Date().toISOString().split("T")[0];

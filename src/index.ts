@@ -121,7 +121,9 @@ const app = express();
 //   debugger;
 //   next();
 // });
-app.use(cors(corsOptions));
+if (process.env.NODE_ENV !== "production") {
+  app.use(cors(corsOptions));
+}
 // app.use(
 //   expressjwt({
 //     credentialsRequired: false,
@@ -230,7 +232,7 @@ app.listen(parseInt(LISTENING_PORT), () => {
   console.log(
     `Running a GraphQL API server at http://localhost:${LISTENING_PORT}/graphql/api`
   );
-  setTimeout(() => spawnMysqldump(), 10 * 1000);
+  setTimeout(() => spawnMysqldump(), 500);
 });
 // } else {
 //   console.log("express index.js file is NOT executed");
