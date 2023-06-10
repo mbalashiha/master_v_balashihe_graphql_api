@@ -1,1 +1,0 @@
-CALL user_register('me-mini', "8@@23#ADDii&--#");

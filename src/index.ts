@@ -10,7 +10,7 @@ if (!SITE_FOLDER_NAME) {
   throw new Error("SITE_FOLDER_NAME enviroment variable has not been set.");
 }
 if (process.env["NODE_ENV"] === "production") {
-  console.log("Running in production enviroment.");
+  // console.log("Running in production enviroment.");
   process.chdir(__dirname);
 }
 (() => {
@@ -81,7 +81,6 @@ import managementLoginMiddleware, {
 import { verifyManagementLoginMiddleware } from "./management-login-middleware";
 import { AuthRequest } from "@root/types/express-custom";
 import { IncomingMessage, OutgoingMessage, ServerResponse } from "http";
-import { spawnMysqldump } from "./sql/mysqldump";
 import { BlogManagementModule } from "@root/schema/modules/blog/management/article-input";
 import { BlogArticleDraftModule } from "@root/schema/modules/blog/management/draft";
 import { ManagementArticlesCardsModule } from "@root/schema/modules/blog/management/article-cards";
@@ -228,11 +227,10 @@ app.use(
     };
   })
 );
-app.listen(parseInt(LISTENING_PORT), () => {
-  console.log(
-    `Running a GraphQL API server at http://localhost:${LISTENING_PORT}/graphql/api`
-  );
-  setTimeout(() => spawnMysqldump(), 500);
+app.listen(parseInt(LISTENING_PORT), "127.0.0.1", () => {
+  // console.log(
+  //   `Running a GraphQL API server at http://localhost:${LISTENING_PORT}/graphql/api`
+  // );
 });
 // } else {
 //   console.log("express index.js file is NOT executed");

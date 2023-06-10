@@ -15,5 +15,6 @@ production-build.js
 .env
 .env.*
 *.secret.sql
+*.scrt
 .env.local
 /production-build.js

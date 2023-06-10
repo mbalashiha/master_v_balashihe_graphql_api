@@ -214,6 +214,6 @@ export const spawnMysqldump = async () => {
         console.error(`Error dumping database: ${databaseName}\n\n`);
       }
     }
-    console.log("mysql database dumping finished!");
+    // console.log("mysql database dumping finished!");
   }
 };

@@ -880,7 +880,7 @@ export const managementModule = createModule({
             ],
           });
           result = result && result[0] && result[0][0];
-          console.log(result);
+          // console.log(result);
           return { draftProductId, productId: result?.productId || null };
         } catch (e: any) {
           console.error(e.stack || e.message);
