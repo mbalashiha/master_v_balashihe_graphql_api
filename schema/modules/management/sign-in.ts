@@ -128,7 +128,7 @@ export const signInModule = createModule({
         info: GraphQLResolveInfo
       ) => {
         // if (context.user) {
-        //   console.log(context.user);
+        //   console.l//og(context.user);
         //   debugger;
         // }
         const { res } = context;

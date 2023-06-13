@@ -81,7 +81,7 @@ export default async function selectArticleDraft({
               draftArticleId: result.draftArticleId,
             },
           });
-          console.log("delete Result:", delRes);
+          console.l//og("delete Result:", delRes);
         } catch (e: any) {
           console.error("delete Result error:", e.stack || e.message);
           debugger;

@@ -858,7 +858,7 @@ export const managementModule = createModule({
             context.manager.id,
             productId
           );
-          // console.log(util.inspect(productInput));
+          // console.l//og(util.inspect(productInput));
           let result: any = await db.excuteQuery({
             query: `call save_product(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             variables: [
@@ -880,7 +880,7 @@ export const managementModule = createModule({
             ],
           });
           result = result && result[0] && result[0][0];
-          // console.log(result);
+          // console.l//og(result);
           return { draftProductId, productId: result?.productId || null };
         } catch (e: any) {
           console.error(e.stack || e.message);

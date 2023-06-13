@@ -176,7 +176,7 @@ class MysqlDbWrapper {
         query,
         normalizedVariables
       );
-      console.log("myPreformattedQuery:", myPreformattedQuery);
+      // console.l//og("myPreformattedQuery:", myPreformattedQuery);
       const results = await db.query<T>(myPreformattedQuery);
       return this.rowsPostProcessing<T>(results);
     } catch (error: any) {

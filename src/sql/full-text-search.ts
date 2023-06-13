@@ -108,7 +108,7 @@ export const fullTextSearch = async ({
     .filter((score: any) => typeof score === "number");
   const min = Math.min(...scoreArray);
   const max = Math.max(...scoreArray);
-  console.log("min:", min, "max:", max);
+  // console.l//og("min:", min, "max:", max);
   const searchWords: RegExp[] = resultArray.length
     ? oneSearchWordReg(search)
     : [];

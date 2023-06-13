@@ -10,7 +10,7 @@ if (!SITE_FOLDER_NAME) {
   throw new Error("SITE_FOLDER_NAME enviroment variable has not been set.");
 }
 if (process.env["NODE_ENV"] === "production") {
-  // console.log("Running in production enviroment.");
+  // console.l//og("Running in production enviroment.");
   process.chdir(__dirname);
 }
 (() => {
@@ -18,7 +18,7 @@ if (process.env["NODE_ENV"] === "production") {
   try {
     let subRoot = __dirname;
     while (!siteFolder) {
-      // console.log("testing folder:", subRoot);
+      // console.l//og("testing folder:", subRoot);
       const testFolder = path.join(subRoot, SITE_FOLDER_NAME);
       if (fse.existsSync(testFolder) && fs.statSync(testFolder).isDirectory()) {
         siteFolder = testFolder;
@@ -116,7 +116,7 @@ if (!process.env["JWT_SECRET"]) {
 }
 const app = express();
 // app.use((req, res, next) => {
-//   console.log(req);
+//   console.l//og(req);
 //   debugger;
 //   next();
 // });
