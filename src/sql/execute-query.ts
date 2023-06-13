@@ -64,7 +64,9 @@ class MysqlDbWrapper {
     if (typeof query !== "string" || !query) {
       throw new Error("Sql query variable must be set as string.");
     }
-
+    if (!variables) {
+      return query;
+    }
     const chooseEscape = (oneVariable: any, matchedString: string) => {
       if (typeof oneVariable === "undefined") {
         return matchedString;
@@ -79,22 +81,28 @@ class MysqlDbWrapper {
         return `${self.valueEscape(oneVariable)}`;
       }
     };
-    let positionVar = 0;
-    query = query.replace(/\?+/gim, (matched) => {
-      const oneVariable = variables[positionVar];
-      if (oneVariable === "?" || oneVariable === "??") {
-        positionVar++;
-      }
-      if (matched === "??" && oneVariable) {
-        return self.escapeId(
-          typeof oneVariable === "string" ? oneVariable : oneVariable.toString()
-        );
-      } else if (matched === "?") {
-        return chooseEscape(oneVariable, matched);
-      } else {
-        return matched;
-      }
-    });
+    if (typeof variables[0] !== "undefined") {
+      let positionVar = 0;
+      query = query.replace(/\?+/gim, (matched) => {
+        const oneVariable = variables[positionVar];
+        if (typeof oneVariable === "undefined") {
+          return matched;
+        }
+        if (matched === "??") {
+          positionVar++;
+          return self.escapeId(
+            typeof oneVariable === "string"
+              ? oneVariable
+              : oneVariable.toString()
+          );
+        } else if (matched === "?") {
+          positionVar++;
+          return chooseEscape(oneVariable, matched);
+        } else {
+          return matched;
+        }
+      });
+    }
     const localReplacer = (matchedString: string, mainGroup: string) => {
       const tryNumberGroup =
         (/^\d+$/im.test(mainGroup.toString()) &&
@@ -168,6 +176,7 @@ class MysqlDbWrapper {
         query,
         normalizedVariables
       );
+      console.log("myPreformattedQuery:", myPreformattedQuery);
       const results = await db.query<T>(myPreformattedQuery);
       return this.rowsPostProcessing<T>(results);
     } catch (error: any) {

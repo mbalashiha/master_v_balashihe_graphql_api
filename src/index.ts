@@ -130,6 +130,7 @@ if (process.env.NODE_ENV !== "production") {
 //     algorithms: ["HS256"],
 //   })
 // );
+app.get("/rest/api/test", (req, res) => res.send("Tesk Ok."));
 app.use(cookieParser());
 const verifyCookieToken =
   (cookieTokenName: string) =>
@@ -228,11 +229,6 @@ app.use(
   })
 );
 app.listen(parseInt(LISTENING_PORT), "127.0.0.1", () => {
-  // console.log(
   //   `Running a GraphQL API server at http://localhost:${LISTENING_PORT}/graphql/api`
-  // );
 });
-// } else {
-//   console.log("express index.js file is NOT executed");
-// }
 export default app;

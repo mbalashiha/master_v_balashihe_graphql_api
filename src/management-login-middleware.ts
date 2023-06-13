@@ -29,10 +29,12 @@ export const managementLoginMiddleware = async (
     if (decoded) {
       const { login, password } = decoded;
       if (login && password) {
+        // console.log('\nlogin:', login, 'password:', pa//ssword);
         const procRes = await db.excuteQuery({
           query: "call user_authenticate(?, ?);",
           variables: [login, password],
         });
+        // console.log('login result:', util.inspect(procRes));
         const values = procRes && procRes[0] && procRes[0][0];
         if (!values || !values.id) {
           throw { message: "Authentification failed" };
