@@ -85,18 +85,27 @@ class MysqlDbWrapper {
       let positionVar = 0;
       query = query.replace(/\?+/gim, (matched) => {
         const oneVariable = variables[positionVar];
-        if (typeof oneVariable === "undefined") {
-          return matched;
-        }
         if (matched === "??") {
           positionVar++;
-          return self.escapeId(
+          if (typeof oneVariable === "undefined") {
+            return matched;
+          }
+          const unescapedId =
             typeof oneVariable === "string"
               ? oneVariable
-              : oneVariable.toString()
-          );
+              : typeof oneVariable.toString === "function"
+              ? oneVariable.toString()
+              : "";
+          if (unescapedId) {
+            return self.escapeId(unescapedId);
+          } else {
+            return matched;
+          }
         } else if (matched === "?") {
           positionVar++;
+          if (typeof oneVariable === "undefined") {
+            return matched;
+          }
           return chooseEscape(oneVariable, matched);
         } else {
           return matched;
