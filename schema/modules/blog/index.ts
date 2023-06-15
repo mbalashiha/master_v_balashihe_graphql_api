@@ -106,6 +106,9 @@ export const blogArticlesModule = createModule({
       type ArticlesCardsConnection {
         nodes: [ArticleCard]!
       }
+      type RecentArticlesConnection {
+        nodes: [ArticleCard]!
+      }
       type PathHandle {
         handle: String!
       }
@@ -124,6 +127,11 @@ export const blogArticlesModule = createModule({
           offset: Int
           limit: Int
         ): ArticlesCardsConnection!
+        recentArticles(
+          search: String
+          offset: Int
+          limit: Int
+        ): RecentArticlesConnection!
         articleByHandle(handle: String): BlogArticle
         articleByAbsUrl(absURL: String): BlogArticle
       }
@@ -248,6 +256,59 @@ export const blogArticlesModule = createModule({
                   MATCH (title,text) AGAINST ($search IN NATURAL LANGUAGE MODE)`,
               booleanModeQuery: `
             select id, imageId, Coalesce(displayingPageHandle, handle, title, id) as handle, absURL, displayingPageHandle, title, createdAt, text as fragment,
+                  MATCH (title,text) AGAINST ($search IN BOOLEAN MODE) as score
+              from blog_article_handle  
+                WHERE 
+                  unPublished is NULL And notSearchable is NULL And 
+                  MATCH (title,text) AGAINST ($search IN BOOLEAN MODE)`,
+            });
+          }
+        } catch (e: any) {
+          console.error(e.stack || e.message || e);
+          debugger;
+          throw e;
+        }
+      },
+    },
+    RecentArticlesConnection: {
+      nodes: async (
+        parent: { search?: string; offset?: number; limit?: number },
+        variables: { offset?: number; limit?: number },
+        _ctx: any,
+        info: GraphQLResolveInfo
+      ) => {
+        try {
+          let search = parent.search || "";
+          const offset = variables.offset || parent.offset || 0;
+          const limit = variables.limit || parent.limit || null;
+          if (!search) {
+            const offsetLimitString = limit
+              ? ` LIMIT $limit OFFSET $offset`
+              : ``;
+            const articles: any = await db.excuteQuery({
+              query:
+                `select id, imageId, handle, null as absURL, handle as displayingPageHandle, title, createdAt, null as fragment, null as score 
+                  from blog_article_handle   
+                    Where notInList is NULL And unPublished is NULL
+                    Order By createdAt Desc, updatedAt Desc ` +
+                offsetLimitString,
+              variables: { offset, limit },
+            });
+            return articles;
+          } else {
+            return await fullTextSearch({
+              search,
+              offset,
+              limit,
+              naturalLanguageModeQuery: `
+            select id, imageId, handle, null as absURL, handle as displayingPageHandle, title, createdAt, text as fragment,
+                  MATCH (title,text) AGAINST ($search IN NATURAL LANGUAGE MODE) as score
+              from blog_article_handle 
+                WHERE 
+                  unPublished is NULL And notSearchable is NULL And 
+                  MATCH (title,text) AGAINST ($search IN NATURAL LANGUAGE MODE)`,
+              booleanModeQuery: `
+            select id, imageId, handle, null as absURL, handle as displayingPageHandle, title, createdAt, text as fragment,
                   MATCH (title,text) AGAINST ($search IN BOOLEAN MODE) as score
               from blog_article_handle  
                 WHERE 
@@ -487,6 +548,14 @@ export const blogArticlesModule = createModule({
         return { ...parent, ...variables };
       },
       articlesCards: async (
+        parent: any,
+        variables: any,
+        _ctx: any,
+        info: GraphQLResolveInfo
+      ) => {
+        return { ...parent, ...variables };
+      },
+      recentArticles: async (
         parent: any,
         variables: any,
         _ctx: any,
