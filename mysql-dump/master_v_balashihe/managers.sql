@@ -1,6 +1,6 @@
 -- --------------------------------------------------------
 -- Хост:                         192.168.0.50
--- Версия сервера:               10.10.3-MariaDB-1:10.10.3+maria~ubu1804 - mariadb.org binary distribution
+-- Версия сервера:               11.0.2-MariaDB-1:11.0.2+maria~ubu2204 - mariadb.org binary distribution
 -- Операционная система:         debian-linux-gnu
 -- HeidiSQL Версия:              12.5.0.6677
 -- --------------------------------------------------------
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `managers` (
 
 -- Дамп данных таблицы master_v_balashihe.managers: ~0 rows (приблизительно)
 INSERT IGNORE INTO `managers` (`id`, `login`, `password`, `is_admin`, `friendly_name`, `email`, `created`, `updated`) VALUES
-	(1, 'me-mini', '6E57AD7D*9604E01847939180F6A3D68C58D014742539AC33', NULL, 'Владелец', NULL, '2022-09-28 11:36:45', '2023-01-23 13:39:01');
+	(1, 'me-mini', 'E58955FF*AFBFEDCDF5978E56A722EB29FADE84897B7EDCA6', NULL, 'Владелец', NULL, '2022-09-28 11:36:45', '2023-06-13 18:02:32');
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

@@ -1,6 +1,6 @@
 -- --------------------------------------------------------
 -- Хост:                         192.168.0.50
--- Версия сервера:               10.10.3-MariaDB-1:10.10.3+maria~ubu1804 - mariadb.org binary distribution
+-- Версия сервера:               11.0.2-MariaDB-1:11.0.2+maria~ubu2204 - mariadb.org binary distribution
 -- Операционная система:         debian-linux-gnu
 -- HeidiSQL Версия:              12.5.0.6677
 -- --------------------------------------------------------
@@ -53,9 +53,9 @@ BEGIN
 	
 	If authenticated_user_id IS NOT NULL
 	Then
-		SELECT authenticated_user_id AS id, authenticated_login AS login, authenticated_is_admin as is_admin;
+		SELECT TRUE AS authorized, authenticated_user_id AS id, authenticated_login AS login, authenticated_is_admin as is_admin;
 	ELSE 
-		SELECT NULL;
+		SELECT 1 failed;
 	END IF;
 END//
 DELIMITER ;
