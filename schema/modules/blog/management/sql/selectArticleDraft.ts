@@ -41,6 +41,7 @@ export default async function selectArticleDraft({
       });
     }
     const isEmpty = !(rows[0] && (rows[0].id || rows[0].existingArticleId));
+
     let result;
     if (isEmpty) {
       result = {
@@ -68,7 +69,7 @@ export default async function selectArticleDraft({
         existingArticle.textHtml == result.textHtml &&
         existingArticle.imageId == result.imageId &&
         existingArticle.orderNumber == result.orderNumber &&
-        existingArticle.keyTextHtml == result.keyTextHtml && 
+        existingArticle.keyTextHtml == result.keyTextHtml &&
         Boolean(existingArticle.notInList) == Boolean(result.notInList) &&
         Boolean(existingArticle.notSearchable) ==
           Boolean(result.notSearchable) &&
@@ -84,7 +85,6 @@ export default async function selectArticleDraft({
           console.l//og("delete Result:", delRes);
         } catch (e: any) {
           console.error("delete Result error:", e.stack || e.message);
-          debugger;
         } ** */
         result = {
           ...result,

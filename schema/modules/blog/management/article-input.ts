@@ -6,6 +6,7 @@ import { GraphQLError, GraphQLResolveInfo } from "graphql";
 import { GraphqlContext } from "@root/types/express-custom";
 import { Schema } from "@root/schema/types/schema";
 import { selectArticleDraft } from "./sql";
+import { mysqlFormatDatetime } from "./draft";
 
 export const BlogManagementModule = createModule({
   id: "blog-article-input-module",
@@ -30,6 +31,7 @@ export const BlogManagementModule = createModule({
         existingArticleId: ID
         renderHtml: String
         imageId: ID
+        publishedAt: Date
       }
       type DeleteArticleResponse {
         error: String
@@ -171,7 +173,8 @@ export const BlogManagementModule = createModule({
             $unPublished,
             $notSearchable,
             $notInList,
-            $keyTextHtml
+            $keyTextHtml,
+            $publishedAt
             );`,
             variables: {
               managerId: context.manager.id,
@@ -193,6 +196,7 @@ export const BlogManagementModule = createModule({
               notSearchable: article.notSearchable ? 1 : null,
               notInList: article.notInList ? 1 : null,
               keyTextHtml: article.keyTextHtml || null,
+              publishedAt: mysqlFormatDatetime(article.publishedAt),
             },
           });
           if (!sqlResult) {

@@ -54,7 +54,7 @@ export const blogArticlesModule = createModule({
         handle: String!
         absURL: String
         displayingPageHandle: String
-        createdAt: Date!
+        publishedAt: Date
         score: Float
         fragment: String
         image: Image
@@ -234,7 +234,7 @@ export const blogArticlesModule = createModule({
               : ``;
             const articles: any = await db.excuteQuery({
               query:
-                `select id, imageId, Coalesce(displayingPageHandle, handle, title, id) as handle, absURL, displayingPageHandle, title, createdAt, null as fragment, null as score 
+                `select id, imageId, Coalesce(displayingPageHandle, handle, title, id) as handle, absURL, displayingPageHandle, title, publishedAt, null as fragment, null as score 
                   from blog_article_handle   
                     Where notInList is NULL And unPublished is NULL
                     Order By createdAt Desc, updatedAt Desc ` +
@@ -248,14 +248,14 @@ export const blogArticlesModule = createModule({
               offset,
               limit,
               naturalLanguageModeQuery: `
-            select id, imageId, Coalesce(displayingPageHandle, handle, title, id) as handle, absURL, displayingPageHandle, title, createdAt, text as fragment,
+            select id, imageId, Coalesce(displayingPageHandle, handle, title, id) as handle, absURL, displayingPageHandle, title, publishedAt, text as fragment,
                   MATCH (title,text) AGAINST ($search IN NATURAL LANGUAGE MODE) as score
               from blog_article_handle 
                 WHERE 
                   unPublished is NULL And notSearchable is NULL And 
                   MATCH (title,text) AGAINST ($search IN NATURAL LANGUAGE MODE)`,
               booleanModeQuery: `
-            select id, imageId, Coalesce(displayingPageHandle, handle, title, id) as handle, absURL, displayingPageHandle, title, createdAt, text as fragment,
+            select id, imageId, Coalesce(displayingPageHandle, handle, title, id) as handle, absURL, displayingPageHandle, title, publishedAt, text as fragment,
                   MATCH (title,text) AGAINST ($search IN BOOLEAN MODE) as score
               from blog_article_handle  
                 WHERE 
@@ -280,14 +280,14 @@ export const blogArticlesModule = createModule({
         try {
           let search = parent.search || "";
           const offset = variables.offset || parent.offset || 0;
-          const limit = variables.limit || parent.limit || null;
+          const limit = variables.limit || parent.limit || 10;
           if (!search) {
             const offsetLimitString = limit
               ? ` LIMIT $limit OFFSET $offset`
               : ``;
             const articles: any = await db.excuteQuery({
               query:
-                `select id, imageId, handle, null as absURL, handle as displayingPageHandle, title, createdAt, null as fragment, null as score 
+                `select id, imageId, handle, null as absURL, handle as displayingPageHandle, title, publishedAt, null as fragment, null as score 
                   from blog_article_handle   
                     Where notInList is NULL And unPublished is NULL
                     Order By createdAt Desc, updatedAt Desc ` +
@@ -301,14 +301,14 @@ export const blogArticlesModule = createModule({
               offset,
               limit,
               naturalLanguageModeQuery: `
-            select id, imageId, handle, null as absURL, handle as displayingPageHandle, title, createdAt, text as fragment,
+            select id, imageId, handle, null as absURL, handle as displayingPageHandle, title, publishedAt, text as fragment,
                   MATCH (title,text) AGAINST ($search IN NATURAL LANGUAGE MODE) as score
               from blog_article_handle 
                 WHERE 
                   unPublished is NULL And notSearchable is NULL And 
                   MATCH (title,text) AGAINST ($search IN NATURAL LANGUAGE MODE)`,
               booleanModeQuery: `
-            select id, imageId, handle, null as absURL, handle as displayingPageHandle, title, createdAt, text as fragment,
+            select id, imageId, handle, null as absURL, handle as displayingPageHandle, title, publishedAt, text as fragment,
                   MATCH (title,text) AGAINST ($search IN BOOLEAN MODE) as score
               from blog_article_handle  
                 WHERE 
@@ -369,7 +369,7 @@ export const blogArticlesModule = createModule({
           if (loopNext) {
             articlesAfterList.push(next);
           }
-          const maximumSidebarItemsLength = 10;
+          const maximumSidebarItemsLength = 5;
           while (
             (loopNext || loopPrev) &&
             articlesBeforeList.length + articlesAfterList.length <

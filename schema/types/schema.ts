@@ -17,6 +17,7 @@ export namespace Schema {
     unPublished: Boolean;
     notSearchable: Boolean;
     notInList: Boolean;
+    publishedAt: Date | String | null;
   }
   export interface ArticleTextDraftInput {
     id: ID;
@@ -93,6 +94,7 @@ export namespace Schema {
     unPublished: Boolean;
     notSearchable: Boolean;
     notInList: Boolean;
+    publishedAt: Date | String;
   }
   export interface ArticleDraft {
     draftArticleId: ID;

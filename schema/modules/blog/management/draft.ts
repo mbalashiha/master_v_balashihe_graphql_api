@@ -5,7 +5,20 @@ import { GraphQLError, GraphQLResolveInfo } from "graphql";
 import { Schema } from "@root/schema/types/schema";
 import { selectArticleDraft } from "./sql";
 import { ID } from "graphql-modules/shared/types";
-
+export const mysqlFormatDatetime = (
+  inDate: string | Date | null
+): string | null => {
+  if (inDate) {
+    if (typeof inDate === "string") {
+      inDate = new Date(inDate);
+    }
+    const timezoneOffset = inDate.getTimezoneOffset() * 60000;
+    inDate = new Date(inDate.getTime() - timezoneOffset);
+    let dt = inDate.toISOString().replace("T", " ").slice(0, 19);
+    return dt;
+  }
+  return null;
+};
 export const BlogArticleDraftModule = createModule({
   id: "blog-article-draft-module",
   dirname: __dirname,
@@ -48,6 +61,7 @@ export const BlogArticleDraftModule = createModule({
         unPublished: Boolean
         notSearchable: Boolean
         notInList: Boolean
+        publishedAt: Date
       }
       input ArticleTextDraftInput {
         id: ID
@@ -186,7 +200,8 @@ export const BlogArticleDraftModule = createModule({
             $unPublished,
             $notSearchable,
             $notInList,
-            $absURL
+            $absURL,
+            $publishedAt
             );`,
             variables: {
               managerId: context.manager.id,
@@ -203,6 +218,7 @@ export const BlogArticleDraftModule = createModule({
               notSearchable: articleDraft.notSearchable ? 1 : null,
               notInList: articleDraft.notInList ? 1 : null,
               absURL: articleDraft.absURL || null,
+              publishedAt: mysqlFormatDatetime(articleDraft.publishedAt),
             },
           });
           const row = (sqlResult[0] && sqlResult[0][0]) || {};

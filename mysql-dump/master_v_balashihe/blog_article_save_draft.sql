@@ -28,10 +28,15 @@ CREATE PROCEDURE `blog_article_save_draft`(
 	IN `in_unPublished` TEXT,
 	IN `in_notSearchable` TEXT,
 	IN `in_notInList` TEXT,
-	IN `in_absURL` TEXT
+	IN `in_absURL` TEXT,
+	IN `in_publishedAt` DATETIME
 )
 BEGIN
 	DECLARE stored_draftArticleId BINARY(16) DEFAULT Null;
+	if (in_publishedAt > NOW())
+	Then 
+		SET in_publishedAt := NOW();
+	END IF;
 	Set in_existingArticleId := If(in_existingArticleId='' OR in_existingArticleId IS NULL,NULL, in_existingArticleId);
 	Set in_managerId := If(in_managerId='' OR in_managerId IS NULL,NULL, in_managerId);
 	Set in_title := If(in_title='' OR in_title IS NULL,NULL,TRIM(in_title));
@@ -57,7 +62,8 @@ BEGIN
 				IFNULL(in_notInList,'')=IFNULL(d.notInList,'') And
 				IFNULL(in_orderNumber,'')=IFNULL(d.orderNumber,'') And
 				IFNULL(in_existingArticleId,'')=IFNULL(d.existingArticleId,'') And
-				IFNULL(in_imageId,'')=IFNULL(d.imageId,'');
+				IFNULL(in_imageId,'')=IFNULL(d.imageId,'') And
+				IfNUll(in_publishedAt,'')=IfNULL(d.publishedAt,'');
 	
 	If stored_draftArticleId IS NOT null
 	Then
@@ -82,7 +88,8 @@ BEGIN
 										IFNULL(in_notSearchable,'')=IFNULL(d.notSearchable,'') And
 										IFNULL(in_notInList,'')=IFNULL(d.notInList,'') And
 										IFNULL(in_orderNumber,'')=IFNULL(d.orderNumber,'') And
-										IFNULL(in_imageId,'')=IFNULL(d.imageId,'')
+										IFNULL(in_imageId,'')=IFNULL(d.imageId,'') And
+										IfNUll(in_publishedAt,'')=IfNULL(d.publishedAt,'')
 									)
 			Then
 				SELECT 'No need to create draft' AS message, null AS draftArticleId;			
@@ -91,7 +98,8 @@ BEGIN
 				unPublished, 
 				notSearchable,
 				notInList,
-				orderNumber, imageId)
+				orderNumber, imageId,
+				publishedAt)
 					VALUES(				
 						in_existingArticleId,
 						in_managerId,
@@ -104,10 +112,11 @@ BEGIN
 				in_notSearchable,
 				in_notInList,
 						in_orderNumber,
-						in_imageId
+						in_imageId,
+						in_publishedAt
 					);
 				SET stored_draftArticleId := @last_draftArticleId;
-				SELECT 'Draft has been created' AS message, Lower(Hex(stored_draftArticleId)) AS draftArticleId;
+				SELECT d.publishedAt, 'Draft has been created' AS message, Lower(Hex(stored_draftArticleId)) AS draftArticleId FROM draft_blog_article d WHERE d.draftArticleId=stored_draftArticleId;
 			END IF;
 		Else
 			UPDATE draft_blog_article SET 
@@ -120,9 +129,10 @@ BEGIN
 				notSearchable=in_notSearchable,
 				notInList=in_notInList,
 				orderNumber=in_orderNumber,
-				imageId=in_imageId
+				imageId=in_imageId,
+				publishedAt=in_publishedAt
 				WHERE draftArticleId=stored_draftArticleId;
-			SELECT 'Draft was updated' AS message, Lower(Hex(stored_draftArticleId)) AS draftArticleId;
+			SELECT d.publishedAt, 'Draft was updated' AS message, Lower(Hex(stored_draftArticleId)) AS draftArticleId FROM draft_blog_article d WHERE d.draftArticleId=stored_draftArticleId;
 		END IF;
 	END IF;
 END//

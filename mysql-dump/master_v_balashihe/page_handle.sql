@@ -20,9 +20,9 @@ CREATE TABLE IF NOT EXISTS `page_handle` (
   `handle` varchar(1024) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `uniq_handle` (`handle`)
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Дамп данных таблицы master_v_balashihe.page_handle: ~23 rows (приблизительно)
+-- Дамп данных таблицы master_v_balashihe.page_handle: ~27 rows (приблизительно)
 INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
 	(17, '/');
 INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
@@ -56,7 +56,13 @@ INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
 INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
 	(14, 'master-po-remontu-kompyuterov-udalit-virusy-v-kompyutere-po-nizkoj-cene-ili-udalit-virusy-samomu');
 INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
+	(24, 'remont-kompyuterov-bystro-balashiha-na-domu-ili-v-ofise');
+INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
 	(2, 'remont-materinskih-plat-v-balashihe-i-moskovskoj-oblasti');
+INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
+	(27, 'remont-noutbuka-mfc-balashiha');
+INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
+	(29, 'remont-noutbuka-v-balashihe-ryadom-s-mfc');
 INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
 	(1, 'remont-noutbukov-v-balashihe-v-den-obrasheniya-u-vas-doma-ili-v-ofisnom-centre');
 INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
@@ -66,7 +72,13 @@ INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
 INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
 	(3, 'sdfsdfsd');
 INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
+	(26, 'srochnyj-remont-kompyutera-balashiha-na-domu-ili-v-ofise');
+INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
+	(25, 'srochnyj-remont-kompyuterov-balashiha-na-domu-ili-v-ofise');
+INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
 	(7, 'udalit-virusy-v-kompyutere-po-nizkoj-cene-v-balashihe-ili-poprobovat-udalit-virusy-samomu');
+INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
+	(28, 'ustanovka-os-windows-v-balashihe-remont-pk');
 INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
 	(23, 'ustanovka-programm-balashiha');
 

@@ -33,7 +33,8 @@ CREATE PROCEDURE `blog_save_article`(
 	IN `in_unPublished` TEXT,
 	IN `in_notSearchable` TEXT,
 	IN `in_notInList` TEXT,
-	IN `in_keyTextHtml` TEXT
+	IN `in_keyTextHtml` TEXT,
+	IN `in_publishedAt` DATETIME
 )
 BEGIN
 	DECLARE stored_articleId INT(10) unsigned DEFAULT Null;
@@ -42,6 +43,10 @@ BEGIN
 	DECLARE stored_absURLid INT(10) unsigned DEFAULT Null;
 	DECLARE stored_draftArticleId BINARY(16) DEFAULT Null;
 	DECLARE test_handle Text DEFAULT Null;
+	if (in_publishedAt > NOW())
+	Then 
+		SET in_publishedAt := NOW();
+	END IF;
 	Set in_existingArticleId := If(in_existingArticleId='' OR in_existingArticleId IS NULL,NULL, in_existingArticleId);
 	Set in_managerId := If(in_managerId='' OR in_managerId IS NULL,NULL, in_managerId);
 	Set in_title := If(in_title='' OR in_title IS NULL,NULL,TRIM(in_title));
@@ -88,11 +93,12 @@ BEGIN
 				IFNULL(in_keyTextHtml,'')=IFNULL(d.`keyTextHtml`,'') And
 				IFNULL(in_renderHtml,'')=IFNULL(d.`renderHtml`,'') And
 				IFNULL(in_imageId,'')=IFNULL(d.`imageId`,'') And
-				IFNULL(in_textRawDraftContentState,'')=IFNULL(d.`textRawDraftContentState`,'');
+				IFNULL(in_textRawDraftContentState,'')=IFNULL(d.`textRawDraftContentState`,'') AND 
+				IfNull(in_publishedAt,'')=IfNull(d.publishedAt, '');
 	END IF;
 	If stored_articleId IS NOT null
 	Then
-		SELECT stored_articleId AS articleId, false as success, 'Nothing to save' AS message;
+		SELECT a.publishedAt, stored_articleId AS articleId, false as success, 'Nothing to save' AS message FROM blog_article a WHERE a.id=stored_articleId;
 	Else
 		if in_handle IS NOT NULL
 		Then
@@ -150,7 +156,7 @@ BEGIN
 					in_keyTextHtml
 				);
 			SET stored_articleId := LAST_INSERT_ID();
-			SELECT stored_articleId AS articleId, true as success, 'Article has been created' AS message, stored_articleId AS articleId;
+			SELECT a.publishedAt, stored_articleId AS articleId, true as success, 'Article has been created' AS message, stored_articleId AS articleId FROM blog_article a WHERE a.id=stored_articleId;
 		Else
 			UPDATE blog_article SET 
 				managerId=in_managerId,
@@ -168,10 +174,11 @@ BEGIN
 				`renderHtml`=in_renderHtml,
 				`imageId`=in_imageId,
 				`textRawDraftContentState`=in_textRawDraftContentState,
-				`keyTextHtml`=in_keyTextHtml
+				`keyTextHtml`=in_keyTextHtml,
+				`publishedAt`=in_publishedAt
 				WHERE id=in_existingArticleId;
 			SET stored_articleId := in_existingArticleId;
-			SELECT stored_articleId AS articleId, true as success, 'Article was updated' AS message;
+			SELECT a.publishedAt, stored_articleId AS articleId, true as success, 'Article was updated' AS message FROM blog_article a WHERE a.id=stored_articleId;
 		END IF;
 		UPDATE draft_blog_article d
 		SET 
@@ -189,7 +196,8 @@ BEGIN
 				`text`=IFNULL(in_text,''), 
 				textHtml=in_textHtml,
 				textRawDraftContentState=in_textRawDraftContentState,
-				`keyTextHtml`=in_keyTextHtml
+				`keyTextHtml`=in_keyTextHtml,
+				`publishedAt`=in_publishedAt
 		WHERE in_managerId=d.managerId AND d.isDraftSaved IS NULL And
 				IFNULL(in_existingArticleId,'')=IFNULL(d.existingArticleId,'');
 	END IF;

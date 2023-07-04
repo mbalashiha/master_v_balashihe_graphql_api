@@ -29,9 +29,9 @@ CREATE TABLE IF NOT EXISTS `image` (
   `pathOfOriginal` text DEFAULT NULL,
   PRIMARY KEY (`imageId`) USING BTREE,
   UNIQUE KEY `uniq_imgSrc` (`imgSrc`(100)) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=155 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=160 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Дамп данных таблицы master_v_balashihe.image: ~89 rows (приблизительно)
+-- Дамп данных таблицы master_v_balashihe.image: ~88 rows (приблизительно)
 INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`) VALUES
 	(5, '/images/Hat-front-black__72990.1603748583.png', 2048, 2048, NULL, NULL, '2022-06-10 19:43:22', '2022-08-14 15:20:49', NULL, NULL, NULL);
 INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`) VALUES
@@ -210,6 +210,14 @@ INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `altText`, `
 	(153, '/image/upload/webp/kisspng-computer-cases-housings-power-supply-unit-cooler-top-bench-5b2ccd4c4f5428-955011561529662796325-1673210180958-475972-png.webp', 567, 847, NULL, NULL, '2023-04-15 19:10:13', '2023-04-15 19:10:13', 567, 847, NULL);
 INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`) VALUES
 	(154, '/image/upload/webp/computer-master-photo-balashikha-obrabotano-1684174021276-446383-jpg.webp', 714, 817, NULL, NULL, '2023-06-15 15:18:02', '2023-06-15 15:18:02', 714, 817, NULL);
+INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`) VALUES
+	(156, '/image/upload/webp/kisspng-windows-7-logo-windows-vista-microsoft-5ab6ff6950d0e4-1612021415219423773311-1687801750664-269527-png.webp', 1000, 1000, NULL, NULL, '2023-06-28 21:05:35', '2023-06-28 21:05:35', 1000, 1000, NULL);
+INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`) VALUES
+	(157, '/image/upload/webp/balashiha-windows-7-logo-microsoft-1687801750664-269527-png.webp', 1000, 1000, NULL, NULL, '2023-06-28 21:06:54', '2023-06-28 21:06:54', 1000, 1000, NULL);
+INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`) VALUES
+	(158, '/image/upload/webp/balashiha-windows-7-logo-microsoft-1687986542495-272282-png.webp', 890, 883, NULL, NULL, '2023-06-28 21:09:16', '2023-06-28 21:09:16', 890, 883, NULL);
+INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`) VALUES
+	(159, '/image/upload/webp/balashiha-os-mirosoft-windows-7-10-1687986729105-328338-png.webp', 898, 883, NULL, NULL, '2023-06-28 21:13:32', '2023-06-28 21:13:32', 898, 883, NULL);
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
