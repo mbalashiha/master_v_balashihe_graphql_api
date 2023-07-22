@@ -18,6 +18,8 @@ export namespace Schema {
     notSearchable: Boolean;
     notInList: Boolean;
     publishedAt: Date | String | null;
+    h2: String | null;
+    secondImageId: ID | null;
   }
   export interface ArticleTextDraftInput {
     id: ID;
@@ -75,6 +77,8 @@ export namespace Schema {
     unPublished: Boolean;
     notSearchable: Boolean;
     notInList: Boolean;
+    h2: String | null;
+    secondImageId: ID | null;
   }
   export interface ArticleInput {
     existingArticleId: ID;
@@ -95,6 +99,8 @@ export namespace Schema {
     notSearchable: Boolean;
     notInList: Boolean;
     publishedAt: Date | String;
+    h2: String | null;
+    secondImageId: ID | null;
   }
   export interface ArticleDraft {
     draftArticleId: ID;
@@ -116,6 +122,8 @@ export namespace Schema {
     unPublished: Boolean;
     notSearchable: Boolean;
     notInList: Boolean;
+    h2: String | null;
+    secondImageId: ID | null;
   }
   export interface BlogArticlesConnection {
     nodes: BlogArticle[];

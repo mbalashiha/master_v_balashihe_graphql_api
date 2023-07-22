@@ -93,11 +93,14 @@ export const blogArticlesModule = createModule({
         publishedAt: Date
         breadcrumbs: [Breadcrumb]
         navigation: BlogArticleNavigation
-        imageId: ID
-        image: Image
         unPublished: Boolean
         notSearchable: Boolean
         notInList: Boolean
+        h2: String
+        imageId: ID
+        image: Image
+        secondImageId: ID
+        secondImage: Image
       }
       type BlogArticlesConnection {
         pageInfo: PageInfo
@@ -336,6 +339,25 @@ export const blogArticlesModule = createModule({
         }
         const rows = await db.excuteQuery({
           query: `select * from image where imageId=$imageId`,
+          variables: parent,
+        });
+        if (rows && rows[0] && rows[0].imgSrc) {
+          return rows[0];
+        } else {
+          return null;
+        }
+      },
+      secondImage: async (
+        parent: Schema.BlogArticle,
+        variables: any,
+        _ctx: any,
+        info: GraphQLResolveInfo
+      ) => {
+        if (!parent.secondImageId) {
+          return null;
+        }
+        const rows = await db.excuteQuery({
+          query: `select * from image where imageId=$secondImageId`,
           variables: parent,
         });
         if (rows && rows[0] && rows[0].imgSrc) {

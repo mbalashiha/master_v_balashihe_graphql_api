@@ -34,6 +34,7 @@ export const BlogArticleDraftModule = createModule({
         textHtml: String
         textRawDraftContentState: String
         keyTextHtml: String
+        h2: String
         orderNumber: Int
         blogCategoryId: ID
         category: CategoryId
@@ -42,11 +43,13 @@ export const BlogArticleDraftModule = createModule({
         publishedAt: Date
         existingArticleId: ID
         existingArticle: BlogArticle
-        imageId: ID
-        image: Image
         unPublished: Boolean
         notSearchable: Boolean
         notInList: Boolean
+        imageId: ID
+        image: Image
+        secondImageId: ID
+        secondImage: Image
       }
       input ArticleDraftInput {
         id: ID
@@ -58,10 +61,12 @@ export const BlogArticleDraftModule = createModule({
         blogCategoryId: ID
         existingArticleId: ID
         imageId: ID
+        secondImageId: ID
         unPublished: Boolean
         notSearchable: Boolean
         notInList: Boolean
         publishedAt: Date
+        h2: String
       }
       input ArticleTextDraftInput {
         id: ID
@@ -142,6 +147,25 @@ export const BlogArticleDraftModule = createModule({
           return null;
         }
       },
+      secondImage: async (
+        parent: Schema.BlogArticle,
+        variables: any,
+        _ctx: any,
+        info: GraphQLResolveInfo
+      ) => {
+        if (!parent.secondImageId) {
+          return null;
+        }
+        const rows = await db.excuteQuery({
+          query: `select * from image where imageId=$secondImageId`,
+          variables: parent,
+        });
+        if (rows && rows[0] && rows[0].imgSrc) {
+          return rows[0];
+        } else {
+          return null;
+        }
+      },
       category: async (
         parent: Schema.ArticleDraft,
         variables: void,
@@ -201,7 +225,9 @@ export const BlogArticleDraftModule = createModule({
             $notSearchable,
             $notInList,
             $absURL,
-            $publishedAt
+            $publishedAt,
+            $h2,
+            $secondImageId
             );`,
             variables: {
               managerId: context.manager.id,
@@ -219,6 +245,8 @@ export const BlogArticleDraftModule = createModule({
               notInList: articleDraft.notInList ? 1 : null,
               absURL: articleDraft.absURL || null,
               publishedAt: mysqlFormatDatetime(articleDraft.publishedAt),
+              h2: articleDraft.h2 || null,
+              secondImageId: articleDraft.secondImageId || null,
             },
           });
           const row = (sqlResult[0] && sqlResult[0][0]) || {};

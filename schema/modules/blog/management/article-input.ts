@@ -32,6 +32,8 @@ export const BlogManagementModule = createModule({
         renderHtml: String
         imageId: ID
         publishedAt: Date
+        h2: String
+        secondImageId: ID
       }
       type DeleteArticleResponse {
         error: String
@@ -174,7 +176,9 @@ export const BlogManagementModule = createModule({
             $notSearchable,
             $notInList,
             $keyTextHtml,
-            $publishedAt
+            $publishedAt,
+            $h2,
+            $secondImageId
             );`,
             variables: {
               managerId: context.manager.id,
@@ -197,6 +201,8 @@ export const BlogManagementModule = createModule({
               notInList: article.notInList ? 1 : null,
               keyTextHtml: article.keyTextHtml || null,
               publishedAt: mysqlFormatDatetime(article.publishedAt),
+              h2: article.h2 || null,
+              secondImageId: article.secondImageId || null,
             },
           });
           if (!sqlResult) {
