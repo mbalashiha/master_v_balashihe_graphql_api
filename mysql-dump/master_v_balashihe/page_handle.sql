@@ -20,9 +20,9 @@ CREATE TABLE IF NOT EXISTS `page_handle` (
   `handle` varchar(1024) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `uniq_handle` (`handle`)
-) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Дамп данных таблицы master_v_balashihe.page_handle: ~27 rows (приблизительно)
+-- Дамп данных таблицы master_v_balashihe.page_handle: ~31 rows (приблизительно)
 INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
 	(17, '/');
 INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
@@ -76,11 +76,19 @@ INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
 INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
 	(25, 'srochnyj-remont-kompyuterov-balashiha-na-domu-ili-v-ofise');
 INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
+	(33, 'udalit-virusy-bystro-i-dyoshevo-v-balashihe-remont-kompyuterov-i-noutbukov-v-centre');
+INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
 	(7, 'udalit-virusy-v-kompyutere-po-nizkoj-cene-v-balashihe-ili-poprobovat-udalit-virusy-samomu');
 INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
 	(28, 'ustanovka-os-windows-v-balashihe-remont-pk');
 INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
 	(23, 'ustanovka-programm-balashiha');
+INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
+	(30, 'vyzvat-mastera-po-remontu-kompyuterov-s-celyu-udalit-virusy-v-kompyutere-po-nizkoj-cene-ili-udalit-virusy-samomu');
+INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
+	(32, 'vyzvat-mastera-po-remontu-kompyuterov-udalit-virusy-v-kompyutere-po-nizkoj-cene');
+INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
+	(31, 'vyzvat-mastera-po-remontu-kompyuterov-udalit-virusy-v-kompyutere-po-nizkoj-cene-ili-udalit-virusy-samomu');
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

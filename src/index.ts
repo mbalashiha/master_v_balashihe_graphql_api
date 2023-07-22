@@ -42,6 +42,7 @@ import { BlogArticleDraftModule } from "@root/schema/modules/blog/management/dra
 import { ManagementArticlesCardsModule } from "@root/schema/modules/blog/management/article-cards";
 import { checkIfAuthenticated } from "./check-if-authenticated";
 import uploadResponseHandler, { uploadMiddleware } from "./multer-image-upload";
+import sendContactForm from "./send-contact-form";
 
 const corsOptions = {
   origin: "http://localhost:3000", //change with your own client URL
@@ -86,6 +87,21 @@ if (process.env.NODE_ENV !== "production") {
 //     algorithms: ["HS256"],
 //   })
 // );
+const rawBodySaver: any = (
+  req: IncomingMessage & { rawBody?: string },
+  res: OutgoingMessage,
+  buf: string | Buffer,
+  encoding: BufferEncoding
+) => {
+  if (buf && buf.length) {
+    req.rawBody = buf.toString(encoding || "utf8");
+  }
+};
+app.post(
+  "/site/contact",
+  bodyParser.raw({ verify: rawBodySaver as any, type: "*/*" }),
+  sendContactForm
+);
 app.get("/rest/api/test", (req, res) => res.send("Tesk Ok."));
 app.use(cookieParser());
 const verifyCookieToken =
@@ -130,16 +146,6 @@ const verifyCookieToken =
 app.use(verifyCookieToken("manager"));
 app.use(verifyCookieToken("client"));
 
-const rawBodySaver: any = (
-  req: IncomingMessage & { rawBody?: string },
-  res: OutgoingMessage,
-  buf: string | Buffer,
-  encoding: BufferEncoding
-) => {
-  if (buf && buf.length) {
-    req.rawBody = buf.toString(encoding || "utf8");
-  }
-};
 // app.post(
 //   "/rest/api/login",
 //   bodyParser.raw({ verify: rawBodySaver, type: "*/*" }),

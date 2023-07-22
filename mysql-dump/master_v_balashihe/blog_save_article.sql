@@ -34,7 +34,9 @@ CREATE PROCEDURE `blog_save_article`(
 	IN `in_notSearchable` TEXT,
 	IN `in_notInList` TEXT,
 	IN `in_keyTextHtml` TEXT,
-	IN `in_publishedAt` DATETIME
+	IN `in_publishedAt` DATETIME,
+	IN `in_h2` TEXT,
+	IN `in_secondImageId` TEXT
 )
 BEGIN
 	DECLARE stored_articleId INT(10) unsigned DEFAULT Null;
@@ -54,6 +56,8 @@ BEGIN
 	SET in_autoHandleSlug := If(in_autoHandleSlug='' OR in_autoHandleSlug IS NULL,NULL,TRIM(in_autoHandleSlug));
 	SET in_absURL := If(in_absURL='' OR in_absURL IS NULL,NULL,TRIM(in_absURL));
 	Set in_blogCategoryId := If(in_blogCategoryId='' OR in_blogCategoryId IS NULL,NULL, in_blogCategoryId);
+	Set in_h2 := If(in_h2='' OR in_h2 IS NULL,NULL,TRIM(in_h2));
+	Set in_secondImageId := If(in_secondImageId='' OR in_secondImageId IS NULL,NULL,TRIM(in_secondImageId));
 	
 	Set in_unPublished := If(in_unPublished='' OR in_unPublished IS NULL,NULL, in_unPublished);
 	Set in_notSearchable := If(in_notSearchable='' OR in_notSearchable IS NULL,NULL, in_notSearchable);
@@ -94,7 +98,9 @@ BEGIN
 				IFNULL(in_renderHtml,'')=IFNULL(d.`renderHtml`,'') And
 				IFNULL(in_imageId,'')=IFNULL(d.`imageId`,'') And
 				IFNULL(in_textRawDraftContentState,'')=IFNULL(d.`textRawDraftContentState`,'') AND 
-				IfNull(in_publishedAt,'')=IfNull(d.publishedAt, '');
+				IfNull(in_publishedAt,'')=IfNull(d.publishedAt, '') And
+				IFNULL(in_h2,'')=IFNULL(d.h2,'') AND 
+				IfNull(in_secondImageId,'')=IfNull(d.secondImageId, '');
 	END IF;
 	If stored_articleId IS NOT null
 	Then
@@ -135,7 +141,8 @@ BEGIN
 			notSearchable,
 			notInList,
 			orderNumber, 
-			`text`, `textHtml`,`renderHtml`, `imageId`, `textRawDraftContentState`, `keyTextHtml`)
+			`text`, `textHtml`,`renderHtml`, `imageId`, `textRawDraftContentState`, `keyTextHtml`, 
+			   h2, secondImageId)
 				VALUES(
 					in_managerId,					
 					in_managerId,
@@ -153,7 +160,9 @@ BEGIN
 					in_renderHtml,
 					in_imageId,
 					in_textRawDraftContentState,
-					in_keyTextHtml
+					in_keyTextHtml,
+					in_h2,
+					in_secondImageId
 				);
 			SET stored_articleId := LAST_INSERT_ID();
 			SELECT a.publishedAt, stored_articleId AS articleId, true as success, 'Article has been created' AS message, stored_articleId AS articleId FROM blog_article a WHERE a.id=stored_articleId;
@@ -175,31 +184,65 @@ BEGIN
 				`imageId`=in_imageId,
 				`textRawDraftContentState`=in_textRawDraftContentState,
 				`keyTextHtml`=in_keyTextHtml,
-				`publishedAt`=in_publishedAt
+				`publishedAt`=in_publishedAt,
+				 h2=in_h2,
+				 secondImageId=in_secondImageId
 				WHERE id=in_existingArticleId;
 			SET stored_articleId := in_existingArticleId;
 			SELECT a.publishedAt, stored_articleId AS articleId, true as success, 'Article was updated' AS message FROM blog_article a WHERE a.id=stored_articleId;
 		END IF;
-		UPDATE draft_blog_article d
-		SET 
-			d.existingArticleId=stored_articleId,
-			d.isDraftSaved=1,
-			title=in_title,
-				handle=in_handle,
-				autoHandleSlug=in_autoHandleSlug,
-				blogCategoryId=in_blogCategoryId,
-				imageId=in_imageId,
-				unPublished=in_unPublished,
-				notSearchable=in_notSearchable,
-				notInList=in_notInList,
-				orderNumber=in_orderNumber,
-				`text`=IFNULL(in_text,''), 
-				textHtml=in_textHtml,
-				textRawDraftContentState=in_textRawDraftContentState,
-				`keyTextHtml`=in_keyTextHtml,
-				`publishedAt`=in_publishedAt
-		WHERE in_managerId=d.managerId AND d.isDraftSaved IS NULL And
-				IFNULL(in_existingArticleId,'')=IFNULL(d.existingArticleId,'');
+		SET @today_string := DATE_FORMAT(NOW(), '%Y%m%d');
+		INSERT INTO archived_blog_article(archivedDateDay, existingArticleId, managerId, createdByManagerId, title, handleId, autoHandleSlugId, absURLid, blogCategoryId, 
+			unPublished, 
+			notSearchable,
+			notInList,
+			orderNumber, 
+			`text`, `textHtml`,`renderHtml`, `imageId`, `textRawDraftContentState`, `keyTextHtml`, 
+			   h2, secondImageId)
+				VALUES(
+    				@today_string,
+    				stored_articleId,
+					in_managerId,					
+					in_managerId,
+					in_title,
+					stored_handleId,
+					stored_autoHandleSlugId,
+					stored_absURLId,
+					in_blogCategoryId,
+					in_unPublished,
+					in_notSearchable,
+					in_notInList,					
+					in_orderNumber,
+					IFNULL(in_text, ''), 
+				   in_textHtml,
+					Null,
+					in_imageId,
+					in_textRawDraftContentState,
+					in_keyTextHtml,
+					in_h2,
+					in_secondImageId
+				)
+				ON DUPLICATE KEY UPDATE 
+					archivedDateDay=@today_string,
+					existingArticleId=stored_articleId,
+					managerId=in_managerId,
+					isDraftSaved=1,
+					title=in_title,
+					handle=in_handle,
+					autoHandleSlug=in_autoHandleSlug,
+					blogCategoryId=in_blogCategoryId,
+					imageId=in_imageId,
+					unPublished=in_unPublished,
+					notSearchable=in_notSearchable,
+					notInList=in_notInList,
+					orderNumber=in_orderNumber,
+					`text`=IFNULL(in_text,''), 
+					textHtml=in_textHtml,
+					textRawDraftContentState=in_textRawDraftContentState,
+					`keyTextHtml`=in_keyTextHtml,
+					`publishedAt`=in_publishedAt,
+					 h2=in_h2,
+					 secondImageId=in_secondImageId;
 	END IF;
 END//
 DELIMITER ;
