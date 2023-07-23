@@ -1,9 +1,9 @@
-// const { merge } = require("webpack-merge");
+process.env.NODE_ENV = "development";
+const Dotenv = require("dotenv-webpack");
 const path = require("path");
 const webpack = require("webpack");
 const nodeExternals = require("webpack-node-externals");
 const WebpackShellPluginNext = require("webpack-shell-plugin-next");
-const Dotenv = require("dotenv-webpack");
 const resolveTsconfigPathsToAlias = require("./resolve-tsconfig-path-to-webpack-alias");
 
 module.exports = {
@@ -52,8 +52,17 @@ module.exports = {
         parallel: true,
       },
     }),
+    // new webpack.DefinePlugin({
+    //   "process.env": JSON.stringify(enviroment),
+    // }),
     new Dotenv({
-      path: path.resolve(__dirname, "./.env.local.env"), // load this now instead of the ones in '.env'
+      path: path.resolve(__dirname, ".env"),
+    }),
+    new Dotenv({
+      path: path.resolve(__dirname, ".env.local"),
+    }),
+    new Dotenv({
+      path: path.resolve(__dirname, `.env.${process.env.NODE_ENV}`),
     }),
   ],
   watch: true,

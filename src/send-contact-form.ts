@@ -13,7 +13,9 @@ import { FullProductInput, ProductInput } from "@schema/types/indext";
 import { AuthRequest } from "@root/types/express-custom";
 
 import { simpleDecrypt } from "@src/encryption/message-hmac-private-key";
+import mailContact from "./utils/node-mailer";
 
+// mailContact().catch(console.error);
 export const sendContactForm = async (req: Request, res: Response) => {
   try {
     const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
@@ -21,10 +23,11 @@ export const sendContactForm = async (req: Request, res: Response) => {
     const decoded =
       (value && typeof value === "string" && simpleDecrypt(value)) || {};
     console.log("decoded:", decoded);
-    const { timestamp } = decoded;
+    const { timestamp, promo } = decoded;
     let procRow;
     if (ip && timestamp) {
       delete decoded.timestamp;
+      delete decoded.promo;
       const keys = Array.from(Object.keys(decoded)).sort();
       const valuesText = keys.map((key) => decoded[key] || "").join(";");
       const frowProc = await db.excuteQuery({
