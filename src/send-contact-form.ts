@@ -23,34 +23,75 @@ export const sendContactForm = async (req: Request, res: Response) => {
     const decoded =
       (value && typeof value === "string" && simpleDecrypt(value)) || {};
     console.log("decoded:", decoded);
-    const { timestamp, promo } = decoded;
+    const { timestamp, promo, telephoneDigits } = decoded;
     let procRow;
-    if (ip && timestamp) {
+    if (ip && timestamp && decoded["Телефон"]) {
       delete decoded.timestamp;
       delete decoded.promo;
+      delete decoded.telephoneDigits;
+      delete decoded.submitError;
+      delete decoded.privacyChecked;
       const keys = Array.from(Object.keys(decoded)).sort();
       const valuesText = keys.map((key) => decoded[key] || "").join(";");
-      const frowProc = await db.excuteQuery({
+      const fromProc = await db.excuteQuery({
         query: "call contact_email(?, ?, ?);",
         variables: [ip, timestamp, valuesText],
       });
       // console.l//og('login result:', util.inspect(procRes));
-      procRow = frowProc && frowProc[0] && frowProc[0][0];
+      procRow = fromProc && fromProc[0] && fromProc[0][0];
       if (!procRow) {
-        console.log(valuesText);
-        debugger;
+        const obj: any = {};
+        obj["Имя клиента"] = decoded["Имя клиента"];
+        delete decoded["Имя клиента"];
+        obj["Телефон"] = decoded["Телефон"];
+        delete decoded["Телефон"];
+        const clientDate = new Date(timestamp);
+        const localeDate = clientDate.toLocaleString("ru-RU");
+        let htmlTemplate = `${localeDate}<br><p>\r\n`;
+        Object.entries(obj).forEach(
+          ([key, value]) =>
+            (htmlTemplate += `\r\n<b>${key}</b>: <strong>${String(
+              typeof value === "undefined" || value === null ? "" : value
+            )}</strong><br>`)
+        );
+        htmlTemplate += "\r\n</p>";
+        Object.entries(decoded).forEach(
+          ([key, value]) =>
+            value &&
+            (htmlTemplate += `\r\n${key}: <b>${String(
+              typeof value === "undefined" || value === null ? "" : value
+            )}</b><br>`)
+        );
+        await mailContact({
+          subject: Array.isArray(ip) ? ip.join(", ") : ip,
+          html: htmlTemplate,
+          text: htmlTemplate.replace(/<[^>]*>/g, ""),
+        });
+        await db.excuteQuery({
+          query: "call contact_email_save_keys(?, ?, ?);",
+          variables: [ip, timestamp, valuesText],
+        });
       } else {
-        console.log(procRow);
-        debugger;
+        throw new Error(
+          procRow && procRow.error
+            ? procRow.error
+            : procRow
+            ? util.inspect(procRow)
+            : util.inspect(fromProc)
+        );
       }
+    } else {
+      throw new Error("No correct ip and timestamp or form values");
     }
-    return res.type("json").send({ ...procRow });
+    return res.type("json").send({ success: true, ...procRow });
   } catch (e: any) {
+    e = e || {};
     console.error(e.stack || e.message);
-    debugger;
-    return res
-      .status(403)
-      .json({ success: false, error: e.stack || e.message || e });
+    return res.status(403).json({
+      statusCode: 403,
+      success: false,
+      error: e.message || e.stack || e,
+    });
   }
 };
 export default sendContactForm;

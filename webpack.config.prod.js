@@ -1,8 +1,5 @@
 process.env.NODE_ENV = "production";
 const path = require("path");
-const webpack = require("webpack");
-const nodeExternals = require("webpack-node-externals");
-const { merge } = require("webpack-merge");
 const resolveTsconfigPathsToAlias = require("./resolve-tsconfig-path-to-webpack-alias");
 const config = require("./webpack.config");
 

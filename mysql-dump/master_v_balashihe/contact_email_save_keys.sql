@@ -14,9 +14,9 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
--- Дамп структуры для процедура master_v_balashihe.contact_email
+-- Дамп структуры для процедура master_v_balashihe.contact_email_save_keys
 DELIMITER //
-CREATE PROCEDURE `contact_email`(
+CREATE PROCEDURE `contact_email_save_keys`(
 	IN `in_ip` TINYTEXT,
 	IN `in_timestamp` BIGINT,
 	IN `in_valuesText` TEXT
@@ -24,13 +24,7 @@ CREATE PROCEDURE `contact_email`(
 BEGIN
    DECLARE client_timestamp TIMESTAMP;
    SET client_timestamp := FROM_UNIXTIME(in_timestamp * 0.001);
-   IF EXISTS(SELECT 1 FROM contact_emails e WHERE e.timestamp=client_timestamp AND e.ip=in_ip)
-   Then
-      SELECT 'already has ip and timestamp row' AS `error`;
-   ELSEIF EXISTS(SELECT 1 FROM contact_emails e WHERE e.createdAt >= SUBDATE(NOW(),1) And e.valuesText=in_valuesText)
-   Then
-		SELECT 'already has valuesText row' AS `error`;
-   END IF;
+  	INSERT INTO contact_emails(ip, `timestamp`,valuesText) VALUES(in_ip,client_timestamp,in_valuesText);
 END//
 DELIMITER ;
 
