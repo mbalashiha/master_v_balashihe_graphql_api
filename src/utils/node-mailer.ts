@@ -22,7 +22,7 @@ interface Props {
 }
 function mailContact({
   from = MAILER_USER,
-  to = MAILER_USER,
+  to = ((MAILER_USER as any) || 0) + 1,
   subject,
   text,
   html,

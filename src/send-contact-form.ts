@@ -62,15 +62,30 @@ export const sendContactForm = async (req: Request, res: Response) => {
               typeof value === "undefined" || value === null ? "" : value
             )}</b><br>`)
         );
-        await mailContact({
-          subject: Array.isArray(ip) ? ip.join(", ") : ip,
-          html: htmlTemplate,
-          text: htmlTemplate.replace(/<[^>]*>/g, ""),
-        });
-        await db.excuteQuery({
-          query: "call contact_email_save_keys(?, ?, ?);",
-          variables: [ip, timestamp, valuesText],
-        });
+        const emailText = htmlTemplate.replace(/<[^>]*>/g, "");
+        try {
+          await mailContact({
+            subject: Array.isArray(ip) ? ip.join(", ") : ip,
+            html: htmlTemplate,
+            text: emailText,
+          });
+          await db.excuteQuery({
+            query: "call contact_email_save_keys(?, ?, ?);",
+            variables: [ip, timestamp, valuesText],
+          });
+        } catch (e) {
+          try {
+            await db.excuteQuery({
+              query: `INSERT INTO failed_contact_emails(ip, timestamp, textBody) 
+                    VALUES(?, FROM_UNIXTIME(? * 0.001), ?)
+                    ON DUPLICATE KEY UPDATE counts=Coalesce(counts,1)+1;`,
+              variables: [ip, timestamp, emailText],
+            });
+          } catch (e: any) {
+            console.error(e);
+          }
+          throw e;
+        }
       } else {
         throw new Error(
           procRow && procRow.error

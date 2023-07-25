@@ -14,18 +14,17 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
--- Дамп структуры для таблица master_v_balashihe.contact_emails
-CREATE TABLE IF NOT EXISTS `contact_emails` (
+-- Дамп структуры для таблица master_v_balashihe.failed_contact_emails
+CREATE TABLE IF NOT EXISTS `failed_contact_emails` (
   `timestamp` timestamp NOT NULL,
   `ip` varchar(100) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
   `createdAt` timestamp NOT NULL DEFAULT current_timestamp(),
   `counts` tinyint(3) unsigned DEFAULT NULL,
-  `valuesText` text NOT NULL,
   `textBody` text DEFAULT NULL,
-  PRIMARY KEY (`timestamp`,`ip`)
+  PRIMARY KEY (`timestamp`,`ip`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Дамп данных таблицы master_v_balashihe.contact_emails: ~0 rows (приблизительно)
+-- Дамп данных таблицы master_v_balashihe.failed_contact_emails: ~0 rows (приблизительно)
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
