@@ -1,5 +1,8 @@
-process.env.NODE_ENV = "production";
+const Dotenv = require("dotenv-webpack");
 const path = require("path");
+const webpack = require("webpack");
+const nodeExternals = require("webpack-node-externals");
+const WebpackShellPluginNext = require("webpack-shell-plugin-next");
 const resolveTsconfigPathsToAlias = require("./resolve-tsconfig-path-to-webpack-alias");
 const config = require("./webpack.config");
 
@@ -30,13 +33,10 @@ module.exports = {
   },
   plugins: [
     new Dotenv({
-      path: path.resolve(__dirname, ".env"),
-    }),
-    new Dotenv({
       path: path.resolve(__dirname, ".env.local"),
     }),
     new Dotenv({
-      path: path.resolve(__dirname, `.env.${process.env.NODE_ENV}`),
+      path: path.resolve(__dirname, `.env.production`),
     }),
   ],
 };

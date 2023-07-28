@@ -1,4 +1,4 @@
-process.env.NODE_ENV = "development";
+
 const Dotenv = require("dotenv-webpack");
 const path = require("path");
 const webpack = require("webpack");
@@ -52,17 +52,11 @@ module.exports = {
         parallel: true,
       },
     }),
-    // new webpack.DefinePlugin({
-    //   "process.env": JSON.stringify(enviroment),
-    // }),
-    new Dotenv({
-      path: path.resolve(__dirname, ".env"),
-    }),
     new Dotenv({
       path: path.resolve(__dirname, ".env.local"),
     }),
     new Dotenv({
-      path: path.resolve(__dirname, `.env.${process.env.NODE_ENV}`),
+      path: path.resolve(__dirname, `.env.development`),
     }),
   ],
   watch: true,

@@ -1,7 +1,7 @@
 import util from "util";
 import nodemailer from "nodemailer";
 
-export const MAILER_USER = process.env.MAILER_USER;
+export const MAILER_USER: string = process.env.MAILER_USER || "";
 export const transporter = nodemailer.createTransport({
   host: "smtp.mail.ru",
   port: 465,
@@ -22,7 +22,7 @@ interface Props {
 }
 function mailContact({
   from = MAILER_USER,
-  to = ((MAILER_USER as any) || 0) + 1,
+  to = MAILER_USER,
   subject,
   text,
   html,
