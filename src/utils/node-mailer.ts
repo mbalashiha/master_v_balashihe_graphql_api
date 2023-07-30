@@ -31,7 +31,7 @@ function mailContact({
     let timeoutId = setTimeout(() => reject("timeout 2000ms exited."), 2000);
     try {
       // send mail with defined transport object
-      console.log("sending email...");
+      // console.l//og("sending email...");
       const info = await transporter.sendMail({
         from, // sender address
         to, // list of receivers
@@ -40,7 +40,7 @@ function mailContact({
         html: html || undefined, // html body
       });
       if (info.response && info.response.startsWith("250 OK")) {
-        console.log("sending email success!", info);
+        // console.l//og("sending email success!", info);
         return resolve(info);
       } else {
         throw new Error(util.inspect(info));

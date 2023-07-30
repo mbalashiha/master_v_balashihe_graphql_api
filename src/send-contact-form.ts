@@ -18,11 +18,17 @@ import mailContact from "./utils/node-mailer";
 // mailContact().catch(console.error);
 export const sendContactForm = async (req: Request, res: Response) => {
   try {
-    const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+    const ip: string = req.headers["x-forwarded-for"]
+      ? typeof req.headers["x-forwarded-for"] === "string"
+        ? req.headers["x-forwarded-for"]
+        : req.headers["x-forwarded-for"][0]
+      : req.socket.remoteAddress
+      ? req.socket.remoteAddress
+      : "";
     const value = (req as any).rawBody || req.body.toString("utf8");
     const decoded =
       (value && typeof value === "string" && simpleDecrypt(value)) || {};
-    console.log("decoded:", decoded);
+    // console.l//og("decoded:", decoded);
     const { timestamp, promo, telephoneDigits } = decoded;
     let procRow;
     if (ip && timestamp && decoded["Телефон"]) {
@@ -77,7 +83,7 @@ export const sendContactForm = async (req: Request, res: Response) => {
           try {
             await db.excuteQuery({
               query: `INSERT INTO failed_contact_emails(ip, timestamp, textBody) 
-                    VALUES(?, FROM_UNIXTIME(? * 0.001), ?)
+                    VALUES(INET6_ATON(?), FROM_UNIXTIME(? * 0.001), ?)
                     ON DUPLICATE KEY UPDATE counts=Coalesce(counts,1)+1;`,
               variables: [ip, timestamp, emailText],
             });

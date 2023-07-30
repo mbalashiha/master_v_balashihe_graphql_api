@@ -20,3 +20,4 @@ production-build.js
 .env.development
 .env.production
 /production-build.js
+*Zone.Identifier

@@ -17,7 +17,7 @@
 -- Дамп структуры для таблица master_v_balashihe.contact_emails
 CREATE TABLE IF NOT EXISTS `contact_emails` (
   `timestamp` timestamp NOT NULL,
-  `ip` varchar(100) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
+  `ip` varbinary(16) NOT NULL,
   `createdAt` timestamp NOT NULL DEFAULT current_timestamp(),
   `counts` tinyint(3) unsigned DEFAULT NULL,
   `valuesText` text NOT NULL,
@@ -26,6 +26,8 @@ CREATE TABLE IF NOT EXISTS `contact_emails` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Дамп данных таблицы master_v_balashihe.contact_emails: ~0 rows (приблизительно)
+INSERT IGNORE INTO `contact_emails` (`timestamp`, `ip`, `createdAt`, `counts`, `valuesText`, `textBody`) VALUES
+	('2023-07-30 17:47:12', _binary 0x7f000001, '2023-07-30 17:47:14', NULL, ';+7(324)324-32-43', NULL);
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

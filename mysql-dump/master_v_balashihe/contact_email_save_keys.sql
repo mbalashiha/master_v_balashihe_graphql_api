@@ -23,8 +23,10 @@ CREATE PROCEDURE `contact_email_save_keys`(
 )
 BEGIN
    DECLARE client_timestamp TIMESTAMP;
+   DECLARE ip_binary VARBINARY(16);
    SET client_timestamp := FROM_UNIXTIME(in_timestamp * 0.001);
-  	INSERT INTO contact_emails(ip, `timestamp`,valuesText) VALUES(in_ip,client_timestamp,in_valuesText);
+   SET ip_binary := INET6_ATON(in_ip);
+   INSERT INTO contact_emails(ip, `timestamp`,valuesText) VALUES(ip_binary,client_timestamp,in_valuesText);
 END//
 DELIMITER ;
 

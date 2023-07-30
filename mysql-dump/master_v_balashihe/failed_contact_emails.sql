@@ -17,7 +17,7 @@
 -- Дамп структуры для таблица master_v_balashihe.failed_contact_emails
 CREATE TABLE IF NOT EXISTS `failed_contact_emails` (
   `timestamp` timestamp NOT NULL,
-  `ip` varchar(100) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
+  `ip` varbinary(16) NOT NULL,
   `createdAt` timestamp NOT NULL DEFAULT current_timestamp(),
   `counts` tinyint(3) unsigned DEFAULT NULL,
   `textBody` text DEFAULT NULL,

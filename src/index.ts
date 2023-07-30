@@ -43,6 +43,7 @@ import { ManagementArticlesCardsModule } from "@root/schema/modules/blog/managem
 import { checkIfAuthenticated } from "./check-if-authenticated";
 import uploadResponseHandler, { uploadMiddleware } from "./multer-image-upload";
 import sendContactForm from "./send-contact-form";
+import pageViewCount from "./page-view-count";
 
 const corsOptions = {
   origin: "http://localhost:3000", //change with your own client URL
@@ -97,6 +98,11 @@ const rawBodySaver: any = (
     req.rawBody = buf.toString(encoding || "utf8");
   }
 };
+app.post(
+  "/site/page-view-count",
+  bodyParser.raw({ verify: rawBodySaver as any, type: "*/*" }),
+  pageViewCount
+);
 app.post(
   "/site/contact",
   bodyParser.raw({ verify: rawBodySaver as any, type: "*/*" }),

@@ -14,27 +14,10 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
--- Дамп структуры для процедура master_v_balashihe.contact_email
-DELIMITER //
-CREATE PROCEDURE `contact_email`(
-	IN `in_ip` TINYTEXT,
-	IN `in_timestamp` BIGINT,
-	IN `in_valuesText` TEXT
-)
-BEGIN
-   DECLARE client_timestamp TIMESTAMP;
-   DECLARE ip_binary VARBINARY(16);
-   SET client_timestamp := FROM_UNIXTIME(in_timestamp * 0.001);
-   SET ip_binary := INET6_ATON(in_ip);
-   IF EXISTS(SELECT 1 FROM contact_emails e WHERE e.timestamp=client_timestamp AND e.ip=ip_binary)
-   Then
-      SELECT 'already has ip and timestamp row' AS `error`;
-   ELSEIF EXISTS(SELECT 1 FROM contact_emails e WHERE e.createdAt >= SUBDATE(NOW(),1) And e.valuesText=in_valuesText)
-   Then
-		SELECT 'already has valuesText row' AS `error`;
-   END IF;
-END//
-DELIMITER ;
+-- Дамп структуры для представление master_v_balashihe.article_statistic_view
+-- Удаление временной таблицы и создание окончательной структуры представления
+DROP TABLE IF EXISTS `article_statistic_view`;
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `article_statistic_view` AS select `a`.`timestamp` AS `timestamp`,inet6_ntoa(`a`.`ip`) AS `ip`,`a`.`createdAt` AS `createdAt`,`a`.`articleId` AS `articleId`,coalesce(`ba`.`absURL`,`ba`.`handle`) AS `url`,`ba`.`title` AS `title`,`a`.`duplicate` AS `duplicate` from (`article_statistic` `a` left join `blog_article_handle` `ba` on(`ba`.`id` = `a`.`articleId`));
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
