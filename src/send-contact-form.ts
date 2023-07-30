@@ -71,7 +71,7 @@ export const sendContactForm = async (req: Request, res: Response) => {
         const emailText = htmlTemplate.replace(/<[^>]*>/g, "");
         try {
           await mailContact({
-            subject: Array.isArray(ip) ? ip.join(", ") : ip,
+            subject: `${ip} (${promo || "Посетитель оставил данные"})`,
             html: htmlTemplate,
             text: emailText,
           });

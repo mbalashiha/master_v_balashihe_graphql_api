@@ -28,7 +28,7 @@ function mailContact({
   html,
 }: Props) {
   return new Promise(async (resolve, reject) => {
-    let timeoutId = setTimeout(() => reject("timeout 2000ms exited."), 2000);
+    let timeoutId = setTimeout(() => reject("timeout 4000ms exited."), 4000);
     try {
       // send mail with defined transport object
       // console.l//og("sending email...");
