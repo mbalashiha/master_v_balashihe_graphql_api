@@ -26,7 +26,7 @@ function mailContact({
   subject,
   text,
   html,
-}: Props) {
+}: Props): Promise<string> {
   return new Promise(async (resolve, reject) => {
     let timeoutId = setTimeout(() => reject("timeout 4000ms exited."), 4000);
     try {
@@ -40,8 +40,8 @@ function mailContact({
         html: html || undefined, // html body
       });
       if (info.response && info.response.startsWith("250 OK")) {
-        // console.l//og("sending email success!", info);
-        return resolve(info);
+        // console.l//og("sending email success!", info.response);
+        return resolve(info.response);
       } else {
         throw new Error(util.inspect(info));
       }
@@ -53,6 +53,7 @@ function mailContact({
       //       <https://github.com/forwardemail/preview-email>
       //
     } catch (e: any) {
+      console.error(util.inspect(e));
       reject(e);
     } finally {
       clearTimeout(timeoutId);
