@@ -14,20 +14,37 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
--- Дамп структуры для процедура master_v_balashihe.contact_email_save_keys
+-- Дамп структуры для процедура master_v_balashihe.save_article_viewed
 DELIMITER //
-CREATE PROCEDURE `contact_email_save_keys`(
+CREATE PROCEDURE `save_article_viewed`(
 	IN `in_ip` TINYTEXT,
 	IN `in_timestamp` BIGINT,
-	IN `in_valuesText` TEXT,
-	IN `in_response` TEXT
+	IN `in_articleId` Text
 )
 BEGIN
    DECLARE client_timestamp TIMESTAMP;
    DECLARE ip_binary VARBINARY(16);
+   DECLARE viewed_count INT UNSIGNED DEFAULT NULL;
    SET client_timestamp := FROM_UNIXTIME(in_timestamp * 0.001);
    SET ip_binary := INET6_ATON(in_ip);
-   INSERT INTO contact_emails(ip, `timestamp`,valuesText,response) VALUES(ip_binary,client_timestamp,in_valuesText,in_response);
+   IF client_timestamp NOT BETWEEN SUBDATE(NOW(),1) AND AddDATE(NOW(),1)
+   Then   	
+      SELECT a.viewed INTO viewed_count FROM blog_article a WHERE a.id=in_articleId;
+      SELECT 'incorrect timestamp from client' AS `error`, COALESCE(viewed_count,0) AS viewed;
+	ELSEIF EXISTS(SELECT 1 FROM article_statistic e WHERE IFNUll(e.articleId, 0)=Ifnull(in_articleId,0) AND e.timestamp=client_timestamp AND e.ip=ip_binary)
+   Then
+      SELECT a.viewed INTO viewed_count FROM blog_article a WHERE a.id=in_articleId;
+      SELECT 'already has articleId, ip and timestamp row' AS `error`, COALESCE(viewed_count,0) AS viewed;
+      UPDATE article_statistic e SET duplicate=Coalesce(duplicate,1)+1
+         WHERE IFNUll(e.articleId, 0)=Ifnull(in_articleId,0) AND e.timestamp=client_timestamp AND e.ip=ip_binary;
+   ELSE
+		INSERT INTO article_statistic(ip, timestamp, articleId) 
+                    VALUES(ip_binary, client_timestamp, in_articleId);
+      UPDATE blog_article a SET a.viewed=COALESCE(a.viewed,0)+1
+      	WHERE a.id=Ifnull(in_articleId,0);
+      SELECT a.viewed INTO viewed_count FROM blog_article a WHERE a.id=in_articleId;
+      SELECT COALESCE(viewed_count,0) AS viewed;
+   END IF;
 END//
 DELIMITER ;
 

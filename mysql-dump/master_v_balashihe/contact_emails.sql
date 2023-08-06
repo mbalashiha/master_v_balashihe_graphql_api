@@ -22,12 +22,21 @@ CREATE TABLE IF NOT EXISTS `contact_emails` (
   `counts` tinyint(3) unsigned DEFAULT NULL,
   `valuesText` text NOT NULL,
   `textBody` text DEFAULT NULL,
+  `response` text DEFAULT NULL,
   PRIMARY KEY (`timestamp`,`ip`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Дамп данных таблицы master_v_balashihe.contact_emails: ~0 rows (приблизительно)
-INSERT IGNORE INTO `contact_emails` (`timestamp`, `ip`, `createdAt`, `counts`, `valuesText`, `textBody`) VALUES
-	('2023-07-30 17:47:12', _binary 0x7f000001, '2023-07-30 17:47:14', NULL, ';+7(324)324-32-43', NULL);
+-- Дамп данных таблицы master_v_balashihe.contact_emails: ~4 rows (приблизительно)
+INSERT IGNORE INTO `contact_emails` (`timestamp`, `ip`, `createdAt`, `counts`, `valuesText`, `textBody`, `response`) VALUES
+	('2023-07-30 22:34:32', _binary 0xc0a80005, '2023-07-30 22:34:32', NULL, ';+7(234)324-32-43', NULL, '250 OK id=1qQEzg-00EQSG-05');
+INSERT IGNORE INTO `contact_emails` (`timestamp`, `ip`, `createdAt`, `counts`, `valuesText`, `textBody`, `response`) VALUES
+	('2023-07-30 23:18:46', _binary 0xc0a80005, '2023-07-30 23:18:46', NULL, ';+7(324)324-32-43', NULL, '250 OK id=1qQFgT-002ueX-2m');
+INSERT IGNORE INTO `contact_emails` (`timestamp`, `ip`, `createdAt`, `counts`, `valuesText`, `textBody`, `response`) VALUES
+	('2023-07-31 00:16:24', _binary 0xc0a80005, '2023-07-31 00:16:24', NULL, ';+7(234)324-23-43', NULL, '250 OK id=1qQGaF-00BALx-Vb');
+INSERT IGNORE INTO `contact_emails` (`timestamp`, `ip`, `createdAt`, `counts`, `valuesText`, `textBody`, `response`) VALUES
+	('2023-07-31 00:29:16', _binary 0xc0a80005, '2023-07-31 00:29:16', NULL, ';+7(879)879-87-98', NULL, '250 OK id=1qQGmi-00E0pM-AN');
+INSERT IGNORE INTO `contact_emails` (`timestamp`, `ip`, `createdAt`, `counts`, `valuesText`, `textBody`, `response`) VALUES
+	('2023-07-31 00:33:19', _binary 0xc0a80005, '2023-07-31 00:33:19', NULL, ';Другая техника;+7(343)412-43-12;Другое', NULL, '250 OK id=1qQGqc-00FpcQ-Uz');
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

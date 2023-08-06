@@ -32,9 +32,7 @@ export const pageViewCount = async (req: Request, res: Response) => {
     const { timestamp, articleId } = decoded;
     if (ip && timestamp && articleId) {
       await db.excuteQuery({
-        query: `INSERT INTO article_statistic(ip, timestamp, articleId) 
-                    VALUES(INET6_ATON(?), FROM_UNIXTIME(? * 0.001), ?)
-                    ON DUPLICATE KEY UPDATE duplicate=Coalesce(duplicate,1)+1;`,
+        query: `call save_article_viewed(?, ?, ?);`,
         variables: [ip, timestamp, articleId],
       });
     } else {
@@ -44,6 +42,7 @@ export const pageViewCount = async (req: Request, res: Response) => {
   } catch (e: any) {
     e = e || {};
     console.error(e.stack || e.message);
+    debugger;
     return res.status(403).json({
       statusCode: 403,
       success: false,
