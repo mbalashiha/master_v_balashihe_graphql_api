@@ -73,7 +73,8 @@ export default async function selectArticleDraft({
         Boolean(existingArticle.notInList) == Boolean(result.notInList) &&
         Boolean(existingArticle.notSearchable) ==
           Boolean(result.notSearchable) &&
-        Boolean(existingArticle.unPublished) == Boolean(result.unPublished)
+        Boolean(existingArticle.unPublished) == Boolean(result.unPublished) && 
+        existingArticle.templateId == result.templateId
       ) {
         /** try {
           const delRes = await db.excuteQuery({

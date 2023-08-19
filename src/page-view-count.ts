@@ -32,8 +32,13 @@ export const pageViewCount = async (req: Request, res: Response) => {
     const { timestamp, articleId } = decoded;
     if (ip && timestamp && articleId) {
       await db.excuteQuery({
-        query: `call save_article_viewed(?, ?, ?);`,
-        variables: [ip, timestamp, articleId],
+        query: `call save_article_viewed(?, ?, ?, ?);`,
+        variables: [
+          ip,
+          timestamp,
+          articleId,
+          process.env.OWNER_IP_ADDRESS || "",
+        ],
       });
     } else {
       throw new Error("No correct ip and timestamp or form values");

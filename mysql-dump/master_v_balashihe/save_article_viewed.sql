@@ -19,7 +19,8 @@ DELIMITER //
 CREATE PROCEDURE `save_article_viewed`(
 	IN `in_ip` TINYTEXT,
 	IN `in_timestamp` BIGINT,
-	IN `in_articleId` Text
+	IN `in_articleId` Text,
+	IN `IN_OWNER_IP_ADDRESS` TINYTEXT
 )
 BEGIN
    DECLARE client_timestamp TIMESTAMP;
@@ -38,8 +39,11 @@ BEGIN
       UPDATE article_statistic e SET duplicate=Coalesce(duplicate,1)+1
          WHERE IFNUll(e.articleId, 0)=Ifnull(in_articleId,0) AND e.timestamp=client_timestamp AND e.ip=ip_binary;
    ELSE
-		INSERT INTO article_statistic(ip, timestamp, articleId) 
+      IF (in_ip <> '127.0.0.1' AND in_ip <> IN_OWNER_IP_ADDRESS AND in_ip NOT LIKE '192.168.%')
+      Then
+			INSERT INTO article_statistic(ip, timestamp, articleId) 
                     VALUES(ip_binary, client_timestamp, in_articleId);
+      END IF;
       UPDATE blog_article a SET a.viewed=COALESCE(a.viewed,0)+1
       	WHERE a.id=Ifnull(in_articleId,0);
       SELECT a.viewed INTO viewed_count FROM blog_article a WHERE a.id=in_articleId;

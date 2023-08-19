@@ -20,6 +20,7 @@ export namespace Schema {
     publishedAt: Date | String | null;
     h2: String | null;
     secondImageId: ID | null;
+    templateId: ID | null;
   }
   export interface ArticleTextDraftInput {
     id: ID;
@@ -79,6 +80,8 @@ export namespace Schema {
     notInList: Boolean;
     h2: String | null;
     secondImageId: ID | null;
+    viewed: number;
+    templateId: ID | null;
   }
   export interface ArticleInput {
     existingArticleId: ID;
@@ -101,6 +104,7 @@ export namespace Schema {
     publishedAt: Date | String;
     h2: String | null;
     secondImageId: ID | null;
+    templateId: ID | null;
   }
   export interface ArticleDraft {
     draftArticleId: ID;
@@ -124,6 +128,7 @@ export namespace Schema {
     notInList: Boolean;
     h2: String | null;
     secondImageId: ID | null;
+    templateId: ID | null;
   }
   export interface BlogArticlesConnection {
     nodes: BlogArticle[];

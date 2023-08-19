@@ -26,7 +26,10 @@ BEGIN
    DECLARE ip_binary VARBINARY(16);
    SET client_timestamp := FROM_UNIXTIME(in_timestamp * 0.001);
    SET ip_binary := INET6_ATON(in_ip);
-   IF EXISTS(SELECT 1 FROM contact_emails e WHERE e.timestamp=client_timestamp AND e.ip=ip_binary)
+   IF client_timestamp NOT BETWEEN SUBDATE(NOW(),1) AND AddDATE(NOW(),1)
+   Then   	
+      SELECT 'incorrect timestamp from client' AS `error`;
+	ELSEIF EXISTS(SELECT 1 FROM contact_emails e WHERE e.timestamp=client_timestamp AND e.ip=ip_binary)
    Then
       SELECT 'already has ip and timestamp row' AS `error`;
    ELSEIF EXISTS(SELECT 1 FROM contact_emails e WHERE e.createdAt >= SUBDATE(NOW(),1) And e.valuesText=in_valuesText)

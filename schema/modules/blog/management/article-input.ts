@@ -34,6 +34,7 @@ export const BlogManagementModule = createModule({
         publishedAt: Date
         h2: String
         secondImageId: ID
+        templateId: ID
       }
       type DeleteArticleResponse {
         error: String
@@ -178,7 +179,8 @@ export const BlogManagementModule = createModule({
             $keyTextHtml,
             $publishedAt,
             $h2,
-            $secondImageId
+            $secondImageId,
+            $templateId
             );`,
             variables: {
               managerId: context.manager.id,
@@ -203,6 +205,7 @@ export const BlogManagementModule = createModule({
               publishedAt: mysqlFormatDatetime(article.publishedAt),
               h2: article.h2 || null,
               secondImageId: article.secondImageId || null,
+              templateId: article.templateId || null,
             },
           });
           if (!sqlResult) {

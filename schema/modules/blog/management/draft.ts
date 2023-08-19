@@ -24,6 +24,10 @@ export const BlogArticleDraftModule = createModule({
   dirname: __dirname,
   typeDefs: [
     gql`
+      type ArticleTemplate {
+        templateId: ID
+        templateName: String
+      }
       type ArticleDraft {
         id: ID
         title: String
@@ -50,6 +54,7 @@ export const BlogArticleDraftModule = createModule({
         image: Image
         secondImageId: ID
         secondImage: Image
+        templateId: ID
       }
       input ArticleDraftInput {
         id: ID
@@ -67,6 +72,7 @@ export const BlogArticleDraftModule = createModule({
         notInList: Boolean
         publishedAt: Date
         h2: String
+        templateId: ID
       }
       input ArticleTextDraftInput {
         id: ID
@@ -88,6 +94,7 @@ export const BlogArticleDraftModule = createModule({
       }
       type Query {
         articleDraft(articleId: ID): ArticleDraft
+        managementArticleTemplates(articleId: ID): [ArticleTemplate]
       }
       type Mutation {
         saveArticleDraft(articleDraft: ArticleDraftInput): ArticleDraftResponse
@@ -227,7 +234,8 @@ export const BlogArticleDraftModule = createModule({
             $absURL,
             $publishedAt,
             $h2,
-            $secondImageId
+            $secondImageId,
+            $templateId
             );`,
             variables: {
               managerId: context.manager.id,
@@ -247,6 +255,7 @@ export const BlogArticleDraftModule = createModule({
               publishedAt: mysqlFormatDatetime(articleDraft.publishedAt),
               h2: articleDraft.h2 || null,
               secondImageId: articleDraft.secondImageId || null,
+              templateId: articleDraft.templateId || null,
             },
           });
           const row = (sqlResult[0] && sqlResult[0][0]) || {};

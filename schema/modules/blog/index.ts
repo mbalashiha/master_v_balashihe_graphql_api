@@ -59,6 +59,7 @@ export const blogArticlesModule = createModule({
         fragment: String
         image: Image
         imageId: ID
+        view: Int
       }
       type NavigationItem {
         id: ID
@@ -101,6 +102,8 @@ export const blogArticlesModule = createModule({
         image: Image
         secondImageId: ID
         secondImage: Image
+        view: Int
+        templateId: ID
       }
       type BlogArticlesConnection {
         pageInfo: PageInfo
