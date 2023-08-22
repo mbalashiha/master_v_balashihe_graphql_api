@@ -221,18 +221,18 @@ export const blogArticlesModule = createModule({
               limit,
               naturalLanguageModeQuery: `
             select id, imageId, Coalesce(displayingPageHandle, handle, title, id) as handle, absURL, displayingPageHandle, title, publishedAt, text as fragment,
-                  MATCH (title,text) AGAINST ($search IN NATURAL LANGUAGE MODE) as score
+                  MATCH (title,text,h2) AGAINST ($search IN NATURAL LANGUAGE MODE) as score
               from blog_article_handle 
                 WHERE 
                   unPublished is NULL And notSearchable is NULL And 
-                  MATCH (title,text) AGAINST ($search IN NATURAL LANGUAGE MODE)`,
+                  MATCH (title,text,h2) AGAINST ($search IN NATURAL LANGUAGE MODE)`,
               booleanModeQuery: `
             select id, imageId, Coalesce(displayingPageHandle, handle, title, id) as handle, absURL, displayingPageHandle, title, publishedAt, text as fragment,
-                  MATCH (title,text) AGAINST ($search IN BOOLEAN MODE) as score
+                  MATCH (title,text,h2) AGAINST ($search IN BOOLEAN MODE) as score
               from blog_article_handle  
                 WHERE 
                   unPublished is NULL And notSearchable is NULL And 
-                  MATCH (title,text) AGAINST ($search IN BOOLEAN MODE)`,
+                  MATCH (title,text,h2) AGAINST ($search IN BOOLEAN MODE)`,
             });
           }
         } catch (e: any) {
@@ -274,18 +274,18 @@ export const blogArticlesModule = createModule({
               limit,
               naturalLanguageModeQuery: `
             select id, imageId, handle, null as absURL, handle as displayingPageHandle, title, publishedAt, text as fragment,
-                  MATCH (title,text) AGAINST ($search IN NATURAL LANGUAGE MODE) as score
+                  MATCH (title,text,h2) AGAINST ($search IN NATURAL LANGUAGE MODE) as score
               from blog_article_handle 
                 WHERE 
                   unPublished is NULL And notSearchable is NULL And 
-                  MATCH (title,text) AGAINST ($search IN NATURAL LANGUAGE MODE)`,
+                  MATCH (title,text,h2) AGAINST ($search IN NATURAL LANGUAGE MODE)`,
               booleanModeQuery: `
             select id, imageId, handle, null as absURL, handle as displayingPageHandle, title, publishedAt, text as fragment,
-                  MATCH (title,text) AGAINST ($search IN BOOLEAN MODE) as score
+                  MATCH (title,text,h2) AGAINST ($search IN BOOLEAN MODE) as score
               from blog_article_handle  
                 WHERE 
                   unPublished is NULL And notSearchable is NULL And 
-                  MATCH (title,text) AGAINST ($search IN BOOLEAN MODE)`,
+                  MATCH (title,text,h2) AGAINST ($search IN BOOLEAN MODE)`,
             });
           }
         } catch (e: any) {

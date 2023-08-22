@@ -21,6 +21,8 @@ export const ManagementArticlesCardsModule = createModule({
         fragment: String
         image: Image
         imageId: ID
+        secondImage: Image
+        secondImageId: ID
         viewed: Int
         templateId: ID
       }
@@ -58,6 +60,25 @@ export const ManagementArticlesCardsModule = createModule({
           return null;
         }
       },
+      secondImage: async (
+        parent: Schema.BlogArticle,
+        variables: any,
+        _ctx: any,
+        info: GraphQLResolveInfo
+      ) => {
+        if (!parent.imageId) {
+          return null;
+        }
+        const rows = await db.excuteQuery({
+          query: `select * from image where imageId=$secondImageId`,
+          variables: parent,
+        });
+        if (rows && rows[0] && rows[0].imgSrc) {
+          return rows[0];
+        } else {
+          return null;
+        }
+      },
     },
     ManagementArticlesCards: {
       search: async (
@@ -85,7 +106,9 @@ export const ManagementArticlesCardsModule = createModule({
               : ``;
             const articles = await db.excuteQuery({
               query:
-                `select id, imageId, Coalesce(displayingPageHandle, handle, title, id) as handle, absURL, displayingPageHandle, title, publishedAt, null as fragment, null as score,
+                `select 
+                  id, imageId, secondImageId, viewed, Coalesce(displayingPageHandle, handle, title, id) as handle, h2,
+                  absURL, displayingPageHandle, title, publishedAt, null as fragment, null as score,
                 viewed
                     from blog_article_handle 
                     Order By createdAt Desc, updatedAt Desc ` +
@@ -99,17 +122,21 @@ export const ManagementArticlesCardsModule = createModule({
               offset,
               limit,
               naturalLanguageModeQuery: `
-            select id, imageId, Coalesce(displayingPageHandle, handle, title, id) as handle, absURL, displayingPageHandle, title, publishedAt, text as fragment,
-                  viewed,
-                  MATCH (title,text) AGAINST ($search IN NATURAL LANGUAGE MODE) as score
+            select
+                  id, imageId, secondImageId, viewed, Coalesce(displayingPageHandle, handle, title, id) as handle, h2, 
+                  absURL, displayingPageHandle, title, publishedAt, 
+                  text as fragment,
+                  MATCH (title,text,h2) AGAINST ($search IN NATURAL LANGUAGE MODE) as score
               from blog_article_handle 
-                WHERE MATCH (title,text) AGAINST ($search IN NATURAL LANGUAGE MODE)`,
+                WHERE MATCH (title,text,h2) AGAINST ($search IN NATURAL LANGUAGE MODE)`,
               booleanModeQuery: `
-            select id, imageId, Coalesce(displayingPageHandle, handle, title, id) as handle, absURL, displayingPageHandle, title, publishedAt, text as fragment,
-                  viewed,
-                  MATCH (title,text) AGAINST ($search IN BOOLEAN MODE) as score
+            select
+                  id, imageId, secondImageId, viewed, Coalesce(displayingPageHandle, handle, title, id) as handle, h2, 
+                  absURL, displayingPageHandle, title, publishedAt, 
+                  text as fragment,
+                  MATCH (title,text,h2) AGAINST ($search IN BOOLEAN MODE) as score
               from blog_article_handle 
-                WHERE MATCH (title,text) AGAINST ($search IN BOOLEAN MODE)`,
+                WHERE MATCH (title,text,h2) AGAINST ($search IN BOOLEAN MODE)`,
             });
           }
         } catch (e: any) {

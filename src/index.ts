@@ -125,9 +125,7 @@ const verifyCookieToken =
     },
     next: () => any
   ) => {
-    let xheader = req.headers[`x-${cookieTokenName}-key`];
-    xheader = Array.isArray(xheader) ? xheader[0] : xheader;
-    const token = xheader || req.cookies[cookieTokenName] || "";
+    const token = req.cookies[cookieTokenName] || "";
     (req as any).responseObject = res;
     if (token) {
       try {
