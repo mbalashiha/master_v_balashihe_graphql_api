@@ -3,7 +3,7 @@ import util from "util";
 import db from "@src/sql/execute-query";
 import { GraphQLError, GraphQLResolveInfo } from "graphql";
 import { Schema } from "@root/schema/types/schema";
-import { selectArticleDraft } from "./sql";
+import { selectArticle } from "./sql";
 import { ID } from "graphql-modules/shared/types";
 export const mysqlFormatDatetime = (
   inDate: string | Date | null
@@ -24,10 +24,6 @@ export const BlogArticleDraftModule = createModule({
   dirname: __dirname,
   typeDefs: [
     gql`
-      type ArticleTemplate {
-        templateId: ID
-        templateName: String
-      }
       type ArticleDraft {
         id: ID
         title: String
@@ -55,6 +51,7 @@ export const BlogArticleDraftModule = createModule({
         secondImageId: ID
         secondImage: Image
         templateId: ID
+        viewed: Int
       }
       input ArticleDraftInput {
         id: ID
@@ -72,7 +69,7 @@ export const BlogArticleDraftModule = createModule({
         notInList: Boolean
         publishedAt: Date
         h2: String
-        templateId: ID
+        templateId: ID!
       }
       input ArticleTextDraftInput {
         id: ID
@@ -94,7 +91,6 @@ export const BlogArticleDraftModule = createModule({
       }
       type Query {
         articleDraft(articleId: ID): ArticleDraft
-        managementArticleTemplates(articleId: ID): [ArticleTemplate]
       }
       type Mutation {
         saveArticleDraft(articleDraft: ArticleDraftInput): ArticleDraftResponse
@@ -127,7 +123,7 @@ export const BlogArticleDraftModule = createModule({
         }
         const { id, managerId, articleId, draftArticleId, existingArticleId } =
           parent;
-        return await selectArticleDraft({
+        return await selectArticle({
           draftArticleId: id || draftArticleId,
           managerId: context.manager.id,
           articleId: articleId || existingArticleId,
@@ -448,7 +444,7 @@ export const BlogArticleDraftModule = createModule({
           throw new GraphQLError("Manager Unauthorized");
         }
         const managerId = context.manager.id;
-        const result = await selectArticleDraft({ managerId, articleId });
+        const result = await selectArticle({ managerId, articleId });
         return result;
       },
     },

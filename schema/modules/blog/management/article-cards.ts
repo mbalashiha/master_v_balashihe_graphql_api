@@ -3,12 +3,27 @@ import util from "util";
 import db from "@src/sql/execute-query";
 import { GraphQLError, GraphQLResolveInfo } from "graphql";
 import { fullTextSearch } from "@src/sql/full-text-search";
+import { Schema } from "@root/schema/types/schema";
 
 export const ManagementArticlesCardsModule = createModule({
   id: "management-article-cards-module",
   dirname: __dirname,
   typeDefs: [
     gql`
+      type ArticleCard {
+        id: ID
+        title: String!
+        handle: String!
+        absURL: String
+        displayingPageHandle: String
+        publishedAt: Date
+        score: Float
+        fragment: String
+        image: Image
+        imageId: ID
+        viewed: Int
+        templateId: ID
+      }
       type ManagementArticlesCards {
         search: String
         nodes(offset: Int, limit: Int): [ArticleCard]!
@@ -23,6 +38,27 @@ export const ManagementArticlesCardsModule = createModule({
     `,
   ],
   resolvers: {
+    ArticleCard: {
+      image: async (
+        parent: Schema.BlogArticle,
+        variables: any,
+        _ctx: any,
+        info: GraphQLResolveInfo
+      ) => {
+        if (!parent.imageId) {
+          return null;
+        }
+        const rows = await db.excuteQuery({
+          query: `select * from image where imageId=$imageId`,
+          variables: parent,
+        });
+        if (rows && rows[0] && rows[0].imgSrc) {
+          return rows[0];
+        } else {
+          return null;
+        }
+      },
+    },
     ManagementArticlesCards: {
       search: async (
         parent: { search?: string; offset?: number; limit?: number },

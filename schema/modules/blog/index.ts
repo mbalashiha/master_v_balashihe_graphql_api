@@ -48,19 +48,6 @@ export const blogArticlesModule = createModule({
       type CategoryId {
         id: ID
       }
-      type ArticleCard {
-        id: ID
-        title: String!
-        handle: String!
-        absURL: String
-        displayingPageHandle: String
-        publishedAt: Date
-        score: Float
-        fragment: String
-        image: Image
-        imageId: ID
-        view: Int
-      }
       type NavigationItem {
         id: ID
         title: String!
@@ -102,7 +89,7 @@ export const blogArticlesModule = createModule({
         image: Image
         secondImageId: ID
         secondImage: Image
-        view: Int
+        viewed: Int
         templateId: ID
       }
       type BlogArticlesConnection {
@@ -182,27 +169,6 @@ export const blogArticlesModule = createModule({
       },
     },
     NavigationItem: {
-      image: async (
-        parent: Schema.BlogArticle,
-        variables: any,
-        _ctx: any,
-        info: GraphQLResolveInfo
-      ) => {
-        if (!parent.imageId) {
-          return null;
-        }
-        const rows = await db.excuteQuery({
-          query: `select * from image where imageId=$imageId`,
-          variables: parent,
-        });
-        if (rows && rows[0] && rows[0].imgSrc) {
-          return rows[0];
-        } else {
-          return null;
-        }
-      },
-    },
-    ArticleCard: {
       image: async (
         parent: Schema.BlogArticle,
         variables: any,

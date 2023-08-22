@@ -148,7 +148,6 @@ export const BlogManagementModule = createModule({
         }
         const { article } = variables;
         const articleId = article.existingArticleId || null;
-
         try {
           article.text = (article.text || "").trim();
           if (article.text && !article.textHtml) {

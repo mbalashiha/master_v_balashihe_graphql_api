@@ -10,14 +10,14 @@ if (!LISTENING_PORT) {
 }
 process.on("uncaughtException", function (err) {
   console.error("\n\nUncaught exception: ", err);
-});              
+});
 process.on(
   "unhandledRejection",
   (reason: Error | any, promise: Promise<any>) => {
     console.error("\n\nUnhandled Rejection at:", promise, "reason:", reason);
     // Application specific logging, throwing an error, or other logic here
   }
-);               
+);
 import express from "express";
 import bodyParser from "body-parser";
 import jwt from "jsonwebtoken";
@@ -44,21 +44,23 @@ import { checkIfAuthenticated } from "./check-if-authenticated";
 import uploadResponseHandler, { uploadMiddleware } from "./multer-image-upload";
 import sendContactForm from "./send-contact-form";
 import pageViewCount from "./page-view-count";
+import { BlogArticleTemplatesModule } from "@root/schema/modules/blog/management/article-templates";
 
-const corsOptions = {
+/**const corsOptions = {
   origin: "http://localhost:3000", //change with your own client URL
   credentials: true,
-};
+};**/
 
 const application = createApplication({
   modules: [
     baseModule,
     signInModule,
     managementModule,
+    ManagementArticlesCardsModule,
+    BlogArticleTemplatesModule,
     blogArticlesModule,
     BlogManagementModule,
     BlogArticleDraftModule,
-    ManagementArticlesCardsModule,
   ],
 });
 const execute = application.createExecution();
@@ -78,9 +80,9 @@ const app = express();
 //   debugger;
 //   next();
 // });
-if (process.env.NODE_ENV !== "production") {
+/**if (process.env.NODE_ENV !== "production") {
   app.use(cors(corsOptions));
-}
+}**/
 // app.use(
 //   expressjwt({
 //     credentialsRequired: false,
@@ -123,7 +125,9 @@ const verifyCookieToken =
     },
     next: () => any
   ) => {
-    const token = req.cookies[cookieTokenName] || "";
+    let xheader = req.headers[`x-${cookieTokenName}-key`];
+    xheader = Array.isArray(xheader) ? xheader[0] : xheader;
+    const token = xheader || req.cookies[cookieTokenName] || "";
     (req as any).responseObject = res;
     if (token) {
       try {
