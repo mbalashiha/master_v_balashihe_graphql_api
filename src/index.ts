@@ -110,6 +110,11 @@ app.post(
   bodyParser.raw({ verify: rawBodySaver as any, type: "*/*" }),
   sendContactForm
 );
+app.post(
+  "/site/contact-request",
+  bodyParser.raw({ verify: rawBodySaver as any, type: "*/*" }),
+  sendContactForm
+);
 app.get("/rest/api/test", (req, res) => res.send("Tesk Ok."));
 app.use(cookieParser());
 const verifyCookieToken =
