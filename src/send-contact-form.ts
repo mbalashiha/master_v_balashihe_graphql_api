@@ -30,11 +30,26 @@ export const sendContactForm = async (req: Request, res: Response) => {
     const value = (req as any).rawBody || req.body.toString("utf8");
     const decoded =
       (value && typeof value === "string" && simpleDecrypt(value)) || {};
+    for (const [key, value] of Object.entries(decoded)) {
+      if (typeof value === "string") {
+        decoded[key] = value.trim();
+      }
+    }
+    if (decoded.telephoneDigits && decoded.telephoneDigits.length < 2) {
+      delete decoded.telephoneDigits;
+    }
     // console.l//og("decoded:", decoded);
-    const { timestamp, promo, telephoneDigits } = decoded;
+    const { timestamp, promo } = decoded;
     diagnostic.timestamp = timestamp;
     let procRow;
-    if (ip && timestamp && decoded["Телефон"]) {
+    if (
+      ip &&
+      timestamp &&
+      (decoded.telephoneDigits || decoded["Email клиента"])
+    ) {
+      if (!decoded.telephoneDigits) {
+        delete decoded["Телефон"];
+      }
       delete decoded.timestamp;
       delete decoded.promo;
       delete decoded.telephoneDigits;
@@ -52,8 +67,14 @@ export const sendContactForm = async (req: Request, res: Response) => {
         const obj: any = {};
         obj["Имя клиента"] = decoded["Имя клиента"];
         delete decoded["Имя клиента"];
-        obj["Телефон"] = decoded["Телефон"];
+        if (decoded["Телефон"]) {
+          obj["Телефон"] = decoded["Телефон"];
+        }
         delete decoded["Телефон"];
+        if (decoded["Email клиента"]) {
+          obj["Email клиента"] = decoded["Email клиента"];
+        }
+        delete decoded["Email клиента"];
         const clientDate = new Date(timestamp);
         const localeDate = clientDate.toLocaleString("ru-RU");
         let htmlTemplate = `${localeDate}<br><p>  \r\n`;
