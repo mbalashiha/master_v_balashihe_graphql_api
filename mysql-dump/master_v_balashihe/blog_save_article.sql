@@ -1,6 +1,6 @@
 -- --------------------------------------------------------
 -- Хост:                         192.168.0.50
--- Версия сервера:               11.0.2-MariaDB-1:11.0.2+maria~ubu2204 - mariadb.org binary distribution
+-- Версия сервера:               11.0.3-MariaDB-1:11.0.3+maria~ubu2204 - mariadb.org binary distribution
 -- Операционная система:         debian-linux-gnu
 -- HeidiSQL Версия:              12.5.0.6677
 -- --------------------------------------------------------
@@ -36,7 +36,8 @@ CREATE PROCEDURE `blog_save_article`(
 	IN `in_keyTextHtml` TEXT,
 	IN `in_publishedAt` DATETIME,
 	IN `in_h2` TEXT,
-	IN `in_secondImageId` TEXT
+	IN `in_secondImageId` TEXT,
+	IN `in_templateId` TEXT
 )
 BEGIN
 	DECLARE stored_articleId INT(10) unsigned DEFAULT Null;
@@ -51,6 +52,7 @@ BEGIN
 	END IF;
 	Set in_existingArticleId := If(in_existingArticleId='' OR in_existingArticleId IS NULL,NULL, in_existingArticleId);
 	Set in_managerId := If(in_managerId='' OR in_managerId IS NULL,NULL, in_managerId);
+	Set in_templateId := If(in_templateId='' OR in_templateId IS NULL,NULL, in_templateId);	
 	Set in_title := If(in_title='' OR in_title IS NULL,NULL,TRIM(in_title));
 	Set in_handle := If(in_handle='' OR in_handle IS NULL,NULL,TRIM(in_handle));
 	SET in_autoHandleSlug := If(in_autoHandleSlug='' OR in_autoHandleSlug IS NULL,NULL,TRIM(in_autoHandleSlug));
@@ -100,7 +102,8 @@ BEGIN
 				IFNULL(in_textRawDraftContentState,'')=IFNULL(d.`textRawDraftContentState`,'') AND 
 				IfNull(in_publishedAt,'')=IfNull(d.publishedAt, '') And
 				IFNULL(in_h2,'')=IFNULL(d.h2,'') AND 
-				IfNull(in_secondImageId,'')=IfNull(d.secondImageId, '');
+				IfNull(in_secondImageId,'')=IfNull(d.secondImageId, '') AND 
+				IfNull(in_templateId,'')=IfNull(d.templateId, '');
 	END IF;
 	If stored_articleId IS NOT null
 	Then
@@ -133,7 +136,9 @@ BEGIN
 				Set stored_absURLId := LAST_INSERT_ID();
 			END IF;
 		END if;
-		
+		  
+		INSERT INTO last_used_article_template(managerId, templateId) VALUES(in_managerId, in_templateId) 
+		  ON DUPLICATE KEY UPDATE templateId=in_templateId;
 		If in_existingArticleId IS Null
 		Then
 			INSERT INTO blog_article(managerId, createdByManagerId, title, handleId, autoHandleSlugId, absURLid, blogCategoryId, 
@@ -142,7 +147,7 @@ BEGIN
 			notInList,
 			orderNumber, 
 			`text`, `textHtml`,`renderHtml`, `imageId`, `textRawDraftContentState`, `keyTextHtml`, 
-			   h2, secondImageId)
+			   h2, secondImageId, templateId)
 				VALUES(
 					in_managerId,					
 					in_managerId,
@@ -162,7 +167,8 @@ BEGIN
 					in_textRawDraftContentState,
 					in_keyTextHtml,
 					in_h2,
-					in_secondImageId
+					in_secondImageId,
+					in_templateId
 				);
 			SET stored_articleId := LAST_INSERT_ID();
 			SELECT a.publishedAt, stored_articleId AS articleId, true as success, 'Article has been created' AS message, stored_articleId AS articleId FROM blog_article a WHERE a.id=stored_articleId;
@@ -186,7 +192,8 @@ BEGIN
 				`keyTextHtml`=in_keyTextHtml,
 				`publishedAt`=in_publishedAt,
 				 h2=in_h2,
-				 secondImageId=in_secondImageId
+				 secondImageId=in_secondImageId,
+				 templateId=in_templateId
 				WHERE id=in_existingArticleId;
 			SET stored_articleId := in_existingArticleId;
 			SELECT a.publishedAt, stored_articleId AS articleId, true as success, 'Article was updated' AS message FROM blog_article a WHERE a.id=stored_articleId;
@@ -198,7 +205,7 @@ BEGIN
 			notInList,
 			orderNumber, 
 			`text`, `textHtml`,`renderHtml`, `imageId`, `textRawDraftContentState`, `keyTextHtml`, 
-			   h2, secondImageId)
+			   h2, secondImageId, templateId)
 				VALUES(
     				@today_string,
     				stored_articleId,
@@ -220,7 +227,8 @@ BEGIN
 					in_textRawDraftContentState,
 					in_keyTextHtml,
 					in_h2,
-					in_secondImageId
+					in_secondImageId,
+					in_templateId
 				)
 				ON DUPLICATE KEY UPDATE 
 					archivedDateDay=@today_string,
@@ -242,7 +250,8 @@ BEGIN
 					`keyTextHtml`=in_keyTextHtml,
 					`publishedAt`=in_publishedAt,
 					 h2=in_h2,
-					 secondImageId=in_secondImageId;
+					 secondImageId=in_secondImageId,
+					 templateId=in_templateId;
 	END IF;
 END//
 DELIMITER ;

@@ -32,7 +32,7 @@ const initUploadDirs = () => {
     if (siteFolder) {
       const sitePublicFolder = path.join(siteFolder, "public");
       const imageUploadFolder = path.join(sitePublicFolder, "image", "upload");
-      process.env["sitePublicFolder"] = sitePublicFolder;
+      process.env["SITE_PUBLIC_FOLDER"] = sitePublicFolder;
       process.env["imageUploadFolder"] = imageUploadFolder;
       fse.mkdirpSync(imageUploadFolder);
     }

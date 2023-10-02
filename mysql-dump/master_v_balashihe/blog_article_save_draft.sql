@@ -1,6 +1,6 @@
 -- --------------------------------------------------------
 -- Хост:                         192.168.0.50
--- Версия сервера:               11.0.2-MariaDB-1:11.0.2+maria~ubu2204 - mariadb.org binary distribution
+-- Версия сервера:               11.0.3-MariaDB-1:11.0.3+maria~ubu2204 - mariadb.org binary distribution
 -- Операционная система:         debian-linux-gnu
 -- HeidiSQL Версия:              12.5.0.6677
 -- --------------------------------------------------------
@@ -31,7 +31,8 @@ CREATE PROCEDURE `blog_article_save_draft`(
 	IN `in_absURL` TEXT,
 	IN `in_publishedAt` DATETIME,
 	IN `in_h2` TEXT,
-	IN `in_secondImageId` TEXT
+	IN `in_secondImageId` TEXT,
+	IN `in_templateId` TINYTEXT
 )
 BEGIN
 	DECLARE stored_draftArticleId BINARY(16) DEFAULT Null;
@@ -41,6 +42,7 @@ BEGIN
 	END IF;
 	Set in_existingArticleId := If(in_existingArticleId='' OR in_existingArticleId IS NULL,NULL, in_existingArticleId);
 	Set in_managerId := If(in_managerId='' OR in_managerId IS NULL,NULL, in_managerId);
+	Set in_templateId := If(in_templateId='' OR in_templateId IS NULL,NULL, in_templateId);	
 	Set in_title := If(in_title='' OR in_title IS NULL,NULL,TRIM(in_title));
 	Set in_handle := If(in_handle='' OR in_handle IS NULL,NULL,TRIM(in_handle));
 	Set in_absURL := If(in_absURL='' OR in_absURL IS NULL,NULL,TRIM(in_absURL));	
@@ -69,7 +71,8 @@ BEGIN
 				IFNULL(in_imageId,'')=IFNULL(d.imageId,'') And
 				IfNUll(in_publishedAt,'')=IfNULL(d.publishedAt,'') And
 				IFNULL(in_h2,'')=IFNULL(d.h2,'') And
-				IfNUll(in_secondImageId,'')=IfNULL(d.secondImageId,'');
+				IfNUll(in_secondImageId,'')=IfNULL(d.secondImageId,'') And
+				IfNUll(in_templateId,'')=IFNULL(d.templateId,'');
 	
 	If stored_draftArticleId IS NOT null
 	Then
@@ -97,7 +100,8 @@ BEGIN
 										IFNULL(in_imageId,'')=IFNULL(d.imageId,'') And
 										IfNUll(in_publishedAt,'')=IfNULL(d.publishedAt,'') And
 										IFNULL(in_h2,'')=IFNULL(d.h2,'') And
-										IfNUll(in_secondImageId,'')=IfNULL(d.secondImageId,'')
+										IfNUll(in_secondImageId,'')=IfNULL(d.secondImageId,'') And
+										IfNUll(in_templateId,'')=IFNULL(d.templateId,'')
 									)
 			Then
 				SELECT 'No need to create draft' AS message, null AS draftArticleId;			
@@ -108,7 +112,7 @@ BEGIN
 				notInList,
 				orderNumber, imageId,
 				publishedAt,
-				h2, secondImageId)
+				h2, secondImageId, templateId)
 					VALUES(				
 						in_existingArticleId,
 						in_managerId,
@@ -123,7 +127,8 @@ BEGIN
 						in_orderNumber,
 						in_imageId,
 						in_publishedAt,
-						in_h2, in_secondImageId
+						in_h2, in_secondImageId,
+						in_templateId
 					);
 				SET stored_draftArticleId := @last_draftArticleId;
 				SELECT d.publishedAt, 'Draft has been created' AS message, Lower(Hex(stored_draftArticleId)) AS draftArticleId FROM draft_blog_article d WHERE d.draftArticleId=stored_draftArticleId;
@@ -142,7 +147,8 @@ BEGIN
 				imageId=in_imageId,
 				publishedAt=in_publishedAt,
 				h2=in_h2,
-				secondImageId=in_secondImageId
+				secondImageId=in_secondImageId,
+				templateId=in_templateId
 				WHERE draftArticleId=stored_draftArticleId;
 			SELECT d.publishedAt, 'Draft was updated' AS message, Lower(Hex(stored_draftArticleId)) AS draftArticleId FROM draft_blog_article d WHERE d.draftArticleId=stored_draftArticleId;
 		END IF;

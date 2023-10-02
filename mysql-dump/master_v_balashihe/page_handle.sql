@@ -1,6 +1,6 @@
 -- --------------------------------------------------------
 -- Хост:                         192.168.0.50
--- Версия сервера:               11.0.2-MariaDB-1:11.0.2+maria~ubu2204 - mariadb.org binary distribution
+-- Версия сервера:               11.0.3-MariaDB-1:11.0.3+maria~ubu2204 - mariadb.org binary distribution
 -- Операционная система:         debian-linux-gnu
 -- HeidiSQL Версия:              12.5.0.6677
 -- --------------------------------------------------------
@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS `page_handle` (
   `handle` varchar(1024) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `uniq_handle` (`handle`)
-) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Дамп данных таблицы master_v_balashihe.page_handle: ~27 rows (приблизительно)
 INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
@@ -89,6 +89,8 @@ INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
 	(32, 'vyzvat-mastera-po-remontu-kompyuterov-udalit-virusy-v-kompyutere-po-nizkoj-cene');
 INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
 	(31, 'vyzvat-mastera-po-remontu-kompyuterov-udalit-virusy-v-kompyutere-po-nizkoj-cene-ili-udalit-virusy-samomu');
+INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
+	(34, 'wsdwq');
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

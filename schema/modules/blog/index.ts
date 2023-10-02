@@ -9,6 +9,7 @@ import { normalizePriceCurrency } from "@src/utils/currency/converter";
 import { FullProductInput, ProductInput } from "@schema/types/indext";
 import { fullTextSearch } from "@src/sql/full-text-search";
 import { Schema } from "@root/schema/types/schema";
+import { parseImagesToRandom } from "@src/image/parse-images-to-random";
 const getFirst = async (notThisId: number | string) => {
   const rows = await db.excuteQuery({
     query: `SELECT 1 as itIsloop, id, title, handle, imageId FROM blog_article_handle WHERE absURL is NULL AND id = (SELECT MIN(id) FROM blog_article_handle Where absURL is NULL) And id != $articleId`,
@@ -87,6 +88,7 @@ export const blogArticlesModule = createModule({
         h2: String
         imageId: ID
         image: Image
+        randomImage: Image
         secondImageId: ID
         secondImage: Image
         viewed: Int
@@ -297,6 +299,31 @@ export const blogArticlesModule = createModule({
     },
     BlogArticleNavigation: {},
     BlogArticle: {
+      randomImage: async (
+        parent: Schema.BlogArticle,
+        variables: any,
+        _ctx: any,
+        info: GraphQLResolveInfo
+      ) => {
+        for (let i = 0; i < 3; i++) {
+          try {
+            const rows = await db.excuteQuery<Array<Schema.Image>>({
+              query: `select * from image where useAsRandom is Not Null
+                        ORDER BY RAND()
+                        LIMIT 1`,
+            });
+            let image = rows && rows[0];
+            if (image && image.imageId) {
+              return image;
+              break;
+            } else {
+              await parseImagesToRandom();
+            }
+          } catch (e) {
+            console.error(e);
+          }
+        }
+      },
       image: async (
         parent: Schema.BlogArticle,
         variables: any,

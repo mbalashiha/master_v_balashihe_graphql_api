@@ -75,6 +75,7 @@ export namespace Schema {
     breadcrumbs: Breadcrumb[];
     imageId: ID;
     image: Image;
+    randomImage?: Image;
     unPublished: Boolean;
     notSearchable: Boolean;
     notInList: Boolean;

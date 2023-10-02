@@ -25,7 +25,7 @@ let originalsFolder: string = "";
 let finalFolder: string = "";
 
 process.nextTick(() => {
-  const sitePublicFolder = process.env["sitePublicFolder"] || "";
+  const sitePublicFolder = process.env["SITE_PUBLIC_FOLDER"] || "";
   if (!sitePublicFolder) {
     throw new Error("No site static resources public http folder!");
   }

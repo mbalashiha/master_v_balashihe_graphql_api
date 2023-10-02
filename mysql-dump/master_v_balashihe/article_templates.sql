@@ -14,22 +14,19 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
--- Дамп структуры для таблица master_v_balashihe.deleted_image_to_product
-CREATE TABLE IF NOT EXISTS `deleted_image_to_product` (
-  `productId` int(10) unsigned NOT NULL,
-  `imageId` int(10) unsigned NOT NULL,
-  `orderNumber` tinyint(3) unsigned DEFAULT NULL,
-  PRIMARY KEY (`productId`,`imageId`),
-  KEY `FK_deleted_image_to_product_image` (`imageId`),
-  CONSTRAINT `FK_deleted_image_to_product_deleted_product` FOREIGN KEY (`productId`) REFERENCES `deleted_product` (`productId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `FK_deleted_image_to_product_image` FOREIGN KEY (`imageId`) REFERENCES `image` (`imageId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+-- Дамп структуры для таблица master_v_balashihe.article_templates
+CREATE TABLE IF NOT EXISTS `article_templates` (
+  `templateId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `templateName` tinytext NOT NULL,
+  PRIMARY KEY (`templateId`),
+  UNIQUE KEY `Индекс 2` (`templateName`(100))
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Дамп данных таблицы master_v_balashihe.deleted_image_to_product: ~2 rows (приблизительно)
-INSERT IGNORE INTO `deleted_image_to_product` (`productId`, `imageId`, `orderNumber`) VALUES
-	(14, 38, 1);
-INSERT IGNORE INTO `deleted_image_to_product` (`productId`, `imageId`, `orderNumber`) VALUES
-	(22, 38, 1);
+-- Дамп данных таблицы master_v_balashihe.article_templates: ~2 rows (приблизительно)
+INSERT IGNORE INTO `article_templates` (`templateId`, `templateName`) VALUES
+	(1, 'Статья');
+INSERT IGNORE INTO `article_templates` (`templateId`, `templateName`) VALUES
+	(2, 'Консультация');
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

@@ -1,6 +1,6 @@
 -- --------------------------------------------------------
 -- Хост:                         192.168.0.50
--- Версия сервера:               11.0.2-MariaDB-1:11.0.2+maria~ubu2204 - mariadb.org binary distribution
+-- Версия сервера:               11.0.3-MariaDB-1:11.0.3+maria~ubu2204 - mariadb.org binary distribution
 -- Операционная система:         debian-linux-gnu
 -- HeidiSQL Версия:              12.5.0.6677
 -- --------------------------------------------------------
@@ -39,7 +39,7 @@ BEGIN
       UPDATE article_statistic e SET duplicate=Coalesce(duplicate,1)+1
          WHERE IFNUll(e.articleId, 0)=Ifnull(in_articleId,0) AND e.timestamp=client_timestamp AND e.ip=ip_binary;
    ELSE
-      IF (in_ip <> '127.0.0.1' AND in_ip <> IN_OWNER_IP_ADDRESS AND in_ip NOT LIKE '192.168.%')
+      IF (in_ip <> '::1' And in_ip <> '127.0.0.1' AND in_ip <> IN_OWNER_IP_ADDRESS AND in_ip NOT LIKE '192.168.%')
       Then
 			INSERT INTO article_statistic(ip, timestamp, articleId) 
                     VALUES(ip_binary, client_timestamp, in_articleId);
