@@ -45,6 +45,7 @@ import uploadResponseHandler, { uploadMiddleware } from "./multer-image-upload";
 import sendContactForm from "./send-contact-form";
 import pageViewCount from "./page-view-count";
 import { BlogArticleTemplatesModule } from "@root/schema/modules/blog/management/article-templates";
+import { parseImagesToDB } from "./image/parse-images-to-db";
 
 /**const corsOptions = {
   origin: "http://localhost:3000", //change with your own client URL
@@ -204,6 +205,7 @@ app.use(
   })
 );
 app.listen(parseInt(LISTENING_PORT), "127.0.0.1", () => {
+  setTimeout(() => parseImagesToDB(), 5000);
   //   `Running a GraphQL API server at http://localhost:${LISTENING_PORT}/graphql/api`
 });
 export default app;
