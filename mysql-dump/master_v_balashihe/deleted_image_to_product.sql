@@ -21,15 +21,10 @@ CREATE TABLE IF NOT EXISTS `deleted_image_to_product` (
   `orderNumber` tinyint(3) unsigned DEFAULT NULL,
   PRIMARY KEY (`productId`,`imageId`),
   KEY `FK_deleted_image_to_product_image` (`imageId`),
-  CONSTRAINT `FK_deleted_image_to_product_deleted_product` FOREIGN KEY (`productId`) REFERENCES `deleted_product` (`productId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `FK_deleted_image_to_product_image` FOREIGN KEY (`imageId`) REFERENCES `image` (`imageId`)
+  CONSTRAINT `FK_deleted_image_to_product_deleted_product` FOREIGN KEY (`productId`) REFERENCES `deleted_product` (`productId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Дамп данных таблицы master_v_balashihe.deleted_image_to_product: ~2 rows (приблизительно)
-INSERT IGNORE INTO `deleted_image_to_product` (`productId`, `imageId`, `orderNumber`) VALUES
-	(14, 38, 1);
-INSERT IGNORE INTO `deleted_image_to_product` (`productId`, `imageId`, `orderNumber`) VALUES
-	(22, 38, 1);
+-- Дамп данных таблицы master_v_balashihe.deleted_image_to_product: ~0 rows (приблизительно)
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

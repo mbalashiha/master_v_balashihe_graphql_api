@@ -20,19 +20,10 @@ CREATE TABLE IF NOT EXISTS `image_to_product` (
   `imageId` int(10) unsigned NOT NULL,
   `orderNumber` tinyint(3) unsigned NOT NULL,
   UNIQUE KEY `FK_image_to_product_image` (`imageId`,`productId`) USING BTREE,
-  KEY `FK_image_to_product_product` (`productId`),
-  CONSTRAINT `FK_image_to_product_product` FOREIGN KEY (`productId`) REFERENCES `product` (`productId`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `FK_image_to_product_product` (`productId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Дамп данных таблицы master_v_balashihe.image_to_product: ~4 rows (приблизительно)
-INSERT IGNORE INTO `image_to_product` (`productId`, `imageId`, `orderNumber`) VALUES
-	(45, 58, 1);
-INSERT IGNORE INTO `image_to_product` (`productId`, `imageId`, `orderNumber`) VALUES
-	(45, 59, 2);
-INSERT IGNORE INTO `image_to_product` (`productId`, `imageId`, `orderNumber`) VALUES
-	(41, 62, 1);
-INSERT IGNORE INTO `image_to_product` (`productId`, `imageId`, `orderNumber`) VALUES
-	(47, 63, 1);
+-- Дамп данных таблицы master_v_balashihe.image_to_product: ~0 rows (приблизительно)
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

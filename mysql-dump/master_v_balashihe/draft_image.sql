@@ -36,9 +36,9 @@ CREATE TABLE IF NOT EXISTS `draft_image` (
 
 -- Дамп данных таблицы master_v_balashihe.draft_image: ~5 rows (приблизительно)
 INSERT IGNORE INTO `draft_image` (`draftImageId`, `imgSrc`, `width`, `height`, `altText`, `format`, `createdAt`, `updatedAt`, `existingImageId`, `originalWidth`, `originalHeight`, `pathOfOriginal`) VALUES
-	(_binary 0x439875cf612111edb34760a44c4f528e, '/uploads/drafts/draft-balashikha-computer-master-forum-image-1667929490000-5815.jpg', 7420, 3840, NULL, NULL, '2022-11-10 17:45:49', '2022-11-10 17:58:25', 58, 400, 207, NULL);
+	(_binary 0x439875cf612111edb34760a44c4f528e, '/uploads/drafts/draft-balashikha-computer-master-forum-image-1667929490000-5815.jpg', 7420, 3840, NULL, NULL, '2022-11-10 17:45:49', '2022-11-10 17:58:25', NULL, 400, 207, NULL);
 INSERT IGNORE INTO `draft_image` (`draftImageId`, `imgSrc`, `width`, `height`, `altText`, `format`, `createdAt`, `updatedAt`, `existingImageId`, `originalWidth`, `originalHeight`, `pathOfOriginal`) VALUES
-	(_binary 0x4399761a612111edb34760a44c4f528e, '/uploads/drafts/draft-balashikha-computer-master-content-uploads-41ova5sqn0l1-1477781790000-17228.jpg', 5754, 3840, NULL, NULL, '2022-11-10 17:45:49', '2022-11-10 17:58:25', 59, 487, 325, NULL);
+	(_binary 0x4399761a612111edb34760a44c4f528e, '/uploads/drafts/draft-balashikha-computer-master-content-uploads-41ova5sqn0l1-1477781790000-17228.jpg', 5754, 3840, NULL, NULL, '2022-11-10 17:45:49', '2022-11-10 17:58:25', NULL, 487, 325, NULL);
 INSERT IGNORE INTO `draft_image` (`draftImageId`, `imgSrc`, `width`, `height`, `altText`, `format`, `createdAt`, `updatedAt`, `existingImageId`, `originalWidth`, `originalHeight`, `pathOfOriginal`) VALUES
 	(_binary 0x764bca1c629b11edb37460a44c4f528e, '/uploads/drafts/balashikha-computer-master-avatar-nnm-Cutted-to-Squere-pirate-penguin-1644835172956-121540.jpg', 3840, 3840, NULL, NULL, '2022-11-12 15:05:38', '2022-11-12 15:05:38', NULL, 683, 683, '/originals/uploaded/balashikha-computer-master-avatar-nnm-Cutted-to-Squere-pirate-penguin-1644835172956-121540.jpg');
 INSERT IGNORE INTO `draft_image` (`draftImageId`, `imgSrc`, `width`, `height`, `altText`, `format`, `createdAt`, `updatedAt`, `existingImageId`, `originalWidth`, `originalHeight`, `pathOfOriginal`) VALUES

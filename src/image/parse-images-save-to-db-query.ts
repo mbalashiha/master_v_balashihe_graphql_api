@@ -4,7 +4,12 @@ import { glob, globSync, globStream, globStreamSync, Glob } from "glob";
 import sharp from "sharp";
 import db from "@src/sql/execute-query";
 
-export const saveToDb = async (imagePath: string) => {
+export const getImgSrcUri = (imagePath: string): string =>
+  imagePath.substring((process.env["SITE_PUBLIC_FOLDER"] || "").length);
+export const getImgAbsolutePath = (imgSrc: string): string =>
+  path.resolve((process.env["SITE_PUBLIC_FOLDER"] || "") + imgSrc);
+
+export const saveToDb = async (imagePath: string): Promise<boolean> => {
   if (!process.env["SITE_PUBLIC_FOLDER"]) {
     throw new Error("No sitePublicFolder");
   }
@@ -12,9 +17,7 @@ export const saveToDb = async (imagePath: string) => {
     const imageStream = sharp(imagePath);
     const meta = await imageStream.metadata();
     if (meta.width && meta.height) {
-      const imgSrc = imagePath.substring(
-        process.env["SITE_PUBLIC_FOLDER"].length
-      );
+      const imgSrc = getImgSrcUri(imagePath);
       const useAsRandom = imgSrc.includes(path.sep + "random" + path.sep);
       let rows = await db.query(
         `select 1 from image where 
@@ -45,9 +48,21 @@ export const saveToDb = async (imagePath: string) => {
             useAsRandom,
           }
         );
+      } else {
+        // console.l//og("No need to save again: same image" + "\n");
       }
+      return true;
+    } else {
+      console.error(
+        imagePath + "\n",
+        "No image width or height!",
+        new Date().toISOString() + ":",
+        "processed"
+      );
+      return false;
     }
   } catch (e: any) {
-    console.error(e.stack || e.message || e);
+    // console.error(imagePath + "\n", e.stack || e.message || e);
+    return false;
   }
 };

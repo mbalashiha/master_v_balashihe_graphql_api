@@ -3,6 +3,7 @@ import fs from "fs/promises";
 import { glob, globSync, globStream, globStreamSync, Glob } from "glob";
 import sharp from "sharp";
 import { saveToDb } from "./parse-images-save-to-db-query";
+import { collectAllPublicImagesToDB } from "./collect-all-public-images";
 
 const IMAGE_UPPER_SIZE_LIMIT = 300 * 1024;
 const ABNORMAL_IMAGE_SIZE_LIMIT = 256 * 1024 * 1024;
@@ -205,6 +206,7 @@ export const parseImagesToDB = async () => {
       }
     }
   }
+  await collectAllPublicImagesToDB();
 };
 /*return;
   for (const image of imagesAlt) {
