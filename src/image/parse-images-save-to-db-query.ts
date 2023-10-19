@@ -18,7 +18,9 @@ export const saveToDb = async (imagePath: string): Promise<boolean> => {
     const meta = await imageStream.metadata();
     if (meta.width && meta.height) {
       const imgSrc = getImgSrcUri(imagePath);
-      const useAsRandom = imgSrc.includes(path.sep + "random" + path.sep);
+      const useAsRandom = imgSrc.includes(path.sep + "random" + path.sep)
+        ? 1
+        : null;
       let rows = await db.query(
         `select 1 from image where 
                   image.imgSrc = $imgSrc And
