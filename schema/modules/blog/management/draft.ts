@@ -5,6 +5,7 @@ import { GraphQLError, GraphQLResolveInfo } from "graphql";
 import { Schema } from "@root/schema/types/schema";
 import { selectArticle } from "./sql";
 import { ID } from "graphql-modules/shared/types";
+import dateToISO from "@src/utils/date-to-iso";
 export const mysqlFormatDatetime = (
   inDate: string | Date | null
 ): string | null => {
@@ -52,6 +53,7 @@ export const BlogArticleDraftModule = createModule({
         secondImage: Image
         templateId: ID
         viewed: Int
+        ogDates: OpenGraphDates!
       }
       input ArticleDraftInput {
         id: ID
@@ -131,6 +133,21 @@ export const BlogArticleDraftModule = createModule({
       },
     },
     ArticleDraft: {
+      ogDates: async (
+        parent: Schema.BlogArticle,
+        variables: any,
+        _ctx: any,
+        info: GraphQLResolveInfo
+      ) => {
+        return {
+          modified_time: parent.updatedAt
+            ? dateToISO(parent.updatedAt)
+            : dateToISO(parent.createdAt),
+          published_time: parent.publishedAt
+            ? dateToISO(parent.publishedAt)
+            : dateToISO(parent.createdAt),
+        };
+      },
       image: async (
         parent: Schema.BlogArticle,
         variables: any,

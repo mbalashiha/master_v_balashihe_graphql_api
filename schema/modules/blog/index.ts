@@ -10,6 +10,7 @@ import { FullProductInput, ProductInput } from "@schema/types/indext";
 import { fullTextSearch } from "@src/sql/full-text-search";
 import { Schema } from "@root/schema/types/schema";
 import { parseImagesToRandom } from "@src/image/parse-images-to-random";
+import dateToISO from "@src/utils/date-to-iso";
 const getFirst = async (notThisId: number | string) => {
   const rows = await db.excuteQuery({
     query: `SELECT 1 as itIsloop, id, title, handle, imageId FROM blog_article_handle WHERE absURL is NULL AND id = (SELECT MIN(id) FROM blog_article_handle Where absURL is NULL) And id != $articleId`,
@@ -62,6 +63,10 @@ export const blogArticlesModule = createModule({
         next: NavigationItem!
         nearestSiblings: [NavigationItem]
       }
+      type OpenGraphDates {
+        modified_time: String!
+        published_time: String!
+      }
       type BlogArticle {
         id: ID
         title: String
@@ -93,6 +98,7 @@ export const blogArticlesModule = createModule({
         secondImage: Image
         viewed: Int
         templateId: ID
+        ogDates: OpenGraphDates!
       }
       type BlogArticlesConnection {
         pageInfo: PageInfo
@@ -299,6 +305,21 @@ export const blogArticlesModule = createModule({
     },
     BlogArticleNavigation: {},
     BlogArticle: {
+      ogDates: async (
+        parent: Schema.BlogArticle,
+        variables: any,
+        _ctx: any,
+        info: GraphQLResolveInfo
+      ) => {
+        return {
+          modified_time: parent.updatedAt
+            ? dateToISO(parent.updatedAt)
+            : dateToISO(parent.createdAt),
+          published_time: parent.publishedAt
+            ? dateToISO(parent.publishedAt)
+            : dateToISO(parent.createdAt),
+        };
+      },
       randomImage: async (
         parent: Schema.BlogArticle,
         variables: any,

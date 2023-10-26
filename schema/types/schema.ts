@@ -34,6 +34,10 @@ export namespace Schema {
     keyTextHtml: String;
     existingArticleId: ID;
   }
+  export interface OpenGraphDates {
+    modified_time: String;
+    published_time: String;
+  }
   export interface Image {
     imageId: ID;
     imgSrc: string;
@@ -83,6 +87,7 @@ export namespace Schema {
     secondImageId: ID | null;
     viewed: number;
     templateId: ID | null;
+    ogDates?: OpenGraphDates;
   }
   export interface ArticleInput {
     existingArticleId: ID;
