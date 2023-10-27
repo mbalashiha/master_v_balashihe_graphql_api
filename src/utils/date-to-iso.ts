@@ -1,3 +1,3 @@
-export default function dateToISO(date: Date): string {
-  return date.toISOString().replace(".000", "");
+export default function dateToISO(date: Date | null): string {
+  return date ? date.toISOString().replace(".000", "") : "";
 }
