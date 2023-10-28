@@ -46,6 +46,7 @@ import sendContactForm from "./send-contact-form";
 import pageViewCount from "./page-view-count";
 import { BlogArticleTemplatesModule } from "@root/schema/modules/blog/management/article-templates";
 import { parseImagesToDB } from "./image/parse-images-to-db";
+import prettierReact from "./utils/prettier-react";
 
 /**const corsOptions = {
   origin: "http://localhost:3000", //change with your own client URL
@@ -179,6 +180,12 @@ app.post(
 app.get("/rest/api/management/verify-login", verifyManagementLoginMiddleware);
 app.get("/rest/api/management/sign-out", managementSignoutMiddleware);
 
+app.post(
+  "/rest/api/management/prettier-react",
+  checkIfAuthenticated,
+  bodyParser.json(),
+  prettierReact
+);
 app.post(
   "/rest/api/management/upload/image",
   checkIfAuthenticated,
