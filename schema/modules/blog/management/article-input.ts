@@ -5,7 +5,7 @@ import sanitizeHtml from "sanitize-html";
 import { GraphQLError, GraphQLResolveInfo } from "graphql";
 import { GraphqlContext } from "@root/types/express-custom";
 import { Schema } from "@root/schema/types/schema";
-import { selectArticleDraft } from "./sql";
+import { selectArticle } from "./sql";
 import { mysqlFormatDatetime } from "./draft";
 
 export const BlogManagementModule = createModule({
@@ -74,7 +74,7 @@ export const BlogManagementModule = createModule({
             throw new GraphQLError("Manager Unauthorized");
           }
           const managerId = context.manager.id;
-          const result = await selectArticleDraft({ managerId, articleId });
+          const result = await selectArticle({ managerId, articleId });
           return result;
         } catch (e: any) {
           console.error(e.stack || e.message || e);
