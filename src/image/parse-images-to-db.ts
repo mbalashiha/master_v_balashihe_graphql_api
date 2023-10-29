@@ -6,6 +6,7 @@ import { saveToDb } from "./parse-images-save-to-db-query";
 import { collectAllPublicImagesToDB } from "./collect-all-public-images";
 
 const IMAGE_UPPER_SIZE_LIMIT = 300 * 1024;
+const IMAGE_MAX_HEIGHT = 2160;
 const ABNORMAL_IMAGE_SIZE_LIMIT = 256 * 1024 * 1024;
 
 export const parseImagesToDB = async () => {
@@ -29,9 +30,11 @@ export const parseImagesToDB = async () => {
         const imagePath = path.fullpath();
         let convertedImagePath = imagePath;
         try {
-          const imageStream = sharp(imagePath);
+          let imageStream = sharp(imagePath);
           const meta = await imageStream.metadata();
-          const needResize = Boolean(meta && meta.height && meta.height > 1600);
+          let needResize = Boolean(
+            meta && meta.height && meta.height > IMAGE_MAX_HEIGHT
+          );
 
           if (meta.height) {
             switch (meta.format) {
@@ -45,10 +48,9 @@ export const parseImagesToDB = async () => {
                     loopPathSize >= IMAGE_UPPER_SIZE_LIMIT &&
                     currentQuality > 0
                   ) {
-                    currentQuality -= 3;
                     if (needResize) {
                       data = await imageStream
-                        .resize({ height: 1600 })
+                        .resize({ height: IMAGE_MAX_HEIGHT })
                         .jpeg({ mozjpeg: true, quality: currentQuality })
                         .withMetadata()
                         .toBuffer();
@@ -59,6 +61,16 @@ export const parseImagesToDB = async () => {
                         .toBuffer();
                     }
                     loopPathSize = data.length;
+                    if (loopPathSize >= IMAGE_UPPER_SIZE_LIMIT) {
+                      const intFraction = Math.floor(
+                        3 * (loopPathSize / IMAGE_UPPER_SIZE_LIMIT)
+                      );
+                      if (currentQuality - intFraction < 3) {
+                        currentQuality -= 1;
+                      } else {
+                        currentQuality -= intFraction >= 1 ? intFraction : 1;
+                      }
+                    }
                     console.log(
                       "It is",
                       convertedImagePath,
@@ -67,7 +79,6 @@ export const parseImagesToDB = async () => {
                       "with quality:",
                       currentQuality
                     );
-                    //
                   }
                   if (currentQuality > 0 && data.length > 1) {
                     await fs.writeFile(convertedImagePath, data);
@@ -87,13 +98,14 @@ export const parseImagesToDB = async () => {
                     loopPathSize >= IMAGE_UPPER_SIZE_LIMIT &&
                     currentQuality > 0
                   ) {
-                    currentQuality -= 3;
                     if (needResize) {
                       data = await imageStream
-                        .resize({ height: 1600 })
+                        .resize({ height: IMAGE_MAX_HEIGHT })
                         .webp({ quality: currentQuality })
                         .withMetadata()
                         .toBuffer();
+                      imageStream = sharp(data);
+                      needResize = false;
                     } else {
                       data = await imageStream
                         .webp({ quality: currentQuality })
@@ -101,6 +113,16 @@ export const parseImagesToDB = async () => {
                         .toBuffer();
                     }
                     loopPathSize = data.length;
+                    if (loopPathSize >= IMAGE_UPPER_SIZE_LIMIT) {
+                      const intFraction = Math.floor(
+                        2 * (loopPathSize / IMAGE_UPPER_SIZE_LIMIT)
+                      );
+                      if (currentQuality - intFraction < 3) {
+                        currentQuality -= 1;
+                      } else {
+                        currentQuality -= intFraction >= 1 ? intFraction : 1;
+                      }
+                    }
                     console.log(
                       "It is",
                       convertedImagePath,
@@ -110,7 +132,6 @@ export const parseImagesToDB = async () => {
                       currentQuality
                     );
                   }
-                  debugger;
                   if (currentQuality > 0 && data.length > 1) {
                     await fs.writeFile(convertedImagePath, data);
                   }
@@ -124,10 +145,12 @@ export const parseImagesToDB = async () => {
                   ) {
                     if (needResize) {
                       data = await imageStream
-                        .resize({ height: 1600 })
+                        .resize({ height: IMAGE_MAX_HEIGHT })
                         .png({ quality: currentQuality, compressionLevel: 6 })
                         .withMetadata()
                         .toBuffer();
+                      imageStream = sharp(data);
+                      needResize = false;
                     } else {
                       data = await imageStream
                         .png({ quality: currentQuality, compressionLevel: 6 })
@@ -144,8 +167,18 @@ export const parseImagesToDB = async () => {
                       currentQuality
                     );
                     if (loopPathSize >= IMAGE_UPPER_SIZE_LIMIT) {
-                      currentQuality -= 1;
+                      const intFraction = Math.floor(
+                        10 * (loopPathSize / IMAGE_UPPER_SIZE_LIMIT)
+                      );
+                      if (currentQuality - intFraction < 3) {
+                        currentQuality -= 1;
+                      } else {
+                        currentQuality -= intFraction >= 1 ? intFraction : 1;
+                      }
                     }
+                  }
+                  if (currentQuality < 1) {
+                    currentQuality = 1;
                   }
                   if (currentQuality > 0 && data.length > 1) {
                     await fs.writeFile(imagePath, data);
@@ -163,13 +196,14 @@ export const parseImagesToDB = async () => {
                     loopPathSize >= IMAGE_UPPER_SIZE_LIMIT &&
                     currentQuality > 0
                   ) {
-                    currentQuality -= 3;
                     if (needResize) {
                       data = await imageStream
-                        .resize({ height: 1600 })
+                        .resize({ height: IMAGE_MAX_HEIGHT })
                         .webp({ quality: currentQuality })
                         .withMetadata()
                         .toBuffer();
+                      imageStream = sharp(data);
+                      needResize = false;
                     } else {
                       data = await imageStream
                         .webp({ quality: currentQuality })
@@ -185,7 +219,16 @@ export const parseImagesToDB = async () => {
                       "with quality:",
                       currentQuality
                     );
-                    //
+                    if (loopPathSize >= IMAGE_UPPER_SIZE_LIMIT) {
+                      const intFraction = Math.floor(
+                        2 * (loopPathSize / IMAGE_UPPER_SIZE_LIMIT)
+                      );
+                      if (currentQuality - intFraction < 3) {
+                        currentQuality -= 1;
+                      } else {
+                        currentQuality -= intFraction >= 1 ? intFraction : 1;
+                      }
+                    }
                   }
                   if (currentQuality > 0 && data.length > 1) {
                     await fs.writeFile(convertedImagePath, data);
