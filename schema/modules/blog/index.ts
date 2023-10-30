@@ -311,8 +311,14 @@ export const blogArticlesModule = createModule({
         _ctx: any,
         info: GraphQLResolveInfo
       ) => {
+        const existingImageId =
+          !parent.templateId || parent.templateId == 2
+            ? parent.secondImageId
+            : parent.imageId;
         return {
-          modified_time: parent.updatedAt
+          modified_time: existingImageId
+            ? dateToISO(new Date())
+            : parent.updatedAt
             ? dateToISO(parent.updatedAt)
             : dateToISO(parent.createdAt),
           published_time: parent.publishedAt
@@ -326,6 +332,23 @@ export const blogArticlesModule = createModule({
         _ctx: any,
         info: GraphQLResolveInfo
       ) => {
+        if (!parent.id) {
+          throw new Error("No article id in randomImage");
+        }
+        const existingImageId =
+          !parent.templateId || parent.templateId == 2
+            ? parent.secondImageId
+            : parent.imageId;
+        if (existingImageId) {
+          const rows = await db.excuteQuery({
+            query: `select * from image where imageId=$1`,
+            variables: [existingImageId],
+          });
+          let image = rows && rows[0];
+          if (image && image.imgSrc) {
+            return image;
+          }
+        }
         for (let i = 0; i < 3; i++) {
           try {
             const rows = await db.excuteQuery<Array<Schema.Image>>({
@@ -334,7 +357,7 @@ export const blogArticlesModule = createModule({
                         LIMIT 1`,
             });
             let image = rows && rows[0];
-            if (image && image.imageId) {
+            if (image && image.imgSrc) {
               return image;
               break;
             } else {
@@ -358,8 +381,9 @@ export const blogArticlesModule = createModule({
           query: `select * from image where imageId=$imageId`,
           variables: parent,
         });
-        if (rows && rows[0] && rows[0].imgSrc) {
-          return rows[0];
+        let image = rows && rows[0];
+        if (image && image.imgSrc) {
+          return image;
         } else {
           return null;
         }
@@ -377,8 +401,9 @@ export const blogArticlesModule = createModule({
           query: `select * from image where imageId=$secondImageId`,
           variables: parent,
         });
-        if (rows && rows[0] && rows[0].imgSrc) {
-          return rows[0];
+        let image = rows && rows[0];
+        if (image && image.imgSrc) {
+          return image;
         } else {
           return null;
         }
