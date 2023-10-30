@@ -311,10 +311,7 @@ export const blogArticlesModule = createModule({
         _ctx: any,
         info: GraphQLResolveInfo
       ) => {
-        const existingImageId =
-          !parent.templateId || parent.templateId == 2
-            ? parent.secondImageId
-            : parent.imageId;
+        const existingImageId = parent.secondImageId || parent.imageId;
         return {
           modified_time: existingImageId
             ? dateToISO(new Date())
@@ -335,10 +332,7 @@ export const blogArticlesModule = createModule({
         if (!parent.id) {
           throw new Error("No article id in randomImage");
         }
-        const existingImageId =
-          !parent.templateId || parent.templateId == 2
-            ? parent.secondImageId
-            : parent.imageId;
+        const existingImageId = parent.secondImageId || parent.imageId;
         if (existingImageId) {
           const rows = await db.excuteQuery({
             query: `select * from image where imageId=$1`,
