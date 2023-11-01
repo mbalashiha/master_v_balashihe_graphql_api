@@ -10,12 +10,15 @@ export default async function prettierReact(
       textContent: string;
       language: string;
     } = req.body; //(req as any).rawBody || req.body.toString("utf8");
-    const newTextContent = await prettier.format(value.textContent, {
+    const newTextContent = await prettier.format(value.textContent.trim(), {
       semi: true,
       parser: "babel",
     });
     return res.json({
-      textContent: newTextContent.replace(/^;\</im, "<").replace(/\>;$/im, ">"),
+      textContent: newTextContent
+        .trim()
+        .replace(/^;\</im, "<")
+        .replace(/\>;$/im, ">"),
       language: value.language,
     });
   } catch (e: any) {

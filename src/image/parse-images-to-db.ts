@@ -8,6 +8,9 @@ import { collectAllPublicImagesToDB } from "./collect-all-public-images";
 const IMAGE_UPPER_SIZE_LIMIT = 300 * 1024;
 const IMAGE_MAX_HEIGHT = 2160;
 const ABNORMAL_IMAGE_SIZE_LIMIT = 256 * 1024 * 1024;
+const WEBP_QUALITY_BOTTOM = 20;
+const JPEG_QUALITY_BOTTOM = 20;
+const PNG_QUALITY_BOTTOM = 3;
 
 export const parseImagesToDB = async () => {
   if (!process.env["SITE_PUBLIC_FOLDER"]) {
@@ -65,7 +68,7 @@ export const parseImagesToDB = async () => {
                       const intFraction = Math.floor(
                         3 * (loopPathSize / IMAGE_UPPER_SIZE_LIMIT)
                       );
-                      if (currentQuality - intFraction < 3) {
+                      if (currentQuality - intFraction < JPEG_QUALITY_BOTTOM) {
                         currentQuality -= 1;
                       } else {
                         currentQuality -= intFraction >= 1 ? intFraction : 1;
@@ -117,7 +120,7 @@ export const parseImagesToDB = async () => {
                       const intFraction = Math.floor(
                         2 * (loopPathSize / IMAGE_UPPER_SIZE_LIMIT)
                       );
-                      if (currentQuality - intFraction < 3) {
+                      if (currentQuality - intFraction < WEBP_QUALITY_BOTTOM) {
                         currentQuality -= 1;
                       } else {
                         currentQuality -= intFraction >= 1 ? intFraction : 1;
@@ -170,7 +173,7 @@ export const parseImagesToDB = async () => {
                       const intFraction = Math.floor(
                         10 * (loopPathSize / IMAGE_UPPER_SIZE_LIMIT)
                       );
-                      if (currentQuality - intFraction < 3) {
+                      if (currentQuality - intFraction < PNG_QUALITY_BOTTOM) {
                         currentQuality -= 1;
                       } else {
                         currentQuality -= intFraction >= 1 ? intFraction : 1;
@@ -223,7 +226,7 @@ export const parseImagesToDB = async () => {
                       const intFraction = Math.floor(
                         2 * (loopPathSize / IMAGE_UPPER_SIZE_LIMIT)
                       );
-                      if (currentQuality - intFraction < 3) {
+                      if (currentQuality - intFraction < WEBP_QUALITY_BOTTOM) {
                         currentQuality -= 1;
                       } else {
                         currentQuality -= intFraction >= 1 ? intFraction : 1;
