@@ -334,14 +334,7 @@ export const blogArticlesModule = createModule({
         }
         const existingImageId = parent.secondImageId || parent.imageId;
         if (existingImageId) {
-          const rows = await db.excuteQuery({
-            query: `select * from image where imageId=$1`,
-            variables: [existingImageId],
-          });
-          let image = rows && rows[0];
-          if (image && image.imgSrc) {
-            return image;
-          }
+          return null;
         }
         for (let i = 0; i < 3; i++) {
           try {
