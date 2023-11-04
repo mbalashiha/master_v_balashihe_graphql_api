@@ -11,6 +11,7 @@ const ABNORMAL_IMAGE_SIZE_LIMIT = 256 * 1024 * 1024;
 const WEBP_QUALITY_BOTTOM = 20;
 const JPEG_QUALITY_BOTTOM = 20;
 const PNG_QUALITY_BOTTOM = 3;
+const MAX_IMAGE_QUALITY_STEP_SUBSTRUCT = 40;
 
 export const parseImagesToDB = async () => {
   if (!process.env["SITE_PUBLIC_FOLDER"]) {
@@ -49,7 +50,7 @@ export const parseImagesToDB = async () => {
                   let data: Buffer = Buffer.alloc(0);
                   while (
                     loopPathSize >= IMAGE_UPPER_SIZE_LIMIT &&
-                    currentQuality > 0
+                    currentQuality >= 0
                   ) {
                     if (needResize) {
                       data = await imageStream
@@ -65,9 +66,12 @@ export const parseImagesToDB = async () => {
                     }
                     loopPathSize = data.length;
                     if (loopPathSize >= IMAGE_UPPER_SIZE_LIMIT) {
-                      const intFraction = Math.floor(
+                      let intFraction = Math.floor(
                         3 * (loopPathSize / IMAGE_UPPER_SIZE_LIMIT)
                       );
+                      if (intFraction > MAX_IMAGE_QUALITY_STEP_SUBSTRUCT) {
+                        intFraction = MAX_IMAGE_QUALITY_STEP_SUBSTRUCT;
+                      }
                       if (currentQuality - intFraction < JPEG_QUALITY_BOTTOM) {
                         currentQuality -= 1;
                       } else {
@@ -83,7 +87,7 @@ export const parseImagesToDB = async () => {
                       currentQuality
                     );
                   }
-                  if (currentQuality > 0 && data.length > 1) {
+                  if (currentQuality >= 0 && data.length > 1) {
                     await fs.writeFile(convertedImagePath, data);
                   }
                 } catch (e: any) {
@@ -99,7 +103,7 @@ export const parseImagesToDB = async () => {
                     imagePath.replace(/\.png$/gim, "") + ".webp";
                   while (
                     loopPathSize >= IMAGE_UPPER_SIZE_LIMIT &&
-                    currentQuality > 0
+                    currentQuality >= 0
                   ) {
                     if (needResize) {
                       data = await imageStream
@@ -117,9 +121,12 @@ export const parseImagesToDB = async () => {
                     }
                     loopPathSize = data.length;
                     if (loopPathSize >= IMAGE_UPPER_SIZE_LIMIT) {
-                      const intFraction = Math.floor(
+                      let intFraction = Math.floor(
                         2 * (loopPathSize / IMAGE_UPPER_SIZE_LIMIT)
                       );
+                      if (intFraction > MAX_IMAGE_QUALITY_STEP_SUBSTRUCT) {
+                        intFraction = MAX_IMAGE_QUALITY_STEP_SUBSTRUCT;
+                      }
                       if (currentQuality - intFraction < WEBP_QUALITY_BOTTOM) {
                         currentQuality -= 1;
                       } else {
@@ -135,7 +142,7 @@ export const parseImagesToDB = async () => {
                       currentQuality
                     );
                   }
-                  if (currentQuality > 0 && data.length > 1) {
+                  if (currentQuality >= 0 && data.length > 1) {
                     await fs.writeFile(convertedImagePath, data);
                   }
 
@@ -144,7 +151,7 @@ export const parseImagesToDB = async () => {
                   data = Buffer.alloc(0);
                   while (
                     loopPathSize >= IMAGE_UPPER_SIZE_LIMIT &&
-                    currentQuality > 0
+                    currentQuality >= 0
                   ) {
                     if (needResize) {
                       data = await imageStream
@@ -170,9 +177,12 @@ export const parseImagesToDB = async () => {
                       currentQuality
                     );
                     if (loopPathSize >= IMAGE_UPPER_SIZE_LIMIT) {
-                      const intFraction = Math.floor(
+                      let intFraction = Math.floor(
                         10 * (loopPathSize / IMAGE_UPPER_SIZE_LIMIT)
                       );
+                      if (intFraction > MAX_IMAGE_QUALITY_STEP_SUBSTRUCT) {
+                        intFraction = MAX_IMAGE_QUALITY_STEP_SUBSTRUCT;
+                      }
                       if (currentQuality - intFraction < PNG_QUALITY_BOTTOM) {
                         currentQuality -= 1;
                       } else {
@@ -183,7 +193,7 @@ export const parseImagesToDB = async () => {
                   if (currentQuality < 1) {
                     currentQuality = 1;
                   }
-                  if (currentQuality > 0 && data.length > 1) {
+                  if (currentQuality >= 0 && data.length > 1) {
                     await fs.writeFile(imagePath, data);
                   }
                 } catch (e: any) {
@@ -197,7 +207,7 @@ export const parseImagesToDB = async () => {
                   let data: Buffer = Buffer.alloc(0);
                   while (
                     loopPathSize >= IMAGE_UPPER_SIZE_LIMIT &&
-                    currentQuality > 0
+                    currentQuality >= 0
                   ) {
                     if (needResize) {
                       data = await imageStream
@@ -223,9 +233,12 @@ export const parseImagesToDB = async () => {
                       currentQuality
                     );
                     if (loopPathSize >= IMAGE_UPPER_SIZE_LIMIT) {
-                      const intFraction = Math.floor(
+                      let intFraction = Math.floor(
                         2 * (loopPathSize / IMAGE_UPPER_SIZE_LIMIT)
                       );
+                      if (intFraction > MAX_IMAGE_QUALITY_STEP_SUBSTRUCT) {
+                        intFraction = MAX_IMAGE_QUALITY_STEP_SUBSTRUCT;
+                      }
                       if (currentQuality - intFraction < WEBP_QUALITY_BOTTOM) {
                         currentQuality -= 1;
                       } else {
@@ -233,7 +246,7 @@ export const parseImagesToDB = async () => {
                       }
                     }
                   }
-                  if (currentQuality > 0 && data.length > 1) {
+                  if (currentQuality >= 0 && data.length > 1) {
                     await fs.writeFile(convertedImagePath, data);
                   }
                 } catch (e: any) {
