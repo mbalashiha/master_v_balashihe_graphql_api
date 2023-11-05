@@ -31,6 +31,7 @@ export const BlogArticleDraftModule = createModule({
         handle: String
         autoHandleSlug: String
         absURL: String
+        description: String
         text: String
         textHtml: String
         textRawDraftContentState: String

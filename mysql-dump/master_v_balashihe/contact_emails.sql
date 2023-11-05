@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS `contact_emails` (
   PRIMARY KEY (`timestamp`,`ip`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Дамп данных таблицы master_v_balashihe.contact_emails: ~36 rows (приблизительно)
+-- Дамп данных таблицы master_v_balashihe.contact_emails: ~32 rows (приблизительно)
 INSERT IGNORE INTO `contact_emails` (`timestamp`, `ip`, `createdAt`, `counts`, `valuesText`, `textBody`, `response`) VALUES
 	('2023-07-30 22:34:32', _binary 0xc0a80005, '2023-07-30 22:34:32', NULL, ';+7(234)324-32-43', NULL, '250 OK id=1qQEzg-00EQSG-05');
 INSERT IGNORE INTO `contact_emails` (`timestamp`, `ip`, `createdAt`, `counts`, `valuesText`, `textBody`, `response`) VALUES

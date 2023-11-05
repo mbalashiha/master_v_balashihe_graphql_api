@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS `article_statistic` (
   CONSTRAINT `FK_article_statistic_blog_article` FOREIGN KEY (`articleId`) REFERENCES `blog_article` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Дамп данных таблицы master_v_balashihe.article_statistic: ~309 rows (приблизительно)
+-- Дамп данных таблицы master_v_balashihe.article_statistic: ~319 rows (приблизительно)
 INSERT IGNORE INTO `article_statistic` (`timestamp`, `ip`, `articleId`, `createdAt`, `duplicate`) VALUES
 	('2023-08-09 17:25:28', _binary 0xc6104e2d, 77, '2023-08-09 17:25:27', NULL);
 INSERT IGNORE INTO `article_statistic` (`timestamp`, `ip`, `articleId`, `createdAt`, `duplicate`) VALUES
@@ -701,6 +701,74 @@ INSERT IGNORE INTO `article_statistic` (`timestamp`, `ip`, `articleId`, `created
 	('2023-10-26 14:23:35', _binary 0x419ae2a9, 77, '2023-10-26 14:23:35', NULL);
 INSERT IGNORE INTO `article_statistic` (`timestamp`, `ip`, `articleId`, `createdAt`, `duplicate`) VALUES
 	('2023-10-26 15:59:13', _binary 0xd46dc46c, 77, '2023-10-26 15:59:13', NULL);
+INSERT IGNORE INTO `article_statistic` (`timestamp`, `ip`, `articleId`, `createdAt`, `duplicate`) VALUES
+	('2023-10-27 15:02:20', _binary 0xc21fadc9, 77, '2023-10-27 15:02:21', NULL);
+INSERT IGNORE INTO `article_statistic` (`timestamp`, `ip`, `articleId`, `createdAt`, `duplicate`) VALUES
+	('2023-10-27 15:06:32', _binary 0x05ffe73d, 77, '2023-10-27 15:06:33', NULL);
+INSERT IGNORE INTO `article_statistic` (`timestamp`, `ip`, `articleId`, `createdAt`, `duplicate`) VALUES
+	('2023-10-28 07:15:21', _binary 0x5f1deee5, 77, '2023-10-28 07:15:21', NULL);
+INSERT IGNORE INTO `article_statistic` (`timestamp`, `ip`, `articleId`, `createdAt`, `duplicate`) VALUES
+	('2023-10-28 19:20:35', _binary 0x59f8ab17, 77, '2023-10-28 19:20:35', NULL);
+INSERT IGNORE INTO `article_statistic` (`timestamp`, `ip`, `articleId`, `createdAt`, `duplicate`) VALUES
+	('2023-10-28 20:06:29', _binary 0x5cff4ec8, 77, '2023-10-28 20:06:29', NULL);
+INSERT IGNORE INTO `article_statistic` (`timestamp`, `ip`, `articleId`, `createdAt`, `duplicate`) VALUES
+	('2023-10-29 00:13:35', _binary 0x57fae0fd, 77, '2023-10-29 00:13:37', NULL);
+INSERT IGNORE INTO `article_statistic` (`timestamp`, `ip`, `articleId`, `createdAt`, `duplicate`) VALUES
+	('2023-10-29 00:44:29', _binary 0x5f1dec02, 80, '2023-10-29 00:44:27', NULL);
+INSERT IGNORE INTO `article_statistic` (`timestamp`, `ip`, `articleId`, `createdAt`, `duplicate`) VALUES
+	('2023-10-29 14:20:57', _binary 0xcc65a113, 77, '2023-10-29 14:20:57', NULL);
+INSERT IGNORE INTO `article_statistic` (`timestamp`, `ip`, `articleId`, `createdAt`, `duplicate`) VALUES
+	('2023-10-29 14:22:34', _binary 0x5f6cd577, 77, '2023-10-29 14:22:35', NULL);
+INSERT IGNORE INTO `article_statistic` (`timestamp`, `ip`, `articleId`, `createdAt`, `duplicate`) VALUES
+	('2023-10-29 16:24:30', _binary 0x5fa1dd4a, 80, '2023-10-29 16:24:31', NULL);
+INSERT IGNORE INTO `article_statistic` (`timestamp`, `ip`, `articleId`, `createdAt`, `duplicate`) VALUES
+	('2023-10-30 04:00:36', _binary 0xd5b4cb14, 77, '2023-10-30 04:00:47', NULL);
+INSERT IGNORE INTO `article_statistic` (`timestamp`, `ip`, `articleId`, `createdAt`, `duplicate`) VALUES
+	('2023-10-30 04:17:59', _binary 0x57fae0ca, 77, '2023-10-30 04:18:24', NULL);
+INSERT IGNORE INTO `article_statistic` (`timestamp`, `ip`, `articleId`, `createdAt`, `duplicate`) VALUES
+	('2023-10-30 05:08:05', _binary 0xc3d34d8e, 77, '2023-10-30 05:08:05', NULL);
+INSERT IGNORE INTO `article_statistic` (`timestamp`, `ip`, `articleId`, `createdAt`, `duplicate`) VALUES
+	('2023-10-30 05:36:53', _binary 0xd5b4cb7a, 72, '2023-10-30 05:36:55', NULL);
+INSERT IGNORE INTO `article_statistic` (`timestamp`, `ip`, `articleId`, `createdAt`, `duplicate`) VALUES
+	('2023-10-31 14:00:40', _binary 0x4fad583c, 80, '2023-10-31 14:00:40', NULL);
+INSERT IGNORE INTO `article_statistic` (`timestamp`, `ip`, `articleId`, `createdAt`, `duplicate`) VALUES
+	('2023-10-31 15:52:11', _binary 0xd5b4cbaf, 77, '2023-10-31 15:52:12', NULL);
+INSERT IGNORE INTO `article_statistic` (`timestamp`, `ip`, `articleId`, `createdAt`, `duplicate`) VALUES
+	('2023-10-31 21:48:17', _binary 0x5f54dc60, 77, '2023-10-31 21:48:11', NULL);
+INSERT IGNORE INTO `article_statistic` (`timestamp`, `ip`, `articleId`, `createdAt`, `duplicate`) VALUES
+	('2023-11-01 13:02:17', _binary 0x2d4fb945, 77, '2023-11-01 13:02:23', NULL);
+INSERT IGNORE INTO `article_statistic` (`timestamp`, `ip`, `articleId`, `createdAt`, `duplicate`) VALUES
+	('2023-11-02 09:52:26', _binary 0xd5b4cbf0, 77, '2023-11-02 09:52:29', NULL);
+INSERT IGNORE INTO `article_statistic` (`timestamp`, `ip`, `articleId`, `createdAt`, `duplicate`) VALUES
+	('2023-11-02 17:40:54', _binary 0x5f1df2eb, 77, '2023-11-02 17:40:52', NULL);
+INSERT IGNORE INTO `article_statistic` (`timestamp`, `ip`, `articleId`, `createdAt`, `duplicate`) VALUES
+	('2023-11-02 19:45:35', _binary 0x6f0760a7, 77, '2023-11-02 19:45:36', NULL);
+INSERT IGNORE INTO `article_statistic` (`timestamp`, `ip`, `articleId`, `createdAt`, `duplicate`) VALUES
+	('2023-11-02 19:46:56', _binary 0x24638880, 77, '2023-11-02 19:46:57', NULL);
+INSERT IGNORE INTO `article_statistic` (`timestamp`, `ip`, `articleId`, `createdAt`, `duplicate`) VALUES
+	('2023-11-02 19:47:08', _binary 0x24638881, 77, '2023-11-02 19:47:09', NULL);
+INSERT IGNORE INTO `article_statistic` (`timestamp`, `ip`, `articleId`, `createdAt`, `duplicate`) VALUES
+	('2023-11-03 08:04:19', _binary 0x59f8ab17, 77, '2023-11-03 08:04:19', NULL);
+INSERT IGNORE INTO `article_statistic` (`timestamp`, `ip`, `articleId`, `createdAt`, `duplicate`) VALUES
+	('2023-11-03 10:22:01', _binary 0x57fae015, 77, '2023-11-03 10:22:02', NULL);
+INSERT IGNORE INTO `article_statistic` (`timestamp`, `ip`, `articleId`, `createdAt`, `duplicate`) VALUES
+	('2023-11-03 20:52:57', _binary 0xcc65a113, 77, '2023-11-03 20:52:57', NULL);
+INSERT IGNORE INTO `article_statistic` (`timestamp`, `ip`, `articleId`, `createdAt`, `duplicate`) VALUES
+	('2023-11-04 01:14:31', _binary 0x5f6cd5c8, 77, '2023-11-04 01:14:31', NULL);
+INSERT IGNORE INTO `article_statistic` (`timestamp`, `ip`, `articleId`, `createdAt`, `duplicate`) VALUES
+	('2023-11-04 19:13:02', _binary 0x42f95329, 77, '2023-11-04 19:13:05', NULL);
+INSERT IGNORE INTO `article_statistic` (`timestamp`, `ip`, `articleId`, `createdAt`, `duplicate`) VALUES
+	('2023-11-04 19:15:19', _binary 0x42f947c5, 77, '2023-11-04 19:15:29', NULL);
+INSERT IGNORE INTO `article_statistic` (`timestamp`, `ip`, `articleId`, `createdAt`, `duplicate`) VALUES
+	('2023-11-05 02:55:40', _binary 0xd5b4cbba, 77, '2023-11-05 02:55:45', NULL);
+INSERT IGNORE INTO `article_statistic` (`timestamp`, `ip`, `articleId`, `createdAt`, `duplicate`) VALUES
+	('2023-11-05 09:00:59', _binary 0x5fa1efbe, 77, '2023-11-05 09:00:59', NULL);
+INSERT IGNORE INTO `article_statistic` (`timestamp`, `ip`, `articleId`, `createdAt`, `duplicate`) VALUES
+	('2023-11-05 10:44:51', _binary 0x25cc060c, 77, '2023-11-05 10:44:51', NULL);
+INSERT IGNORE INTO `article_statistic` (`timestamp`, `ip`, `articleId`, `createdAt`, `duplicate`) VALUES
+	('2023-11-05 19:58:46', _binary 0x42f94228, 80, '2023-11-05 19:58:51', NULL);
+INSERT IGNORE INTO `article_statistic` (`timestamp`, `ip`, `articleId`, `createdAt`, `duplicate`) VALUES
+	('2023-11-05 20:20:09', _binary 0x42f94227, 80, '2023-11-05 20:20:15', NULL);
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

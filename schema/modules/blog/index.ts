@@ -72,6 +72,7 @@ export const blogArticlesModule = createModule({
         title: String
         handle: String
         displayingPageHandle: String
+        description: String
         absURL: String
         text: String
         textHtml: String
@@ -99,6 +100,8 @@ export const blogArticlesModule = createModule({
         viewed: Int
         templateId: ID
         ogDates: OpenGraphDates!
+        datePublished: String!
+        dateModified: String!
       }
       type BlogArticlesConnection {
         pageInfo: PageInfo
@@ -214,7 +217,9 @@ export const blogArticlesModule = createModule({
               : ``;
             const articles: any = await db.excuteQuery({
               query:
-                `select id, imageId, Coalesce(displayingPageHandle, handle, title, id) as handle, absURL, displayingPageHandle, title, publishedAt, null as fragment, null as score 
+                `select id, imageId, Coalesce(displayingPageHandle, handle, title, id) as handle, absURL, displayingPageHandle, title, 
+                     publishedAt, 
+                     updatedAt, description, viewed,  null as fragment, null as score 
                   from blog_article_handle   
                     Where notInList is NULL And unPublished is NULL
                     Order By createdAt Desc, updatedAt Desc ` +
@@ -228,14 +233,18 @@ export const blogArticlesModule = createModule({
               offset,
               limit,
               naturalLanguageModeQuery: `
-            select id, imageId, Coalesce(displayingPageHandle, handle, title, id) as handle, absURL, displayingPageHandle, title, publishedAt, text as fragment,
+            select id, imageId, Coalesce(displayingPageHandle, handle, title, id) as handle, absURL, displayingPageHandle, title, 
+                     publishedAt, 
+                     updatedAt, description, viewed,  text as fragment,
                   MATCH (title,text,h2) AGAINST ($search IN NATURAL LANGUAGE MODE) as score
               from blog_article_handle 
                 WHERE 
                   unPublished is NULL And notSearchable is NULL And 
                   MATCH (title,text,h2) AGAINST ($search IN NATURAL LANGUAGE MODE)`,
               booleanModeQuery: `
-            select id, imageId, Coalesce(displayingPageHandle, handle, title, id) as handle, absURL, displayingPageHandle, title, publishedAt, text as fragment,
+            select id, imageId, Coalesce(displayingPageHandle, handle, title, id) as handle, absURL, displayingPageHandle, title, 
+                     publishedAt, 
+                     updatedAt, description, viewed,  text as fragment,
                   MATCH (title,text,h2) AGAINST ($search IN BOOLEAN MODE) as score
               from blog_article_handle  
                 WHERE 
@@ -267,7 +276,10 @@ export const blogArticlesModule = createModule({
               : ``;
             const articles: any = await db.excuteQuery({
               query:
-                `select id, imageId, handle, null as absURL, handle as displayingPageHandle, title, publishedAt, null as fragment, null as score 
+                `select id, imageId, handle, null as absURL, handle as displayingPageHandle, title, 
+                     publishedAt, 
+                     updatedAt, description, viewed, 
+                     null as fragment, null as score 
                   from blog_article_handle   
                     Where notInList is NULL And unPublished is NULL
                     Order By createdAt Desc, updatedAt Desc ` +
@@ -281,14 +293,18 @@ export const blogArticlesModule = createModule({
               offset,
               limit,
               naturalLanguageModeQuery: `
-            select id, imageId, handle, null as absURL, handle as displayingPageHandle, title, publishedAt, text as fragment,
+            select id, imageId, handle, null as absURL, handle as displayingPageHandle, title, 
+                     publishedAt, 
+                     updatedAt, description, viewed,  text as fragment,
                   MATCH (title,text,h2) AGAINST ($search IN NATURAL LANGUAGE MODE) as score
               from blog_article_handle 
                 WHERE 
                   unPublished is NULL And notSearchable is NULL And 
                   MATCH (title,text,h2) AGAINST ($search IN NATURAL LANGUAGE MODE)`,
               booleanModeQuery: `
-            select id, imageId, handle, null as absURL, handle as displayingPageHandle, title, publishedAt, text as fragment,
+            select id, imageId, handle, null as absURL, handle as displayingPageHandle, title, 
+                     publishedAt, 
+                     updatedAt, description, viewed,  text as fragment,
                   MATCH (title,text,h2) AGAINST ($search IN BOOLEAN MODE) as score
               from blog_article_handle  
                 WHERE 
@@ -305,6 +321,29 @@ export const blogArticlesModule = createModule({
     },
     BlogArticleNavigation: {},
     BlogArticle: {
+      datePublished: async (
+        parent: Schema.BlogArticle,
+        variables: any,
+        _ctx: any,
+        info: GraphQLResolveInfo
+      ) => {
+        return parent.publishedAt
+          ? dateToISO(parent.publishedAt)
+          : dateToISO(parent.createdAt);
+      },
+      dateModified: async (
+        parent: Schema.BlogArticle,
+        variables: any,
+        _ctx: any,
+        info: GraphQLResolveInfo
+      ) => {
+        const existingImageId = parent.secondImageId || parent.imageId;
+        return existingImageId
+          ? dateToISO(new Date())
+          : parent.updatedAt
+          ? dateToISO(parent.updatedAt)
+          : dateToISO(parent.createdAt);
+      },
       ogDates: async (
         parent: Schema.BlogArticle,
         variables: any,

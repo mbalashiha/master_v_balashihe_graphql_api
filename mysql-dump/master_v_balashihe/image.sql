@@ -30,9 +30,9 @@ CREATE TABLE IF NOT EXISTS `image` (
   `useAsRandom` tinyint(1) unsigned DEFAULT NULL,
   PRIMARY KEY (`imageId`) USING BTREE,
   UNIQUE KEY `uniq_imgSrc` (`imgSrc`(512)) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=5649 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=29365 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Дамп данных таблицы master_v_balashihe.image: ~204 rows (приблизительно)
+-- Дамп данных таблицы master_v_balashihe.image: ~219 rows (приблизительно)
 INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
 	(64, '/image/upload/webp/avatar-nnm-another-copy-pinguine-pirate-1644835997144-299703.webp', 678, 678, NULL, NULL, '2023-03-13 18:06:05', '2023-10-18 19:19:32', 678, 678, NULL, NULL);
 INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
@@ -232,7 +232,7 @@ INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `altText`, `
 INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
 	(379, '/images/random/DSC01956.JPG', 2133, 1600, NULL, NULL, '2023-10-16 21:02:36', '2023-10-16 21:02:36', 2133, 1600, NULL, 1);
 INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
-	(380, '/images/random/DSC01946.JPG', 2133, 1600, NULL, NULL, '2023-10-16 21:02:46', '2023-10-16 21:02:46', 2133, 1600, NULL, 1);
+	(380, '/images/random/DSC01946.JPG', 1439, 1388, NULL, NULL, '2023-10-16 21:02:46', '2023-10-29 15:04:56', 1439, 1388, NULL, 1);
 INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
 	(381, '/images/random/DSC00446.JPG', 2133, 1600, NULL, NULL, '2023-10-16 21:02:51', '2023-10-16 21:02:51', 2133, 1600, NULL, 1);
 INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
@@ -247,14 +247,6 @@ INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `altText`, `
 	(390, '/images/tiny_computer_master_balashikha.webp', 60, 60, NULL, NULL, '2023-10-18 17:56:04', '2023-10-18 19:19:09', 60, 60, NULL, NULL);
 INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
 	(391, '/images/svg-dummy.svg', 1920, 1600, NULL, NULL, '2023-10-18 17:56:04', '2023-10-18 19:19:09', 1920, 1600, NULL, NULL);
-INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
-	(392, '/images/services_004.webp', 480, 360, NULL, NULL, '2023-10-18 17:56:04', '2023-10-18 19:19:09', 480, 360, NULL, NULL);
-INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
-	(393, '/images/services_003.webp', 415, 360, NULL, NULL, '2023-10-18 17:56:04', '2023-10-18 19:19:09', 415, 360, NULL, NULL);
-INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
-	(394, '/images/services_002.webp', 491, 360, NULL, NULL, '2023-10-18 17:56:04', '2023-10-18 19:19:30', 491, 360, NULL, NULL);
-INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
-	(395, '/images/services_001.webp', 582, 600, NULL, NULL, '2023-10-18 17:56:04', '2023-10-18 19:19:30', 582, 600, NULL, NULL);
 INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
 	(396, '/images/pre_computer-master-landing-balashiha.webp', 477, 610, NULL, NULL, '2023-10-18 17:56:04', '2023-10-18 19:19:30', 477, 610, NULL, NULL);
 INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
@@ -441,6 +433,44 @@ INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `altText`, `
 	(1261, '/images/wizard/imac.webp', 1518, 1518, NULL, NULL, '2023-10-21 19:57:10', '2023-10-21 19:57:10', 1518, 1518, NULL, NULL);
 INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
 	(1263, '/images/wizard/computer-desktop.webp', 1148, 1148, NULL, NULL, '2023-10-21 19:58:31', '2023-10-21 19:58:31', 1148, 1148, NULL, NULL);
+INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
+	(14082, '/images/random/IMG_20230831_225023.jpg', 2562, 2160, NULL, NULL, '2023-10-29 19:55:55', '2023-10-29 19:55:55', 2562, 2160, NULL, 1);
+INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
+	(14083, '/images/random/IMG_20230831_211739.jpg', 1051, 1080, NULL, NULL, '2023-10-29 19:55:56', '2023-10-29 19:55:56', 1051, 1080, NULL, 1);
+INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
+	(19017, '/image/upload/webp/pngwing-com-24-1697916770777-488261-png.webp', 1280, 905, NULL, NULL, '2023-11-01 21:12:16', '2023-11-01 21:12:16', 1280, 905, NULL, NULL);
+INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
+	(19019, '/image/upload/webp/888b0d3304eaf88478a133c53616c9af-1698597320684-123523-jpg.webp', 736, 1472, NULL, NULL, '2023-11-01 21:20:20', '2023-11-01 21:20:20', 736, 1472, NULL, NULL);
+INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
+	(19020, '/image/upload/webp/pngwing-com-22-1697916745910-570918-png.webp', 1014, 1024, NULL, NULL, '2023-11-01 21:23:23', '2023-11-01 21:23:23', 1014, 1024, NULL, NULL);
+INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
+	(19021, '/image/upload/webp/pngwing-com-21-1697916734762-286620-png.webp', 597, 483, NULL, NULL, '2023-11-01 21:27:52', '2023-11-01 21:27:52', 597, 483, NULL, NULL);
+INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
+	(19023, '/image/upload/webp/question-mark-1697917249453-792903-png.webp', 2572, 2572, NULL, NULL, '2023-11-01 21:47:49', '2023-11-01 21:47:49', 2572, 2572, NULL, NULL);
+INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
+	(19024, '/image/upload/webp/001-1697916401897-243691-png.webp', 800, 618, NULL, NULL, '2023-11-01 21:54:40', '2023-11-01 21:54:40', 800, 618, NULL, NULL);
+INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
+	(19025, '/image/upload/webp/pngwing-com-14-1697916611512-421057-png.webp', 960, 960, NULL, NULL, '2023-11-01 22:06:51', '2023-11-01 22:06:51', 960, 960, NULL, NULL);
+INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
+	(19494, '/image/upload/webp/pngwing-com-23-1697916754642-1095525-png.webp', 1000, 1000, NULL, NULL, '2023-11-02 14:13:51', '2023-11-02 14:13:51', 1000, 1000, NULL, NULL);
+INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
+	(20038, '/images/services/services_004.jpg', 582, 600, NULL, NULL, '2023-11-02 20:47:11', '2023-11-02 21:49:41', 582, 600, NULL, NULL);
+INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
+	(20135, '/images/services/services_003.jpg', 2696, 1898, NULL, NULL, '2023-11-02 21:49:40', '2023-11-02 22:47:48', 2696, 1898, NULL, NULL);
+INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
+	(20198, '/images/services/services_002.jpg', 2133, 1600, NULL, NULL, '2023-11-02 21:49:41', '2023-11-02 21:49:41', 2133, 1600, NULL, NULL);
+INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
+	(20199, '/images/services/services_001.jpg', 1293, 900, NULL, NULL, '2023-11-02 21:49:41', '2023-11-02 22:47:50', 1293, 900, NULL, NULL);
+INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
+	(20459, '/images/services_004.webp', 480, 360, NULL, NULL, '2023-11-02 22:47:50', '2023-11-02 22:47:50', 480, 360, NULL, NULL);
+INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
+	(20460, '/images/services_003.webp', 415, 360, NULL, NULL, '2023-11-02 22:47:50', '2023-11-02 22:47:50', 415, 360, NULL, NULL);
+INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
+	(20461, '/images/services_002.webp', 491, 360, NULL, NULL, '2023-11-02 22:47:50', '2023-11-02 22:47:50', 491, 360, NULL, NULL);
+INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
+	(20462, '/images/services_001.webp', 582, 600, NULL, NULL, '2023-11-02 22:47:50', '2023-11-02 22:47:50', 582, 600, NULL, NULL);
+INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
+	(20529, '/images/landing/portfolio004.jpg', 2133, 1600, NULL, NULL, '2023-11-02 22:47:51', '2023-11-02 22:47:51', 2133, 1600, NULL, NULL);
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

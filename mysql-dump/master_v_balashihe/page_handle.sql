@@ -20,9 +20,9 @@ CREATE TABLE IF NOT EXISTS `page_handle` (
   `handle` varchar(1024) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `uniq_handle` (`handle`)
-) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Дамп данных таблицы master_v_balashihe.page_handle: ~27 rows (приблизительно)
+-- Дамп данных таблицы master_v_balashihe.page_handle: ~28 rows (приблизительно)
 INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
 	(17, '/');
 INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
@@ -68,9 +68,13 @@ INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
 INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
 	(4, 'sdf');
 INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
+	(36, 'sdfsafsdfs');
+INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
 	(6, 'sdfsdf');
 INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
 	(3, 'sdfsdfsd');
+INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
+	(35, 'semanticheskaya-razmetka-schema-org-v-react-js');
 INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
 	(26, 'srochnyj-remont-kompyutera-balashiha-na-domu-ili-v-ofise');
 INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES

@@ -4,6 +4,7 @@ import db from "@src/sql/execute-query";
 import { GraphQLError, GraphQLResolveInfo } from "graphql";
 import { fullTextSearch } from "@src/sql/full-text-search";
 import { Schema } from "@root/schema/types/schema";
+import dateToISO from "@src/utils/date-to-iso";
 
 export const ManagementArticlesCardsModule = createModule({
   id: "management-article-cards-module",
@@ -17,6 +18,7 @@ export const ManagementArticlesCardsModule = createModule({
         absURL: String
         displayingPageHandle: String
         publishedAt: Date
+        updatedAt: Date
         score: Float
         fragment: String
         image: Image
@@ -25,6 +27,9 @@ export const ManagementArticlesCardsModule = createModule({
         secondImageId: ID
         viewed: Int
         templateId: ID
+        datePublished: String
+        dateModified: String
+        description: String
       }
       type ManagementArticlesCards {
         search: String
@@ -41,6 +46,29 @@ export const ManagementArticlesCardsModule = createModule({
   ],
   resolvers: {
     ArticleCard: {
+      datePublished: async (
+        parent: Schema.BlogArticle,
+        variables: any,
+        _ctx: any,
+        info: GraphQLResolveInfo
+      ) => {
+        return parent.publishedAt
+          ? dateToISO(parent.publishedAt)
+          : dateToISO(parent.createdAt);
+      },
+      dateModified: async (
+        parent: Schema.BlogArticle,
+        variables: any,
+        _ctx: any,
+        info: GraphQLResolveInfo
+      ) => {
+        const existingImageId = parent.secondImageId || parent.imageId;
+        return existingImageId
+          ? dateToISO(new Date())
+          : parent.updatedAt
+          ? dateToISO(parent.updatedAt)
+          : dateToISO(parent.createdAt);
+      },
       image: async (
         parent: Schema.BlogArticle,
         variables: any,
@@ -108,7 +136,8 @@ export const ManagementArticlesCardsModule = createModule({
               query:
                 `select 
                   id, imageId, secondImageId, viewed, Coalesce(displayingPageHandle, handle, title, id) as handle, h2,
-                  absURL, displayingPageHandle, title, publishedAt, null as fragment, null as score,
+                  absURL, displayingPageHandle, title, publishedAt, updatedAt, description, 
+                  null as fragment, null as score,
                 viewed
                     from blog_article_handle 
                     Order By createdAt Desc, updatedAt Desc ` +
@@ -124,7 +153,7 @@ export const ManagementArticlesCardsModule = createModule({
               naturalLanguageModeQuery: `
             select
                   id, imageId, secondImageId, viewed, Coalesce(displayingPageHandle, handle, title, id) as handle, h2, 
-                  absURL, displayingPageHandle, title, publishedAt, 
+                  absURL, displayingPageHandle, title, publishedAt, updatedAt, description,
                   text as fragment,
                   MATCH (title,text,h2) AGAINST ($search IN NATURAL LANGUAGE MODE) as score
               from blog_article_handle 
@@ -132,7 +161,7 @@ export const ManagementArticlesCardsModule = createModule({
               booleanModeQuery: `
             select
                   id, imageId, secondImageId, viewed, Coalesce(displayingPageHandle, handle, title, id) as handle, h2, 
-                  absURL, displayingPageHandle, title, publishedAt, 
+                  absURL, displayingPageHandle, title, publishedAt, updatedAt, description, 
                   text as fragment,
                   MATCH (title,text,h2) AGAINST ($search IN BOOLEAN MODE) as score
               from blog_article_handle 

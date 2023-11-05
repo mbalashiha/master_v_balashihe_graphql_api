@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS `failed_contact_emails` (
   PRIMARY KEY (`timestamp`,`ip`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Дамп данных таблицы master_v_balashihe.failed_contact_emails: ~14 rows (приблизительно)
+-- Дамп данных таблицы master_v_balashihe.failed_contact_emails: ~13 rows (приблизительно)
 INSERT IGNORE INTO `failed_contact_emails` (`timestamp`, `ip`, `createdAt`, `counts`, `textBody`, `error`) VALUES
 	('2023-07-31 00:52:05', _binary 0x7f000001, '2023-07-31 00:52:05', NULL, '31.07.2023, 03:52:05  \r\n  \r\nИмя клиента:   \r\nТелефон: +7(343)221-43-42  \r\n', 'Mail command failed: 550 not local sender over smtp');
 INSERT IGNORE INTO `failed_contact_emails` (`timestamp`, `ip`, `createdAt`, `counts`, `textBody`, `error`) VALUES
