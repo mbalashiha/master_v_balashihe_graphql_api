@@ -21,6 +21,7 @@ export namespace Schema {
     h2: String | null;
     secondImageId: ID | null;
     templateId: ID | null;
+    description: String | null;
   }
   export interface ArticleTextDraftInput {
     id: ID;
@@ -111,6 +112,7 @@ export namespace Schema {
     h2: String | null;
     secondImageId: ID | null;
     templateId: ID | null;
+    description: String | null;
   }
   export interface ArticleDraft {
     draftArticleId: ID;

@@ -35,6 +35,7 @@ export const BlogManagementModule = createModule({
         h2: String
         secondImageId: ID
         templateId: ID
+        description: String
       }
       type DeleteArticleResponse {
         error: String
@@ -179,7 +180,8 @@ export const BlogManagementModule = createModule({
             $publishedAt,
             $h2,
             $secondImageId,
-            $templateId
+            $templateId,
+            $description
             );`,
             variables: {
               managerId: context.manager.id,
@@ -205,6 +207,7 @@ export const BlogManagementModule = createModule({
               h2: article.h2 || null,
               secondImageId: article.secondImageId || null,
               templateId: article.templateId || null,
+              description: article.description || null,
             },
           });
           if (!sqlResult) {

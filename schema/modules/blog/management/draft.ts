@@ -249,7 +249,8 @@ export const BlogArticleDraftModule = createModule({
             $publishedAt,
             $h2,
             $secondImageId,
-            $templateId
+            $templateId,
+            $description
             );`,
             variables: {
               managerId: context.manager.id,
@@ -270,6 +271,7 @@ export const BlogArticleDraftModule = createModule({
               h2: articleDraft.h2 || null,
               secondImageId: articleDraft.secondImageId || null,
               templateId: articleDraft.templateId || null,
+              description: articleDraft.description || null,
             },
           });
           const row = (sqlResult[0] && sqlResult[0][0]) || {};

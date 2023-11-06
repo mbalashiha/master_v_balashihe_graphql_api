@@ -30,9 +30,10 @@ CREATE PROCEDURE `blog_article_save_draft`(
 	IN `in_notInList` TEXT,
 	IN `in_absURL` TEXT,
 	IN `in_publishedAt` DATETIME,
-	IN `in_h2` TEXT,
+	IN `in_h2` VARCHAR(150),
 	IN `in_secondImageId` TEXT,
-	IN `in_templateId` TINYTEXT
+	IN `in_templateId` TINYTEXT,
+	IN `in_description` VARCHAR(150)
 )
 BEGIN
 	DECLARE stored_draftArticleId BINARY(16) DEFAULT Null;

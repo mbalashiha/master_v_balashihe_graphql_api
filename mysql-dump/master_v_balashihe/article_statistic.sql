@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS `article_statistic` (
   CONSTRAINT `FK_article_statistic_blog_article` FOREIGN KEY (`articleId`) REFERENCES `blog_article` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Дамп данных таблицы master_v_balashihe.article_statistic: ~319 rows (приблизительно)
+-- Дамп данных таблицы master_v_balashihe.article_statistic: ~320 rows (приблизительно)
 INSERT IGNORE INTO `article_statistic` (`timestamp`, `ip`, `articleId`, `createdAt`, `duplicate`) VALUES
 	('2023-08-09 17:25:28', _binary 0xc6104e2d, 77, '2023-08-09 17:25:27', NULL);
 INSERT IGNORE INTO `article_statistic` (`timestamp`, `ip`, `articleId`, `createdAt`, `duplicate`) VALUES
@@ -769,6 +769,8 @@ INSERT IGNORE INTO `article_statistic` (`timestamp`, `ip`, `articleId`, `created
 	('2023-11-05 19:58:46', _binary 0x42f94228, 80, '2023-11-05 19:58:51', NULL);
 INSERT IGNORE INTO `article_statistic` (`timestamp`, `ip`, `articleId`, `createdAt`, `duplicate`) VALUES
 	('2023-11-05 20:20:09', _binary 0x42f94227, 80, '2023-11-05 20:20:15', NULL);
+INSERT IGNORE INTO `article_statistic` (`timestamp`, `ip`, `articleId`, `createdAt`, `duplicate`) VALUES
+	('2023-11-06 17:12:16', _binary 0x05ffe7af, 77, '2023-11-06 17:12:16', NULL);
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

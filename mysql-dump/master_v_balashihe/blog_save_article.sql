@@ -35,9 +35,10 @@ CREATE PROCEDURE `blog_save_article`(
 	IN `in_notInList` TEXT,
 	IN `in_keyTextHtml` TEXT,
 	IN `in_publishedAt` DATETIME,
-	IN `in_h2` TEXT,
+	IN `in_h2` VARCHAR(150),
 	IN `in_secondImageId` TEXT,
-	IN `in_templateId` TEXT
+	IN `in_templateId` TEXT,
+	IN `in_description` VARCHAR(150)
 )
 BEGIN
 	DECLARE stored_articleId INT(10) unsigned DEFAULT Null;
@@ -59,6 +60,7 @@ BEGIN
 	SET in_absURL := If(in_absURL='' OR in_absURL IS NULL,NULL,TRIM(in_absURL));
 	Set in_blogCategoryId := If(in_blogCategoryId='' OR in_blogCategoryId IS NULL,NULL, in_blogCategoryId);
 	Set in_h2 := If(in_h2='' OR in_h2 IS NULL,NULL,TRIM(in_h2));
+	Set in_description := If(in_description='' OR in_description IS NULL,NULL,TRIM(in_description));
 	Set in_secondImageId := If(in_secondImageId='' OR in_secondImageId IS NULL,NULL,TRIM(in_secondImageId));
 	
 	Set in_unPublished := If(in_unPublished='' OR in_unPublished IS NULL,NULL, in_unPublished);
@@ -102,6 +104,7 @@ BEGIN
 				IFNULL(in_textRawDraftContentState,'')=IFNULL(d.`textRawDraftContentState`,'') AND 
 				IfNull(in_publishedAt,'')=IfNull(d.publishedAt, '') And
 				IFNULL(in_h2,'')=IFNULL(d.h2,'') AND 
+				IFNULL(in_description,'')=IFNULL(d.description,'') AND 
 				IfNull(in_secondImageId,'')=IfNull(d.secondImageId, '') AND 
 				IfNull(in_templateId,'')=IfNull(d.templateId, '');
 	END IF;
@@ -147,7 +150,7 @@ BEGIN
 			notInList,
 			orderNumber, 
 			`text`, `textHtml`,`renderHtml`, `imageId`, `textRawDraftContentState`, `keyTextHtml`, 
-			   h2, secondImageId, templateId)
+			   h2, `description`, secondImageId, templateId)
 				VALUES(
 					in_managerId,					
 					in_managerId,
@@ -167,6 +170,7 @@ BEGIN
 					in_textRawDraftContentState,
 					in_keyTextHtml,
 					in_h2,
+					in_description,
 					in_secondImageId,
 					in_templateId
 				);
@@ -192,6 +196,7 @@ BEGIN
 				`keyTextHtml`=in_keyTextHtml,
 				`publishedAt`=in_publishedAt,
 				 h2=in_h2,
+				 `description`=in_description,
 				 secondImageId=in_secondImageId,
 				 templateId=in_templateId
 				WHERE id=in_existingArticleId;
@@ -205,7 +210,7 @@ BEGIN
 			notInList,
 			orderNumber, 
 			`text`, `textHtml`,`renderHtml`, `imageId`, `textRawDraftContentState`, `keyTextHtml`, 
-			   h2, secondImageId, templateId)
+			   h2, `description`, secondImageId, templateId)
 				VALUES(
     				@today_string,
     				stored_articleId,
@@ -227,6 +232,7 @@ BEGIN
 					in_textRawDraftContentState,
 					in_keyTextHtml,
 					in_h2,
+					in_description,
 					in_secondImageId,
 					in_templateId
 				)
@@ -250,6 +256,7 @@ BEGIN
 					`keyTextHtml`=in_keyTextHtml,
 					`publishedAt`=in_publishedAt,
 					 h2=in_h2,
+					 `description`=in_description,
 					 secondImageId=in_secondImageId,
 					 templateId=in_templateId;
 	END IF;
