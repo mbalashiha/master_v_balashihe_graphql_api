@@ -50,7 +50,7 @@ export const parseImagesToDB = async () => {
                   let data: Buffer = Buffer.alloc(0);
                   while (
                     loopPathSize >= IMAGE_UPPER_SIZE_LIMIT &&
-                    currentQuality >= 0
+                    currentQuality > 0
                   ) {
                     if (needResize) {
                       data = await imageStream
@@ -87,8 +87,16 @@ export const parseImagesToDB = async () => {
                       currentQuality
                     );
                   }
-                  if (currentQuality >= 0 && data.length > 1) {
+                  if (currentQuality > 0 && data.length > 1) {
                     await fs.writeFile(convertedImagePath, data);
+                    console.log(
+                      "\tsaved",
+                      convertedImagePath.split(path.sep).pop(),
+                      "\n\t  size of file is:",
+                      data.length,
+                      "\n\t  with quality:",
+                      currentQuality
+                    );
                   }
                 } catch (e: any) {
                   console.error(e.stack || e.message || e);
@@ -103,7 +111,7 @@ export const parseImagesToDB = async () => {
                     imagePath.replace(/\.png$/gim, "") + ".webp";
                   while (
                     loopPathSize >= IMAGE_UPPER_SIZE_LIMIT &&
-                    currentQuality >= 0
+                    currentQuality > 0
                   ) {
                     if (needResize) {
                       data = await imageStream
@@ -142,16 +150,23 @@ export const parseImagesToDB = async () => {
                       currentQuality
                     );
                   }
-                  if (currentQuality >= 0 && data.length > 1) {
+                  if (currentQuality > 0 && data.length > 1) {
                     await fs.writeFile(convertedImagePath, data);
+                    console.log(
+                      "\tsaved",
+                      convertedImagePath.split(path.sep).pop(),
+                      "\n\t  size of file is:",
+                      data.length,
+                      "\n\t  with quality:",
+                      currentQuality
+                    );
                   }
-
                   loopPathSize = path.size;
                   currentQuality = 100;
                   data = Buffer.alloc(0);
                   while (
                     loopPathSize >= IMAGE_UPPER_SIZE_LIMIT &&
-                    currentQuality >= 0
+                    currentQuality > 0
                   ) {
                     if (needResize) {
                       data = await imageStream
@@ -193,8 +208,16 @@ export const parseImagesToDB = async () => {
                   if (currentQuality < 1) {
                     currentQuality = 1;
                   }
-                  if (currentQuality >= 0 && data.length > 1) {
+                  if (currentQuality > 0 && data.length > 1) {
                     await fs.writeFile(imagePath, data);
+                    console.log(
+                      "\tsaved",
+                      imagePath.split(path.sep).pop(),
+                      "\n\t  size of file is:",
+                      data.length,
+                      "\n\t  with quality:",
+                      currentQuality
+                    );
                   }
                 } catch (e: any) {
                   console.error(e.stack || e.message || e);
@@ -207,7 +230,7 @@ export const parseImagesToDB = async () => {
                   let data: Buffer = Buffer.alloc(0);
                   while (
                     loopPathSize >= IMAGE_UPPER_SIZE_LIMIT &&
-                    currentQuality >= 0
+                    currentQuality > 0
                   ) {
                     if (needResize) {
                       data = await imageStream
@@ -246,8 +269,16 @@ export const parseImagesToDB = async () => {
                       }
                     }
                   }
-                  if (currentQuality >= 0 && data.length > 1) {
+                  if (currentQuality > 0 && data.length > 1) {
                     await fs.writeFile(convertedImagePath, data);
+                    console.log(
+                      "\tsaved",
+                      convertedImagePath.split(path.sep).pop(),
+                      "\n\t  size of file is:",
+                      data.length,
+                      "\n\t  with quality:",
+                      currentQuality
+                    );
                   }
                 } catch (e: any) {
                   console.error(e.stack || e.message || e);
