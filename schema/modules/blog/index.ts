@@ -104,7 +104,6 @@ export const blogArticlesModule = createModule({
         dateModified: String!
       }
       type BlogArticlesConnection {
-        pageInfo: PageInfo
         nodes(offset: Int, limit: Int): [BlogArticle]
       }
       type ArticlesCardsConnection {

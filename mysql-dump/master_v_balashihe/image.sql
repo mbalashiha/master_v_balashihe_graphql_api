@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS `image` (
   `useAsRandom` tinyint(1) unsigned DEFAULT NULL,
   PRIMARY KEY (`imageId`) USING BTREE,
   UNIQUE KEY `uniq_imgSrc` (`imgSrc`(512)) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=34705 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=43006 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Дамп данных таблицы master_v_balashihe.image: ~216 rows (приблизительно)
 INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `title`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
@@ -441,7 +441,7 @@ INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `title`, `al
 INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `title`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
 	(19025, '/image/upload/webp/pngwing-com-14-1697916611512-421057-png.webp', 960, 960, NULL, NULL, NULL, '2023-11-01 22:06:51', '2023-11-01 22:06:51', 960, 960, NULL, NULL);
 INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `title`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
-	(19494, '/image/upload/webp/pngwing-com-23-1697916754642-1095525-png.webp', 1000, 1000, NULL, NULL, NULL, '2023-11-02 14:13:51', '2023-11-02 14:13:51', 1000, 1000, NULL, NULL);
+	(19494, '/image/upload/webp/pngwing-com-23-1697916754642-1095525-png.webp', 1000, 1000, 'sfsdsf', NULL, NULL, '2023-11-02 14:13:51', '2023-11-07 18:31:57', 1000, 1000, NULL, NULL);
 INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `title`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
 	(20038, '/images/services/services_004.jpg', 582, 600, NULL, NULL, NULL, '2023-11-02 20:47:11', '2023-11-02 21:49:41', 582, 600, NULL, NULL);
 INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `title`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
@@ -466,6 +466,60 @@ INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `title`, `al
 	(30176, '/images/computer_master_landing_balashiha.webp', 600, 802, NULL, NULL, NULL, '2023-11-06 12:57:53', '2023-11-06 12:57:53', 600, 802, NULL, NULL);
 INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `title`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
 	(30420, '/images/computer-master-landing-balashiha.png', 475, 618, NULL, NULL, NULL, '2023-11-06 13:16:36', '2023-11-06 13:16:36', 475, 618, NULL, NULL);
+INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `title`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
+	(42489, '/image/upload/webp/computer-desktop-2-1697917515323-1613807-png.webp', 1148, 1148, NULL, NULL, NULL, '2023-11-07 19:31:53', '2023-11-07 19:31:53', 1148, 1148, NULL, NULL);
+INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `title`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
+	(42490, '/image/upload/webp/laptop-2-1697917379513-3931362-png.webp', 2160, 2160, NULL, NULL, NULL, '2023-11-07 19:32:19', '2023-11-08 00:59:37', 2160, 2160, NULL, NULL);
+INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `title`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
+	(42505, '/image/upload/webp/pngwing-com-15-1697916629771-189161-png.webp', 500, 500, NULL, NULL, NULL, '2023-11-07 20:31:14', '2023-11-07 20:31:14', 500, 500, NULL, NULL);
+INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `title`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
+	(42512, '/image/upload/webp/older-dsc04494-1698959951922-2628444-jpg.webp', 2880, 2160, NULL, NULL, NULL, '2023-11-07 22:00:01', '2023-11-08 00:59:19', 2880, 2160, NULL, NULL);
+INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `title`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
+	(42518, '/image/upload/webp/imac-1697917678533-1457164-png.webp', 1518, 1518, NULL, NULL, NULL, '2023-11-07 22:08:28', '2023-11-07 22:08:28', 1518, 1518, NULL, NULL);
+INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `title`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
+	(42533, '/image/upload/webp/pngwing-com-16-1697916647478-1541835-png.webp', 1600, 1163, NULL, NULL, NULL, '2023-11-07 23:08:07', '2023-11-07 23:08:07', 1600, 1163, NULL, NULL);
+INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `title`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
+	(42535, '/image/upload/webp/2023-10-01-14-22-45-1696160213825-1591755-png.webp', 2342, 2829, NULL, NULL, NULL, '2023-11-07 23:19:13', '2023-11-07 23:19:13', 2342, 2829, NULL, NULL);
+INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `title`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
+	(42536, '/image/upload/webp/final-tiny-new-editing-img-20230922-191950-1699276347696-455203-png.webp', 600, 802, NULL, NULL, NULL, '2023-11-07 23:58:19', '2023-11-07 23:58:19', 600, 802, NULL, NULL);
+INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `title`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
+	(42537, '/image/upload/webp/older-002-dsc04520-1698960054182-2755478-jpg.webp', 2880, 2160, NULL, NULL, NULL, '2023-11-07 23:58:21', '2023-11-08 00:59:27', 2880, 2160, NULL, NULL);
+INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `title`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
+	(42538, '/image/upload/webp/old-dsc04498-1698959996492-2606604-jpg.webp', 2880, 2160, NULL, NULL, NULL, '2023-11-07 23:58:22', '2023-11-08 00:59:33', 2880, 2160, NULL, NULL);
+INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `title`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
+	(42540, '/image/upload/webp/interest-next-img-20230911-174242-1698597833764-2477947-jpg.webp', 1520, 2160, NULL, NULL, NULL, '2023-11-07 23:58:25', '2023-11-08 00:59:41', 1520, 2160, NULL, NULL);
+INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `title`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
+	(42541, '/image/upload/webp/interest-img-20230911-174242-1698597732724-2919227-jpg.webp', 2880, 2160, NULL, NULL, NULL, '2023-11-07 23:58:27', '2023-11-08 00:59:47', 2880, 2160, NULL, NULL);
+INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `title`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
+	(42551, '/image/upload/webp/pngwing-com-18-1697916667540-488261-png.webp', 1280, 905, NULL, NULL, NULL, '2023-11-07 23:58:35', '2023-11-07 23:58:35', 1280, 905, NULL, NULL);
+INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `title`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
+	(42611, '/image/upload/webp/computer-master-photo-balashikha-1697411861519-264824-jpg.webp', 1087, 1600, NULL, NULL, NULL, '2023-11-08 00:20:31', '2023-11-08 00:20:31', 1087, 1600, NULL, NULL);
+INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `title`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
+	(42612, '/image/upload/webp/master-v-balashihe-1697406128668-252532-jpg.webp', 1197, 1600, NULL, NULL, NULL, '2023-11-08 00:20:32', '2023-11-08 00:20:32', 1197, 1600, NULL, NULL);
+INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `title`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
+	(42613, '/image/upload/webp/logo-master-v-balashihe-rf-screwdriver-1697404865478-33490-png.webp', 380, 380, NULL, NULL, NULL, '2023-11-08 00:20:32', '2023-11-08 00:20:32', 380, 380, NULL, NULL);
+INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `title`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
+	(42614, '/image/upload/webp/dsc03141-1696191921933-2861876-jpg.webp', 2880, 2160, NULL, NULL, NULL, '2023-11-08 00:20:35', '2023-11-08 01:00:44', 2880, 2160, NULL, NULL);
+INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `title`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
+	(42615, '/image/upload/webp/dsc03154-1696191902503-2671893-jpg.webp', 2880, 2160, NULL, NULL, NULL, '2023-11-08 00:20:38', '2023-11-08 01:00:19', 2880, 2160, NULL, NULL);
+INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `title`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
+	(42616, '/image/upload/webp/img-20230825-145755-1696185770659-2850834-jpg.webp', 2880, 2160, NULL, NULL, NULL, '2023-11-08 00:20:41', '2023-11-08 01:00:05', 2880, 2160, NULL, NULL);
+INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `title`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
+	(42617, '/image/upload/webp/img-20230901-002001-1696184731559-2848184-jpg.webp', 2880, 2160, NULL, NULL, NULL, '2023-11-08 00:20:45', '2023-11-08 00:59:58', 2880, 2160, NULL, NULL);
+INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `title`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
+	(42618, '/image/upload/webp/img-20230911-174242-1696183859689-2919227-jpg.webp', 2880, 2160, NULL, NULL, NULL, '2023-11-08 00:20:49', '2023-11-08 00:59:53', 2880, 2160, NULL, NULL);
+INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `title`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
+	(42619, '/image/upload/webp/2023-10-01-18-29-33-1696174183710-364029-png.webp', 545, 658, NULL, NULL, NULL, '2023-11-08 00:20:49', '2023-11-08 00:20:49', 545, 658, NULL, NULL);
+INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `title`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
+	(42620, '/image/upload/webp/small-for-landing-page-1692966627039-good-1696164655507-282307-png.webp', 428, 618, NULL, NULL, NULL, '2023-11-08 00:20:50', '2023-11-08 00:20:50', 428, 618, NULL, NULL);
+INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `title`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
+	(42998, '/image/upload/webp/2023-10-01-14-24-21-1696160413825-1498818-png.webp', 2032, 2829, NULL, NULL, NULL, '2023-11-08 01:26:59', '2023-11-08 01:26:59', 2032, 2829, NULL, NULL);
+INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `title`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
+	(43000, '/image/upload/webp/2023-10-01-14-23-27-1696160382725-1419766-png.webp', 2125, 2829, NULL, NULL, NULL, '2023-11-08 01:27:01', '2023-11-08 01:27:01', 2125, 2829, NULL, NULL);
+INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `title`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
+	(43002, '/image/upload/webp/2023-10-01-14-24-49-1696160336295-1538577-png.webp', 2259, 2829, NULL, NULL, NULL, '2023-11-08 01:27:02', '2023-11-08 01:27:02', 2259, 2829, NULL, NULL);
+INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `title`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
+	(43004, '/image/upload/webp/2023-10-01-14-23-45-1696160254915-1390364-png.webp', 2128, 2829, NULL, NULL, NULL, '2023-11-08 01:27:04', '2023-11-08 01:27:04', 2128, 2829, NULL, NULL);
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

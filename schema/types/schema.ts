@@ -52,6 +52,23 @@ export namespace Schema {
     createdAt: string;
     updatedAt: string;
   }
+  export interface ImageInput {
+    imageId: ID;
+    imgSrc: String;
+    title: String;
+    width: Int;
+    height: Int;
+    format?: String;
+    orderNumber?: Int;
+    originalWidth?: Int;
+    originalHeight?: Int;
+    pathOfOriginal?: String;
+    altText?: String;
+  }
+  export interface ImageArrayInput {
+    existingArticleId: ID | null;
+    images: [ImageInput];
+  }
   export interface ImageConnection {
     nodes: Image[];
   }

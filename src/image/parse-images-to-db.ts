@@ -8,10 +8,276 @@ import { collectAllPublicImagesToDB } from "./collect-all-public-images";
 const IMAGE_UPPER_SIZE_LIMIT = 300 * 1024;
 const IMAGE_MAX_HEIGHT = 2160;
 const ABNORMAL_IMAGE_SIZE_LIMIT = 256 * 1024 * 1024;
-const WEBP_QUALITY_BOTTOM = 20;
-const JPEG_QUALITY_BOTTOM = 20;
+const WEBP_QUALITY_BOTTOM = 30;
+const JPEG_QUALITY_BOTTOM = 30;
 const PNG_QUALITY_BOTTOM = 3;
 const MAX_IMAGE_QUALITY_STEP_SUBSTRUCT = 40;
+
+export async function processImage(imagePath: string, originalSize?: number) {
+  let convertedImagePath = imagePath;
+  try {
+    let imageStream = sharp(imagePath);
+    const meta = await imageStream.metadata();
+    let needResize = Boolean(
+      meta && meta.height && meta.height > IMAGE_MAX_HEIGHT
+    );
+    if (!originalSize) {
+      const stat = await fs.stat(imagePath);
+      originalSize = stat.size;
+    }
+    if (meta.height) {
+      switch (meta.format) {
+        case "jpeg":
+        case "jpg":
+          try {
+            let loopPathSize = originalSize;
+            let currentQuality = 100;
+            let data: Buffer = Buffer.alloc(0);
+            while (
+              loopPathSize >= IMAGE_UPPER_SIZE_LIMIT &&
+              currentQuality > 0
+            ) {
+              if (needResize) {
+                data = await imageStream
+                  .resize({ height: IMAGE_MAX_HEIGHT })
+                  .jpeg({ mozjpeg: true, quality: currentQuality })
+                  .withMetadata()
+                  .toBuffer();
+              } else {
+                data = await imageStream
+                  .jpeg({ mozjpeg: true, quality: currentQuality })
+                  .withMetadata()
+                  .toBuffer();
+              }
+              loopPathSize = data.length;
+              if (loopPathSize >= IMAGE_UPPER_SIZE_LIMIT) {
+                let intFraction = Math.floor(
+                  3 * (loopPathSize / IMAGE_UPPER_SIZE_LIMIT)
+                );
+                if (intFraction > MAX_IMAGE_QUALITY_STEP_SUBSTRUCT) {
+                  intFraction = MAX_IMAGE_QUALITY_STEP_SUBSTRUCT;
+                }
+                if (currentQuality - intFraction < JPEG_QUALITY_BOTTOM) {
+                  currentQuality -= 1;
+                } else {
+                  currentQuality -= intFraction >= 1 ? intFraction : 1;
+                }
+              }
+              console.log(
+                "It is",
+                convertedImagePath,
+                "\n\thaving size:",
+                loopPathSize,
+                "with quality:",
+                currentQuality
+              );
+            }
+            if (currentQuality > 0 && data.length > 1) {
+              await fs.writeFile(convertedImagePath, data);
+              console.log(
+                "\tsaved",
+                convertedImagePath.split(path.sep).pop(),
+                "\n\t  size of file is:",
+                data.length,
+                "\n\t  with quality:",
+                currentQuality
+              );
+            }
+          } catch (e: any) {
+            console.error(e.stack || e.message || e);
+          }
+          break;
+        case "png":
+          try {
+            let loopPathSize = originalSize;
+            let currentQuality = 100;
+            let data: Buffer = Buffer.alloc(0);
+            convertedImagePath = imagePath.replace(/\.png$/gim, "") + ".webp";
+            while (
+              loopPathSize >= IMAGE_UPPER_SIZE_LIMIT &&
+              currentQuality > 0
+            ) {
+              if (needResize) {
+                data = await imageStream
+                  .resize({ height: IMAGE_MAX_HEIGHT })
+                  .webp({ quality: currentQuality })
+                  .withMetadata()
+                  .toBuffer();
+                imageStream = sharp(data);
+                needResize = false;
+              } else {
+                data = await imageStream
+                  .webp({ quality: currentQuality })
+                  .withMetadata()
+                  .toBuffer();
+              }
+              loopPathSize = data.length;
+              if (loopPathSize >= IMAGE_UPPER_SIZE_LIMIT) {
+                let intFraction = Math.floor(
+                  2 * (loopPathSize / IMAGE_UPPER_SIZE_LIMIT)
+                );
+                if (intFraction > MAX_IMAGE_QUALITY_STEP_SUBSTRUCT) {
+                  intFraction = MAX_IMAGE_QUALITY_STEP_SUBSTRUCT;
+                }
+                if (currentQuality - intFraction < WEBP_QUALITY_BOTTOM) {
+                  currentQuality -= 1;
+                } else {
+                  currentQuality -= intFraction >= 1 ? intFraction : 1;
+                }
+              }
+              console.log(
+                "It is",
+                convertedImagePath,
+                "\n\thaving size:",
+                loopPathSize,
+                "with quality:",
+                currentQuality
+              );
+            }
+            if (currentQuality > 0 && data.length > 1) {
+              await fs.writeFile(convertedImagePath, data);
+              console.log(
+                "\tsaved",
+                convertedImagePath.split(path.sep).pop(),
+                "\n\t  size of file is:",
+                data.length,
+                "\n\t  with quality:",
+                currentQuality
+              );
+            }
+            loopPathSize = originalSize;
+            currentQuality = 100;
+            data = Buffer.alloc(0);
+            while (
+              loopPathSize >= IMAGE_UPPER_SIZE_LIMIT &&
+              currentQuality > 0
+            ) {
+              if (needResize) {
+                data = await imageStream
+                  .resize({ height: IMAGE_MAX_HEIGHT })
+                  .png({ quality: currentQuality, compressionLevel: 6 })
+                  .withMetadata()
+                  .toBuffer();
+                imageStream = sharp(data);
+                needResize = false;
+              } else {
+                data = await imageStream
+                  .png({ quality: currentQuality, compressionLevel: 6 })
+                  .withMetadata()
+                  .toBuffer();
+              }
+              loopPathSize = data.length;
+              console.log(
+                "It is",
+                imagePath,
+                "\n\thaving size:",
+                loopPathSize,
+                "with quality:",
+                currentQuality
+              );
+              if (loopPathSize >= IMAGE_UPPER_SIZE_LIMIT) {
+                let intFraction = Math.floor(
+                  10 * (loopPathSize / IMAGE_UPPER_SIZE_LIMIT)
+                );
+                if (intFraction > MAX_IMAGE_QUALITY_STEP_SUBSTRUCT) {
+                  intFraction = MAX_IMAGE_QUALITY_STEP_SUBSTRUCT;
+                }
+                if (currentQuality - intFraction < PNG_QUALITY_BOTTOM) {
+                  currentQuality -= 1;
+                } else {
+                  currentQuality -= intFraction >= 1 ? intFraction : 1;
+                }
+              }
+            }
+            if (currentQuality < 1) {
+              currentQuality = 1;
+            }
+            if (currentQuality > 0 && data.length > 1) {
+              await fs.writeFile(imagePath, data);
+              console.log(
+                "\tsaved",
+                imagePath.split(path.sep).pop(),
+                "\n\t  size of file is:",
+                data.length,
+                "\n\t  with quality:",
+                currentQuality
+              );
+            }
+          } catch (e: any) {
+            console.error(e.stack || e.message || e);
+          }
+          break;
+        case "webp":
+          try {
+            let loopPathSize = originalSize;
+            let currentQuality = 100;
+            let data: Buffer = Buffer.alloc(0);
+            while (
+              loopPathSize >= IMAGE_UPPER_SIZE_LIMIT &&
+              currentQuality > 0
+            ) {
+              if (needResize) {
+                data = await imageStream
+                  .resize({ height: IMAGE_MAX_HEIGHT })
+                  .webp({ quality: currentQuality })
+                  .withMetadata()
+                  .toBuffer();
+                imageStream = sharp(data);
+                needResize = false;
+              } else {
+                data = await imageStream
+                  .webp({ quality: currentQuality })
+                  .withMetadata()
+                  .toBuffer();
+              }
+              loopPathSize = data.length;
+              console.log(
+                "It is",
+                convertedImagePath,
+                "\n\thaving size:",
+                loopPathSize,
+                "with quality:",
+                currentQuality
+              );
+              if (loopPathSize >= IMAGE_UPPER_SIZE_LIMIT) {
+                let intFraction = Math.floor(
+                  2 * (loopPathSize / IMAGE_UPPER_SIZE_LIMIT)
+                );
+                if (intFraction > MAX_IMAGE_QUALITY_STEP_SUBSTRUCT) {
+                  intFraction = MAX_IMAGE_QUALITY_STEP_SUBSTRUCT;
+                }
+                if (currentQuality - intFraction < WEBP_QUALITY_BOTTOM) {
+                  currentQuality -= 1;
+                } else {
+                  currentQuality -= intFraction >= 1 ? intFraction : 1;
+                }
+              }
+            }
+            if (currentQuality > 0 && data.length > 1) {
+              await fs.writeFile(convertedImagePath, data);
+              console.log(
+                "\tsaved",
+                convertedImagePath.split(path.sep).pop(),
+                "\n\t  size of file is:",
+                data.length,
+                "\n\t  with quality:",
+                currentQuality
+              );
+            }
+          } catch (e: any) {
+            console.error(e.stack || e.message || e);
+          }
+          break;
+      }
+    }
+    await saveToDb(imagePath);
+    if (convertedImagePath && convertedImagePath !== imagePath) {
+      await saveToDb(convertedImagePath);
+    }
+  } catch (e: any) {
+    console.error(e.stack || e.message || e);
+  }
+}
 
 export const parseImagesToDB = async () => {
   if (!process.env["SITE_PUBLIC_FOLDER"]) {
@@ -32,267 +298,7 @@ export const parseImagesToDB = async () => {
         path.size < ABNORMAL_IMAGE_SIZE_LIMIT
       ) {
         const imagePath = path.fullpath();
-        let convertedImagePath = imagePath;
-        try {
-          let imageStream = sharp(imagePath);
-          const meta = await imageStream.metadata();
-          let needResize = Boolean(
-            meta && meta.height && meta.height > IMAGE_MAX_HEIGHT
-          );
-
-          if (meta.height) {
-            switch (meta.format) {
-              case "jpeg":
-              case "jpg":
-                try {
-                  let loopPathSize = path.size;
-                  let currentQuality = 100;
-                  let data: Buffer = Buffer.alloc(0);
-                  while (
-                    loopPathSize >= IMAGE_UPPER_SIZE_LIMIT &&
-                    currentQuality > 0
-                  ) {
-                    if (needResize) {
-                      data = await imageStream
-                        .resize({ height: IMAGE_MAX_HEIGHT })
-                        .jpeg({ mozjpeg: true, quality: currentQuality })
-                        .withMetadata()
-                        .toBuffer();
-                    } else {
-                      data = await imageStream
-                        .jpeg({ mozjpeg: true, quality: currentQuality })
-                        .withMetadata()
-                        .toBuffer();
-                    }
-                    loopPathSize = data.length;
-                    if (loopPathSize >= IMAGE_UPPER_SIZE_LIMIT) {
-                      let intFraction = Math.floor(
-                        3 * (loopPathSize / IMAGE_UPPER_SIZE_LIMIT)
-                      );
-                      if (intFraction > MAX_IMAGE_QUALITY_STEP_SUBSTRUCT) {
-                        intFraction = MAX_IMAGE_QUALITY_STEP_SUBSTRUCT;
-                      }
-                      if (currentQuality - intFraction < JPEG_QUALITY_BOTTOM) {
-                        currentQuality -= 1;
-                      } else {
-                        currentQuality -= intFraction >= 1 ? intFraction : 1;
-                      }
-                    }
-                    console.log(
-                      "It is",
-                      convertedImagePath,
-                      "\n\thaving size:",
-                      loopPathSize,
-                      "with quality:",
-                      currentQuality
-                    );
-                  }
-                  if (currentQuality > 0 && data.length > 1) {
-                    await fs.writeFile(convertedImagePath, data);
-                    console.log(
-                      "\tsaved",
-                      convertedImagePath.split(path.sep).pop(),
-                      "\n\t  size of file is:",
-                      data.length,
-                      "\n\t  with quality:",
-                      currentQuality
-                    );
-                  }
-                } catch (e: any) {
-                  console.error(e.stack || e.message || e);
-                }
-                break;
-              case "png":
-                try {
-                  let loopPathSize = path.size;
-                  let currentQuality = 100;
-                  let data: Buffer = Buffer.alloc(0);
-                  convertedImagePath =
-                    imagePath.replace(/\.png$/gim, "") + ".webp";
-                  while (
-                    loopPathSize >= IMAGE_UPPER_SIZE_LIMIT &&
-                    currentQuality > 0
-                  ) {
-                    if (needResize) {
-                      data = await imageStream
-                        .resize({ height: IMAGE_MAX_HEIGHT })
-                        .webp({ quality: currentQuality })
-                        .withMetadata()
-                        .toBuffer();
-                      imageStream = sharp(data);
-                      needResize = false;
-                    } else {
-                      data = await imageStream
-                        .webp({ quality: currentQuality })
-                        .withMetadata()
-                        .toBuffer();
-                    }
-                    loopPathSize = data.length;
-                    if (loopPathSize >= IMAGE_UPPER_SIZE_LIMIT) {
-                      let intFraction = Math.floor(
-                        2 * (loopPathSize / IMAGE_UPPER_SIZE_LIMIT)
-                      );
-                      if (intFraction > MAX_IMAGE_QUALITY_STEP_SUBSTRUCT) {
-                        intFraction = MAX_IMAGE_QUALITY_STEP_SUBSTRUCT;
-                      }
-                      if (currentQuality - intFraction < WEBP_QUALITY_BOTTOM) {
-                        currentQuality -= 1;
-                      } else {
-                        currentQuality -= intFraction >= 1 ? intFraction : 1;
-                      }
-                    }
-                    console.log(
-                      "It is",
-                      convertedImagePath,
-                      "\n\thaving size:",
-                      loopPathSize,
-                      "with quality:",
-                      currentQuality
-                    );
-                  }
-                  if (currentQuality > 0 && data.length > 1) {
-                    await fs.writeFile(convertedImagePath, data);
-                    console.log(
-                      "\tsaved",
-                      convertedImagePath.split(path.sep).pop(),
-                      "\n\t  size of file is:",
-                      data.length,
-                      "\n\t  with quality:",
-                      currentQuality
-                    );
-                  }
-                  loopPathSize = path.size;
-                  currentQuality = 100;
-                  data = Buffer.alloc(0);
-                  while (
-                    loopPathSize >= IMAGE_UPPER_SIZE_LIMIT &&
-                    currentQuality > 0
-                  ) {
-                    if (needResize) {
-                      data = await imageStream
-                        .resize({ height: IMAGE_MAX_HEIGHT })
-                        .png({ quality: currentQuality, compressionLevel: 6 })
-                        .withMetadata()
-                        .toBuffer();
-                      imageStream = sharp(data);
-                      needResize = false;
-                    } else {
-                      data = await imageStream
-                        .png({ quality: currentQuality, compressionLevel: 6 })
-                        .withMetadata()
-                        .toBuffer();
-                    }
-                    loopPathSize = data.length;
-                    console.log(
-                      "It is",
-                      imagePath,
-                      "\n\thaving size:",
-                      loopPathSize,
-                      "with quality:",
-                      currentQuality
-                    );
-                    if (loopPathSize >= IMAGE_UPPER_SIZE_LIMIT) {
-                      let intFraction = Math.floor(
-                        10 * (loopPathSize / IMAGE_UPPER_SIZE_LIMIT)
-                      );
-                      if (intFraction > MAX_IMAGE_QUALITY_STEP_SUBSTRUCT) {
-                        intFraction = MAX_IMAGE_QUALITY_STEP_SUBSTRUCT;
-                      }
-                      if (currentQuality - intFraction < PNG_QUALITY_BOTTOM) {
-                        currentQuality -= 1;
-                      } else {
-                        currentQuality -= intFraction >= 1 ? intFraction : 1;
-                      }
-                    }
-                  }
-                  if (currentQuality < 1) {
-                    currentQuality = 1;
-                  }
-                  if (currentQuality > 0 && data.length > 1) {
-                    await fs.writeFile(imagePath, data);
-                    console.log(
-                      "\tsaved",
-                      imagePath.split(path.sep).pop(),
-                      "\n\t  size of file is:",
-                      data.length,
-                      "\n\t  with quality:",
-                      currentQuality
-                    );
-                  }
-                } catch (e: any) {
-                  console.error(e.stack || e.message || e);
-                }
-                break;
-              case "webp":
-                try {
-                  let loopPathSize = path.size;
-                  let currentQuality = 100;
-                  let data: Buffer = Buffer.alloc(0);
-                  while (
-                    loopPathSize >= IMAGE_UPPER_SIZE_LIMIT &&
-                    currentQuality > 0
-                  ) {
-                    if (needResize) {
-                      data = await imageStream
-                        .resize({ height: IMAGE_MAX_HEIGHT })
-                        .webp({ quality: currentQuality })
-                        .withMetadata()
-                        .toBuffer();
-                      imageStream = sharp(data);
-                      needResize = false;
-                    } else {
-                      data = await imageStream
-                        .webp({ quality: currentQuality })
-                        .withMetadata()
-                        .toBuffer();
-                    }
-                    loopPathSize = data.length;
-                    console.log(
-                      "It is",
-                      convertedImagePath,
-                      "\n\thaving size:",
-                      loopPathSize,
-                      "with quality:",
-                      currentQuality
-                    );
-                    if (loopPathSize >= IMAGE_UPPER_SIZE_LIMIT) {
-                      let intFraction = Math.floor(
-                        2 * (loopPathSize / IMAGE_UPPER_SIZE_LIMIT)
-                      );
-                      if (intFraction > MAX_IMAGE_QUALITY_STEP_SUBSTRUCT) {
-                        intFraction = MAX_IMAGE_QUALITY_STEP_SUBSTRUCT;
-                      }
-                      if (currentQuality - intFraction < WEBP_QUALITY_BOTTOM) {
-                        currentQuality -= 1;
-                      } else {
-                        currentQuality -= intFraction >= 1 ? intFraction : 1;
-                      }
-                    }
-                  }
-                  if (currentQuality > 0 && data.length > 1) {
-                    await fs.writeFile(convertedImagePath, data);
-                    console.log(
-                      "\tsaved",
-                      convertedImagePath.split(path.sep).pop(),
-                      "\n\t  size of file is:",
-                      data.length,
-                      "\n\t  with quality:",
-                      currentQuality
-                    );
-                  }
-                } catch (e: any) {
-                  console.error(e.stack || e.message || e);
-                }
-                break;
-            }
-          }
-          await saveToDb(imagePath);
-          if (convertedImagePath && convertedImagePath !== imagePath) {
-            await saveToDb(convertedImagePath);
-          }
-        } catch (e: any) {
-          console.error(e.stack || e.message || e);
-        }
+        await processImage(imagePath, path.size);
       }
     }
   }

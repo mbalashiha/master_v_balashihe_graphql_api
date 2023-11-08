@@ -28,7 +28,6 @@ import cookieParser from "cookie-parser";
 import excuteQuery from "@src/sql/execute-query";
 import { createApplication } from "graphql-modules";
 import { baseModule } from "@modules/base";
-import { managementModule } from "@modules/management";
 import { blogArticlesModule } from "@modules/blog";
 import { signInModule } from "@modules/management/sign-in";
 import managementLoginMiddleware, {
@@ -47,6 +46,7 @@ import pageViewCount from "./page-view-count";
 import { BlogArticleTemplatesModule } from "@root/schema/modules/blog/management/article-templates";
 import { parseImagesToDB } from "./image/parse-images-to-db";
 import prettierReact from "./utils/prettier-react";
+import { imagesModule } from "@root/schema/modules/management/images";
 
 /**const corsOptions = {
   origin: "http://localhost:3000", //change with your own client URL
@@ -56,8 +56,8 @@ import prettierReact from "./utils/prettier-react";
 const application = createApplication({
   modules: [
     baseModule,
+    imagesModule,
     signInModule,
-    managementModule,
     ManagementArticlesCardsModule,
     BlogArticleTemplatesModule,
     blogArticlesModule,

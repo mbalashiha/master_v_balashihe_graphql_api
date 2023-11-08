@@ -7,6 +7,7 @@ import delay from "delay";
 import util from "util";
 import sharp from "sharp";
 import db from "./sql/execute-query";
+import { processImage } from "./image/parse-images-to-db";
 export interface UploadedFileUriObject {
   absolutePathOfOriginal: string;
   absoluteFinalPath: string;
@@ -122,89 +123,105 @@ export const uploadResponseHandler = async function (
   res: EnhResponse,
   next: Function
 ) {
-  const { fullFilepathes } = req;
-  const result: Array<{
-    imgSrc: string;
-    width: number;
-    height: number;
-    imageId: string | number | null;
-    fieldname: string;
-  }> = [];
-  let lastError: string | null = null;
-  for (let i = 0; i < fullFilepathes.length; i++) {
-    try {
-      const obj = fullFilepathes[i];
-      const fieldname = obj.db.fieldname;
-      const imgSrc = obj.db.imgSrc;
-      const filepath = obj.absolutePathOfOriginal;
-      const absoluteFinalPath = obj.absoluteFinalPath;
-      let data: sharp.OutputInfo | undefined = undefined;
+  const newImageAbsolutePathes: Array<string> = [];
+  try {
+    const { fullFilepathes } = req;
+    const result: Array<{
+      imgSrc: string;
+      width: number;
+      height: number;
+      imageId: string | number;
+      fieldname: string;
+    }> = [];
+    let lastError: string | null = null;
+    for (let i = 0; i < fullFilepathes.length; i++) {
       try {
-        const imageStream = sharp(filepath);
-        data = await imageStream
-          .toFormat("webp", { quality: 95 })
-          .toFile(absoluteFinalPath);
-      } catch (e: any) {
-        if (e) {
-          lastError = e.stack || e.message || e;
-          console.error(e.stack || e.message || e);
-        }
-      } finally {
+        const obj = fullFilepathes[i];
+        const fieldname = obj.db.fieldname;
+        const imgSrc = obj.db.imgSrc;
+        const filepath = obj.absolutePathOfOriginal;
+        const absoluteFinalPath = obj.absoluteFinalPath;
+        let data: sharp.OutputInfo | undefined = undefined;
         try {
-          await fse.remove(filepath);
-        } catch {}
-      }
-      if (data && data.width && data.height) {
-        let imageId: string | number | null = null;
-        const { width, height } = data;
-        lastError = null;
-        try {
-          let insertRowDataPacket: any = await db.query(
-            `insert into image(imgSrc, width, height, originalWidth, originalHeight) values($imgSrc, $width, $height, $width, $height)
-                ON DUPLICATE KEY UPDATE
-                  image.width = VALUES(image.width),
-                  image.height = VALUES(image.height),
-                  image.originalWidth = VALUES(image.originalWidth),
-                  image.originalHeight = VALUES(image.originalHeight)`,
-            { imgSrc, width, height }
-          );
-          insertRowDataPacket =
-            (insertRowDataPacket && insertRowDataPacket[0]) ||
-            insertRowDataPacket;
-          if (insertRowDataPacket && insertRowDataPacket.insertId) {
-            imageId = insertRowDataPacket.insertId;
-          } else {
-            const rows = await db.excuteQuery({
-              query: `select imageId from image where imgSrc=$imgSrc`,
-              variables: {
-                imgSrc,
-              },
-            });
-            imageId = (rows && rows[0] && rows[0].imageId) || null;
-          }
+          const imageStream = sharp(filepath);
+          data = await imageStream
+            .toFormat("webp", { quality: 95 })
+            .toFile(absoluteFinalPath);
         } catch (e: any) {
           if (e) {
             lastError = e.stack || e.message || e;
             console.error(e.stack || e.message || e);
           }
+        } finally {
+          try {
+            await fse.remove(filepath);
+          } catch {
+            newImageAbsolutePathes.push(filepath);
+          }
         }
-        if (imageId) {
-          result.push({ fieldname, imgSrc, width, height, imageId });
+        if (data && data.width && data.height) {
+          newImageAbsolutePathes.push(absoluteFinalPath);
+          let imageId: string | number | null = null;
+          const { width, height } = data;
+          lastError = null;
+          try {
+            let insertRowDataPacket: any = await db.query(
+              `insert into image(imgSrc, width, height, originalWidth, originalHeight) values($imgSrc, $width, $height, $width, $height)
+                ON DUPLICATE KEY UPDATE
+                  image.width = VALUES(image.width),
+                  image.height = VALUES(image.height),
+                  image.originalWidth = VALUES(image.originalWidth),
+                  image.originalHeight = VALUES(image.originalHeight)`,
+              { imgSrc, width, height }
+            );
+            insertRowDataPacket =
+              (insertRowDataPacket && insertRowDataPacket[0]) ||
+              insertRowDataPacket;
+            if (insertRowDataPacket && insertRowDataPacket.insertId) {
+              imageId = insertRowDataPacket.insertId;
+            } else {
+              const rows = await db.excuteQuery({
+                query: `select imageId from image where imgSrc=$imgSrc`,
+                variables: {
+                  imgSrc,
+                },
+              });
+              imageId = (rows && rows[0] && rows[0].imageId) || null;
+            }
+          } catch (e: any) {
+            if (e) {
+              lastError = e.stack || e.message || e;
+              console.error(e.stack || e.message || e);
+            }
+          }
+          if (imageId) {
+            result.push({ fieldname, imgSrc, width, height, imageId });
+          }
         }
+      } catch (e: any) {
+        if (e) {
+          lastError = e.stack || e.message || e;
+          console.error(e.stack || e.message || e);
+        }
+        console.error();
       }
-    } catch (e: any) {
-      if (e) {
-        lastError = e.stack || e.message || e;
-        console.error(e.stack || e.message || e);
-      }
-      console.error();
     }
+    const resultJson = {
+      success: lastError || result.length <= 0 ? false : true,
+      error: lastError || null,
+      images: result,
+    };
+    return res.json(resultJson);
+  } finally {
+    (async () => {
+      for (const imagePath of newImageAbsolutePathes) {
+        try {
+          await processImage(imagePath);
+        } catch (e: any) {
+          console.error(e.message || e.stack || e);
+        }
+      }
+    })();
   }
-  const resultJson = {
-    success: lastError || result.length <= 0 ? false : true,
-    error: lastError || null,
-    images: result,
-  };
-  return res.json(resultJson);
 } as any;
 export default uploadResponseHandler;
