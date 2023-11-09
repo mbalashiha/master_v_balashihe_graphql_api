@@ -55,6 +55,8 @@ const storage = multer.diskStorage({
     cb: (error: Error | null, destination: string) => void
   ): void {
     // Uploads is the Upload_folder_name
+    fse.mkdirp(originalsFolder);
+    fse.mkdirp(finalFolder);
     const originalFieldname = file.fieldname;
     const fieldname = file.fieldname
       .replace(/[.]{2,}/gim, ".")

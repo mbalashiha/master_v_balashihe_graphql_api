@@ -2,9 +2,7 @@ import { createModule, gql } from "graphql-modules";
 import util from "util";
 import db from "@src/sql/execute-query";
 import { GraphQLError, GraphQLResolveInfo } from "graphql";
-import { isPositiveInteger } from "@src/utils/type-checkers";
 import { Schema } from "@root/schema/types/schema";
-import { inputAdornmentClasses } from "@mui/material";
 
 export const imagesModule = createModule({
   id: "images-module",
