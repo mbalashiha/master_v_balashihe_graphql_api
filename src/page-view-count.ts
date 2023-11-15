@@ -43,7 +43,12 @@ export const pageViewCount = async (req: Request, res: Response) => {
     } else {
       throw new Error("No correct ip and timestamp or form values");
     }
-    return res.type("json").send({});
+    const rows = await db.query(
+      "select id as articleId, viewed from blog_article where id=$articleId",
+      { articleId }
+    );
+    const info = rows && rows[0];
+    return res.type("json").send({ ...info });
   } catch (e: any) {
     e = e || {};
     console.error(e.stack || e.message);
