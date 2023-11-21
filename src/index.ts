@@ -47,6 +47,7 @@ import { BlogArticleTemplatesModule } from "@root/schema/modules/blog/management
 import { parseImagesToDB } from "./image/parse-images-to-db";
 import prettierReact from "./utils/prettier-react";
 import { imagesModule } from "@root/schema/modules/management/images";
+import { imagesQueryModule } from "@root/schema/modules/images";
 
 /**const corsOptions = {
   origin: "http://localhost:3000", //change with your own client URL
@@ -57,6 +58,7 @@ const application = createApplication({
   modules: [
     baseModule,
     imagesModule,
+    imagesQueryModule,
     signInModule,
     ManagementArticlesCardsModule,
     BlogArticleTemplatesModule,
@@ -213,6 +215,6 @@ app.use(
 );
 app.listen(parseInt(LISTENING_PORT), "127.0.0.1", () => {
   setTimeout(() => parseImagesToDB(), 15000);
-  //   `Running a GraphQL API server at http://localhost:${LISTENING_PORT}/graphql/api`
+  // `Running a GraphQL API server at http://localhost:${LISTENING_PORT}/graphql/api`
 });
 export default app;
