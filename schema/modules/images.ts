@@ -28,7 +28,14 @@ export const imagesQueryModule = createModule({
         info: GraphQLResolveInfo
       ) => {
         return await db.query(
-          "select * from image where imgSrc Like '%/ticker/%' ORDER BY RAND()"
+          `
+          SELECT i.* FROM image i
+            Left JOIN image i2 ON 
+                SUBSTRING_INDEX(i.imgSrc, '.', -1) != 'webp' AND 
+                i2.imageId != i.imageId And 
+                i2.imgSrc = Concat(SUBSTRING(i.imgSrc, 1, LENGTH(i.imgSrc)-Length(SUBSTRING_INDEX(i.imgSrc, '.', -1))), 'webp')
+            WHERE i.imgSrc Like '%/ticker/%' And i2.imageId IS NULL ORDER BY RAND()
+          `
         );
       },
     },
