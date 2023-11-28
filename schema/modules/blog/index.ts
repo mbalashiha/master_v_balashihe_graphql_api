@@ -281,7 +281,7 @@ export const blogArticlesModule = createModule({
                      null as fragment, null as score 
                   from blog_article_handle   
                     Where notInList is NULL And unPublished is NULL
-                    Order By createdAt Desc, updatedAt Desc ` +
+                    Order By viewed Desc, updatedAt Desc, publishedAt Desc, createdAt Desc ` +
                 offsetLimitString,
               variables: { offset, limit },
             });

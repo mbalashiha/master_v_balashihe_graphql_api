@@ -5,6 +5,7 @@ import { GraphQLError, GraphQLResolveInfo } from "graphql";
 import { fullTextSearch } from "@src/sql/full-text-search";
 import { Schema } from "@root/schema/types/schema";
 import dateToISO from "@src/utils/date-to-iso";
+import formatDateString from "@src/utils/date-format-date-string";
 
 export const ManagementArticlesCardsModule = createModule({
   id: "management-article-cards-module",
@@ -27,9 +28,11 @@ export const ManagementArticlesCardsModule = createModule({
         secondImageId: ID
         viewed: Int
         templateId: ID
-        datePublished: String
-        dateModified: String
+        datePublishedISO: String
+        dateModifiedISO: String
         description: String
+        modifiedDate: String
+        publishedDate: String
       }
       type ManagementArticlesCards {
         search: String
@@ -46,7 +49,7 @@ export const ManagementArticlesCardsModule = createModule({
   ],
   resolvers: {
     ArticleCard: {
-      datePublished: async (
+      datePublishedISO: async (
         parent: Schema.BlogArticle,
         variables: any,
         _ctx: any,
@@ -56,7 +59,7 @@ export const ManagementArticlesCardsModule = createModule({
           ? dateToISO(parent.publishedAt)
           : dateToISO(parent.createdAt);
       },
-      dateModified: async (
+      dateModifiedISO: async (
         parent: Schema.BlogArticle,
         variables: any,
         _ctx: any,
@@ -68,6 +71,26 @@ export const ManagementArticlesCardsModule = createModule({
           : parent.updatedAt
           ? dateToISO(parent.updatedAt)
           : dateToISO(parent.createdAt);
+      },
+      modifiedDate: async (
+        parent: Schema.BlogArticle,
+        variables: any,
+        _ctx: any,
+        info: GraphQLResolveInfo
+      ) => {
+        return parent.updatedAt
+          ? formatDateString(parent.updatedAt)
+          : formatDateString(parent.createdAt);
+      },
+      publishedDate: async (
+        parent: Schema.BlogArticle,
+        variables: any,
+        _ctx: any,
+        info: GraphQLResolveInfo
+      ) => {
+        return parent.publishedAt
+          ? formatDateString(parent.publishedAt)
+          : formatDateString(parent.createdAt);
       },
       image: async (
         parent: Schema.BlogArticle,
