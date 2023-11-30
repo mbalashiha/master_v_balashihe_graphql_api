@@ -3,9 +3,9 @@ import fs from "fs/promises";
 import fse from "fs-extra";
 import { glob, globSync, globStream, globStreamSync, Glob, Path } from "glob";
 import sharp from "sharp";
+import slugify from "slugify";
 import { saveToDb } from "./parse-images-save-to-db-query";
 import { collectAllPublicImagesToDB } from "./collect-all-public-images";
-import { fullTextSearch } from "@src/sql/full-text-search";
 
 const IMAGE_UPPER_SIZE_LIMIT = 300 * 1024;
 const IMAGE_MAX_HEIGHT = 2160;
@@ -14,6 +14,19 @@ const WEBP_QUALITY_BOTTOM = 30;
 const JPEG_QUALITY_BOTTOM = 30;
 const PNG_QUALITY_BOTTOM = 3;
 const MAX_IMAGE_QUALITY_STEP_SUBSTRUCT = 40;
+
+function getExtensionAndBasename(inFilepath: string) {
+  const dotLastindex = inFilepath.lastIndexOf(".");
+  let extension =
+    dotLastindex < 0 ? "" : inFilepath.substring(inFilepath.lastIndexOf("."));
+  let withoutExtension =
+    dotLastindex < 0
+      ? inFilepath
+      : inFilepath.substring(0, inFilepath.lastIndexOf("."));
+  let lcExtension = extension.toLowerCase();
+  return { extension, withoutExtension, lcExtension };
+}
+// const getExtensionRegexp = () => /\.[^\.\/\\]+$/;
 
 async function convertToWebp(
   imageStream: sharp.Sharp,
@@ -269,22 +282,49 @@ export async function processImage(imagePath: string, originalSize?: number) {
     console.error(e.stack || e.message || e);
   }
 }
-async function getFinalPath(path: Path): Promise<string> {
-  let tempImagePath = path.fullpath();
-  let extension = tempImagePath.substring(tempImagePath.lastIndexOf("."));
-  let withoutExtension = tempImagePath.substring(
-    0,
-    tempImagePath.lastIndexOf(".")
+async function getFinalPath(inPath: Path): Promise<string> {
+  let tempImagePath = inPath.fullpath();
+  const baseName = tempImagePath.substring(
+    tempImagePath.lastIndexOf(path.sep) + 1
   );
-  let lcExtension = extension.toLowerCase();
+  const baseDir = tempImagePath.substring(
+    0,
+    tempImagePath.lastIndexOf(path.sep)
+  );
+  const transl = slugify(baseName);
+  if (transl && transl != baseName) {
+    const { extension, withoutExtension, lcExtension } =
+      getExtensionAndBasename(transl);
+    let renamingToFullpath = path.join(
+      baseDir,
+      `${withoutExtension}${lcExtension}`
+    );
+    try {
+      if (!(await fse.exists(renamingToFullpath))) {
+        await fse.rename(inPath.fullpath(), renamingToFullpath);
+      } else {
+        renamingToFullpath = path.join(
+          baseDir,
+          `${withoutExtension}_slugified${lcExtension}`
+        );
+        await fse.rename(inPath.fullpath(), renamingToFullpath);
+      }
+      tempImagePath = renamingToFullpath;
+      return tempImagePath;
+    } catch (e: any) {
+      console.error(e.message || e);
+    }
+  }
+  const { extension, withoutExtension, lcExtension } =
+    getExtensionAndBasename(tempImagePath);
   if (lcExtension !== extension) {
     let renamingToFullpath = `${withoutExtension}${lcExtension}`;
     try {
       if (!(await fse.exists(renamingToFullpath))) {
-        await fse.rename(path.fullpath(), renamingToFullpath);
+        await fse.rename(inPath.fullpath(), renamingToFullpath);
       } else {
         renamingToFullpath = `${withoutExtension}_loweredcase_ext${lcExtension}`;
-        await fse.rename(path.fullpath(), renamingToFullpath);
+        await fse.rename(inPath.fullpath(), renamingToFullpath);
       }
       tempImagePath = renamingToFullpath;
     } catch (e: any) {
@@ -339,4 +379,4 @@ export const parseImagesToDB = async () => {
         }
       );
     }
-  }*/
+  }*/ 
