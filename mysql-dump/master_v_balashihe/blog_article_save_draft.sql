@@ -57,6 +57,10 @@ BEGIN
 	Set in_secondImageId := If(in_secondImageId='' OR in_secondImageId IS NULL,NULL, in_secondImageId);
 	Set in_h2 := If(in_h2='' OR in_h2 IS NULL,NULL, in_h2);
 	
+	Set in_autoHandleSlug := TRIM(BOTH '/' FROM in_autoHandleSlug);
+	Set in_handle := TRIM(BOTH '/' FROM in_handle);	
+	Set in_absURL := TRIM(BOTH '/' FROM in_absURL);
+	
 	SELECT draftArticleId INTO stored_draftArticleId FROM draft_blog_article d
 		WHERE in_managerId=d.managerId AND d.isDraftSaved IS NULL And
 				IFNULL(in_title, '')=IFNULL(d.title,'') And

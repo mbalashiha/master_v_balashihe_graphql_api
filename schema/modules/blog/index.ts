@@ -11,6 +11,9 @@ import { fullTextSearch } from "@src/sql/full-text-search";
 import { Schema } from "@root/schema/types/schema";
 import { parseImagesToRandom } from "@src/image/parse-images-to-random";
 import dateToISO from "@src/utils/date-to-iso";
+import getnextJsPagePath from "@src/utils/get-next-js-page-path";
+import path from "path";
+import { glob } from "glob";
 const getFirst = async (notThisId: number | string) => {
   const rows = await db.excuteQuery({
     query: `SELECT 1 as itIsloop, id, title, handle, imageId FROM blog_article_handle WHERE absURL is NULL AND id = (SELECT MIN(id) FROM blog_article_handle Where absURL is NULL) And id != $articleId`,
@@ -71,7 +74,6 @@ export const blogArticlesModule = createModule({
         id: ID
         title: String
         handle: String
-        displayingPageHandle: String
         description: String
         absURL: String
         text: String
@@ -79,7 +81,6 @@ export const blogArticlesModule = createModule({
         textRawDraftContentState: String
         renderHtml: String
         keyTextHtml: String
-        autoHandleSlug: String
         orderNumber: Int
         blogCategoryId: ID
         category: CategoryId
@@ -124,7 +125,7 @@ export const blogArticlesModule = createModule({
           offset: Int
           limit: Int
         ): BlogArticlesConnection
-        articlesPathes: PathHandlesRespose!
+        articlesPathes(filename: String): PathHandlesRespose!
         articlesCards(
           search: String
           offset: Int
@@ -135,7 +136,7 @@ export const blogArticlesModule = createModule({
           offset: Int
           limit: Int
         ): RecentArticlesConnection!
-        articleByHandle(handle: String): BlogArticle
+        articleByHandle(handle: String, filename: String): BlogArticle
         articleByAbsUrl(absURL: String): BlogArticle
       }
     `,
@@ -150,9 +151,39 @@ export const blogArticlesModule = createModule({
       ) => {
         try {
           const articles: any = await db.excuteQuery({
-            query: "select handle from blog_article_handle",
+            query: `SELECT ph.handle FROM page_handle ph`,
           });
-          return articles;
+          /**
+           * const articles: any = await db.excuteQuery({
+            query: `SELECT * FROM page_handle ph
+                  LEFT JOIN blog_article ba ON ba.handleId=ph.id
+                  LEFT JOIN blog_category bc ON bc.handleId=ph.id
+                  WHERE ba.id IS NOT NULL OR bc.blogCategoryId IS NOT NULL`,
+              });
+           */
+          const pages = (
+            await glob("**/*.{js,jsx,tsx}", {
+              cwd: path.join(process.env["NEXTJS_ROOT_FOLDER"] || "", "pages"),
+            })
+          ).map((str) =>
+            str
+              .replace(/^index\.(js|jsx|tsx)$/i, "")
+              .replace(/[\/\\]index\.(js|jsx|tsx)$/i, "")
+              .replace(/\.(js|jsx|tsx)$/i, "")
+              .replace(/\\/g, "/")
+          );
+          // console.log("pages:", pages);
+          const filtered = articles
+            .filter((elem: any) => elem && typeof elem.handle === "string")
+            .map(({ handle }: any) => ({
+              handle: handle
+                .replace(/\.(\w+)$/, "-$1")
+                .replace(/[\/\\]index$/i, "")
+                .replace(/^index$/i, ""),
+            }))
+            .filter(({ handle }: any) => !pages.includes(handle));
+          // console.log("filtered:", filtered);
+          return filtered;
         } catch (e: any) {
           console.error(e.stack || e.message || e);
           debugger;
@@ -216,7 +247,7 @@ export const blogArticlesModule = createModule({
               : ``;
             const articles: any = await db.excuteQuery({
               query:
-                `select id, imageId, Coalesce(displayingPageHandle, handle, title, id) as handle, absURL, displayingPageHandle, title, 
+                `select id, imageId, Coalesce(handle, title, id) as handle, absURL, title, 
                      publishedAt, 
                      updatedAt, description, viewed,  null as fragment, null as score 
                   from blog_article_handle   
@@ -232,7 +263,7 @@ export const blogArticlesModule = createModule({
               offset,
               limit,
               naturalLanguageModeQuery: `
-            select id, imageId, Coalesce(displayingPageHandle, handle, title, id) as handle, absURL, displayingPageHandle, title, 
+            select id, imageId, Coalesce(handle, title, id) as handle, absURL, title, 
                      publishedAt, 
                      updatedAt, description, viewed,  text as fragment,
                   MATCH (title,text,h2) AGAINST ($search IN NATURAL LANGUAGE MODE) as score
@@ -241,7 +272,7 @@ export const blogArticlesModule = createModule({
                   unPublished is NULL And notSearchable is NULL And 
                   MATCH (title,text,h2) AGAINST ($search IN NATURAL LANGUAGE MODE)`,
               booleanModeQuery: `
-            select id, imageId, Coalesce(displayingPageHandle, handle, title, id) as handle, absURL, displayingPageHandle, title, 
+            select id, imageId, Coalesce(handle, title, id) as handle, absURL, title, 
                      publishedAt, 
                      updatedAt, description, viewed,  text as fragment,
                   MATCH (title,text,h2) AGAINST ($search IN BOOLEAN MODE) as score
@@ -275,7 +306,7 @@ export const blogArticlesModule = createModule({
               : ``;
             const articles: any = await db.excuteQuery({
               query:
-                `select id, imageId, handle, null as absURL, handle as displayingPageHandle, title, 
+                `select id, imageId, handle, null as absURL, title, 
                      publishedAt, 
                      updatedAt, description, viewed, 
                      null as fragment, null as score 
@@ -292,7 +323,7 @@ export const blogArticlesModule = createModule({
               offset,
               limit,
               naturalLanguageModeQuery: `
-            select id, imageId, handle, null as absURL, handle as displayingPageHandle, title, 
+            select id, imageId, handle, null as absURL,title, 
                      publishedAt, 
                      updatedAt, description, viewed,  text as fragment,
                   MATCH (title,text,h2) AGAINST ($search IN NATURAL LANGUAGE MODE) as score
@@ -301,7 +332,7 @@ export const blogArticlesModule = createModule({
                   unPublished is NULL And notSearchable is NULL And 
                   MATCH (title,text,h2) AGAINST ($search IN NATURAL LANGUAGE MODE)`,
               booleanModeQuery: `
-            select id, imageId, handle, null as absURL, handle as displayingPageHandle, title, 
+            select id, imageId, handle, null as absURL, title, 
                      publishedAt, 
                      updatedAt, description, viewed,  text as fragment,
                   MATCH (title,text,h2) AGAINST ($search IN BOOLEAN MODE) as score
@@ -326,6 +357,9 @@ export const blogArticlesModule = createModule({
         _ctx: any,
         info: GraphQLResolveInfo
       ) => {
+        if (!parent?.id) {
+          return null;
+        }
         return parent.publishedAt
           ? dateToISO(parent.publishedAt)
           : dateToISO(parent.createdAt);
@@ -336,6 +370,9 @@ export const blogArticlesModule = createModule({
         _ctx: any,
         info: GraphQLResolveInfo
       ) => {
+        if (!parent?.id) {
+          return null;
+        }
         const existingImageId = parent.secondImageId || parent.imageId;
         return existingImageId
           ? dateToISO(new Date())
@@ -349,6 +386,9 @@ export const blogArticlesModule = createModule({
         _ctx: any,
         info: GraphQLResolveInfo
       ) => {
+        if (!parent?.id) {
+          return null;
+        }
         const existingImageId = parent.secondImageId || parent.imageId;
         return {
           modified_time: existingImageId
@@ -367,8 +407,8 @@ export const blogArticlesModule = createModule({
         _ctx: any,
         info: GraphQLResolveInfo
       ) => {
-        if (!parent.id) {
-          throw new Error("No article id in randomImage");
+        if (!parent?.id) {
+          return null;
         }
         const existingImageId = parent.secondImageId || parent.imageId;
         if (existingImageId) {
@@ -399,7 +439,7 @@ export const blogArticlesModule = createModule({
         _ctx: any,
         info: GraphQLResolveInfo
       ) => {
-        if (!parent.imageId) {
+        if (!parent?.imageId) {
           return null;
         }
         const rows = await db.excuteQuery({
@@ -439,10 +479,10 @@ export const blogArticlesModule = createModule({
         _ctx: any,
         info: GraphQLResolveInfo
       ) => {
-        const articleId = parent.id;
-        if (!articleId) {
-          throw new Error("Why is no parent article id for navigation node!");
+        if (!parent?.id) {
+          return null;
         }
+        const articleId = parent.id;
         try {
           const articlesBeforeList: any[] = [];
           const articlesAfterList: any[] = [];
@@ -508,11 +548,14 @@ export const blogArticlesModule = createModule({
         }
       },
       breadcrumbs: async (
-        parent: { productId: any },
+        parent: any,
         variables: any,
         _ctx: any,
         info: GraphQLResolveInfo
       ) => {
+        if (!parent?.id) {
+          return null;
+        }
         // if (!parent.productId) {
         //   throw new Error("Product breadcrumbs: no parent.productId");
         // }
@@ -654,16 +697,20 @@ export const blogArticlesModule = createModule({
       },
       articleByHandle: async (
         parent: any,
-        variables: { handle: string },
+        variables: { handle: string; filename: string },
         _ctx: any,
         info: GraphQLResolveInfo
       ) => {
         try {
+          const { handle, filename } = variables;
           let rows = await db.query(
-            `select * from blog_article_handle where handle=?`,
+            `select * from blog_article_handle where handle=TRIM(BOTH '/' FROM ?)`,
             [variables.handle]
           );
           let result = rows && rows[0];
+          if (!result) {
+            return null;
+          }
           return { ...parent, ...variables, ...result };
         } catch (e: any) {
           console.error(e.stack || e.message || e);
@@ -679,10 +726,13 @@ export const blogArticlesModule = createModule({
       ) => {
         try {
           let rows = await db.query(
-            `select * from blog_article_handle where absURL=?`,
+            `select * from blog_article_handle where absURL=TRIM(BOTH '/' FROM ?)`,
             [variables.absURL]
           );
           let result = rows && rows[0];
+          if (!result) {
+            return null;
+          }
           return { ...parent, ...variables, ...result };
         } catch (e: any) {
           console.error(e.stack || e.message || e);

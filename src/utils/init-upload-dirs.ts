@@ -34,6 +34,7 @@ const initUploadDirs = () => {
       const imageUploadFolder = path.join(sitePublicFolder, "image", "upload");
       process.env["SITE_PUBLIC_FOLDER"] = sitePublicFolder;
       process.env["imageUploadFolder"] = imageUploadFolder;
+      process.env["NEXTJS_ROOT_FOLDER"] = siteFolder;
       fse.mkdirpSync(imageUploadFolder);
     }
   } catch (e: any) {

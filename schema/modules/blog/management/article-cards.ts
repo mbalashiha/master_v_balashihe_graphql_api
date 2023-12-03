@@ -17,7 +17,6 @@ export const ManagementArticlesCardsModule = createModule({
         title: String!
         handle: String!
         absURL: String
-        displayingPageHandle: String
         publishedAt: Date
         updatedAt: Date
         score: Float
@@ -158,8 +157,8 @@ export const ManagementArticlesCardsModule = createModule({
             const articles = await db.excuteQuery({
               query:
                 `select 
-                  id, imageId, secondImageId, viewed, Coalesce(displayingPageHandle, handle, title, id) as handle, h2,
-                  absURL, displayingPageHandle, title, publishedAt, updatedAt, description, 
+                  id, imageId, secondImageId, viewed, Coalesce(handle, title, id) as handle, h2,
+                  absURL, title, publishedAt, updatedAt, description, 
                   null as fragment, null as score,
                 viewed
                     from blog_article_handle 
@@ -175,16 +174,16 @@ export const ManagementArticlesCardsModule = createModule({
               limit,
               naturalLanguageModeQuery: `
             select
-                  id, imageId, secondImageId, viewed, Coalesce(displayingPageHandle, handle, title, id) as handle, h2, 
-                  absURL, displayingPageHandle, title, publishedAt, updatedAt, description,
+                  id, imageId, secondImageId, viewed, Coalesce(handle, title, id) as handle, h2, 
+                  absURL, title, publishedAt, updatedAt, description,
                   text as fragment,
                   MATCH (title,text,h2) AGAINST ($search IN NATURAL LANGUAGE MODE) as score
               from blog_article_handle 
                 WHERE MATCH (title,text,h2) AGAINST ($search IN NATURAL LANGUAGE MODE)`,
               booleanModeQuery: `
             select
-                  id, imageId, secondImageId, viewed, Coalesce(displayingPageHandle, handle, title, id) as handle, h2, 
-                  absURL, displayingPageHandle, title, publishedAt, updatedAt, description, 
+                  id, imageId, secondImageId, viewed, Coalesce(handle, title, id) as handle, h2, 
+                  absURL, title, publishedAt, updatedAt, description, 
                   text as fragment,
                   MATCH (title,text,h2) AGAINST ($search IN BOOLEAN MODE) as score
               from blog_article_handle 

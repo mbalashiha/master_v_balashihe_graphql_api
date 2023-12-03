@@ -51,6 +51,10 @@ BEGIN
 	Then 
 		SET in_publishedAt := NOW();
 	END IF;
+	if in_blogCategoryId='' OR in_blogCategoryId IS NULL
+	Then
+		SELECT bc.blogCategoryId INTO in_blogCategoryId FROM blog_category bc ORDER BY bc.blogCategoryId ASC LIMIT 1;
+	END if;
 	Set in_existingArticleId := If(in_existingArticleId='' OR in_existingArticleId IS NULL,NULL, in_existingArticleId);
 	Set in_managerId := If(in_managerId='' OR in_managerId IS NULL,NULL, in_managerId);
 	Set in_templateId := If(in_templateId='' OR in_templateId IS NULL,NULL, in_templateId);	
@@ -75,7 +79,15 @@ BEGIN
 	Set in_imageId := If(in_imageId='' OR in_imageId IS NULL,NULL, in_imageId);
 	Set in_textRawDraftContentState := If(in_textRawDraftContentState='' OR in_textRawDraftContentState IS NULL,NULL, TRIM(in_textRawDraftContentState));
 	
+	If in_autoHandleSlug != '' AND in_autoHandleSlug IS NOT NULL
+			Then
+				SELECT CONCAT(TRIM(BOTH '/' FROM bv.handle),'/',TRIM(BOTH '/' FROM in_autoHandleSlug)) INTO in_autoHandleSlug FROM blog_category_view bv WHERE bv.blogCategoryId=in_blogCategoryId;
+			END IF;
 	SET in_handle := IF(in_handle IS NULL OR in_handle ='', in_autoHandleSlug, in_handle);
+	
+	Set in_autoHandleSlug := TRIM(BOTH '/' FROM in_autoHandleSlug);
+	Set in_handle := TRIM(BOTH '/' FROM in_handle);	
+	Set in_absURL := TRIM(BOTH '/' FROM in_absURL);
 	
 	If in_existingArticleId IS NOT NULL
 	Then
@@ -84,12 +96,12 @@ BEGIN
 			IF test_handle IS NOT NULL AND TRIM(test_handle) != ''
 			Then 
 				SET in_handle := test_handle;
+	         Set in_handle := TRIM(BOTH '/' FROM in_handle);
 			END IF;
 	SELECT id INTO stored_articleId FROM blog_article_handle d
 		WHERE d.id=in_existingArticleId And
 				IFNULL(in_title, '')=IFNULL(d.title,'') And
 				IFNULL(in_handle, '')=IFNULL(d.handle,'') and
-				IFNULL(in_autoHandleSlug, '')=IFNULL(d.autoHandleSlug,'') And
 				IFNULL(in_absURL, '')=IFNULL(d.absURL,'') And
 				IFNULL(in_blogCategoryId, '')=IFNULL(d.blogCategoryId,'') And
 				IFNULL(in_unPublished,'')=IFNULL(d.unPublished,'') And
@@ -121,15 +133,6 @@ BEGIN
 				Set stored_handleId := LAST_INSERT_ID();
 			END IF;
 		END if;
-		if in_autoHandleSlug IS NOT NULL
-		Then
-			SELECT id INTO stored_autoHandleSlugId FROM page_handle WHERE handle=in_autoHandleSlug;
-			if stored_autoHandleSlugId IS NULL
-			Then
-				INSERT INTO page_handle(handle) VALUES(in_autoHandleSlug);
-				Set stored_autoHandleSlugId := LAST_INSERT_ID();
-			END IF;
-		END if;
 		if in_absURL IS NOT NULL
 		Then
 			SELECT id INTO stored_absURLId FROM page_handle WHERE handle=in_absURL;
@@ -144,7 +147,7 @@ BEGIN
 		  ON DUPLICATE KEY UPDATE templateId=in_templateId;
 		If in_existingArticleId IS Null
 		Then
-			INSERT INTO blog_article(managerId, createdByManagerId, title, handleId, autoHandleSlugId, absURLid, blogCategoryId, 
+			INSERT INTO blog_article(managerId, createdByManagerId, title, handleId, absURLid, blogCategoryId, 
 			unPublished, 
 			notSearchable,
 			notInList,
@@ -156,7 +159,6 @@ BEGIN
 					in_managerId,
 					in_title,
 					stored_handleId,
-					stored_autoHandleSlugId,
 					stored_absURLId,
 					in_blogCategoryId,
 					in_unPublished,
@@ -181,7 +183,6 @@ BEGIN
 				managerId=in_managerId,
 				title=in_title,
 				handleId=stored_handleId,
-				autoHandleSlugId=stored_autoHandleSlugId,
 				absURLId=stored_absURLId,
 				blogCategoryId=in_blogCategoryId,
 				unPublished=in_unPublished,
@@ -204,7 +205,7 @@ BEGIN
 			SELECT a.publishedAt, stored_articleId AS articleId, true as success, 'Article was updated' AS message FROM blog_article a WHERE a.id=stored_articleId;
 		END IF;
 		SET @today_string := DATE_FORMAT(NOW(), '%Y%m%d');
-		INSERT INTO archived_blog_article(archivedDateDay, existingArticleId, managerId, createdByManagerId, title, handleId, autoHandleSlugId, absURLid, blogCategoryId, 
+		INSERT INTO archived_blog_article(archivedDateDay, existingArticleId, managerId, createdByManagerId, title, handleId, absURLid, blogCategoryId, 
 			unPublished, 
 			notSearchable,
 			notInList,
@@ -218,7 +219,6 @@ BEGIN
 					in_managerId,
 					in_title,
 					stored_handleId,
-					stored_autoHandleSlugId,
 					stored_absURLId,
 					in_blogCategoryId,
 					in_unPublished,
@@ -243,7 +243,6 @@ BEGIN
 					isDraftSaved=1,
 					title=in_title,
 					handle=in_handle,
-					autoHandleSlug=in_autoHandleSlug,
 					blogCategoryId=in_blogCategoryId,
 					imageId=in_imageId,
 					unPublished=in_unPublished,

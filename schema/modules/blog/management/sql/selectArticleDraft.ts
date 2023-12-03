@@ -52,49 +52,12 @@ export default async function selectArticleDraft({
     } else {
       result = rows[0];
     }
-    if (result && result.id && result.existingArticleId) {
-      const rows = await db.excuteQuery({
-        query: "select * from blog_article_handle Where id=?",
-        variables: [result.existingArticleId],
-      });
-      const existingArticle = rows && rows[0];
-      if (
-        existingArticle &&
-        existingArticle.blogCategoryId == result.blogCategoryId &&
-        existingArticle.title == result.title &&
-        existingArticle.autoHandleSlug == result.autoHandleSlug &&
-        existingArticle.handle == result.handle &&
-        existingArticle.absURL == result.absURL &&
-        existingArticle.text == result.text &&
-        existingArticle.textHtml == result.textHtml &&
-        existingArticle.imageId == result.imageId &&
-        existingArticle.orderNumber == result.orderNumber &&
-        existingArticle.keyTextHtml == result.keyTextHtml &&
-        Boolean(existingArticle.notInList) == Boolean(result.notInList) &&
-        Boolean(existingArticle.notSearchable) ==
-          Boolean(result.notSearchable) &&
-        Boolean(existingArticle.unPublished) == Boolean(result.unPublished) && 
-        existingArticle.templateId == result.templateId
-      ) {
-        /** try {
-          const delRes = await db.excuteQuery({
-            query: `delete from draft_blog_article where draftArticleId=$draftArticleId`,
-            variables: {
-              draftArticleId: result.draftArticleId,
-            },
-          });
-          console.l//og("delete Result:", delRes);
-        } catch (e: any) {
-          console.error("delete Result error:", e.stack || e.message);
-        } ** */
-        result = {
-          ...result,
-          ...existingArticle,
-          id: null,
-          draftArticleId: null,
-          existingArticle,
-        };
-      }
+    if (!result.templateId) {
+      const rows = await db.query(
+        `select templateId from article_templates Order By templateId ASC Limit 1`
+      );
+      result.templateId =
+        rows && rows[0] && rows[0].templateId ? rows[0].templateId : 1;
     }
     return result;
   } catch (e: any) {
