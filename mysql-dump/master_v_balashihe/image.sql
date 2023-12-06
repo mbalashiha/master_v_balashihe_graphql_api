@@ -2,7 +2,7 @@
 -- Хост:                         192.168.0.50
 -- Версия сервера:               11.0.3-MariaDB-1:11.0.3+maria~ubu2204 - mariadb.org binary distribution
 -- Операционная система:         debian-linux-gnu
--- HeidiSQL Версия:              12.5.0.6677
+-- HeidiSQL Версия:              12.6.0.6765
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -31,9 +31,9 @@ CREATE TABLE IF NOT EXISTS `image` (
   `useAsRandom` tinyint(1) unsigned DEFAULT NULL,
   PRIMARY KEY (`imageId`) USING BTREE,
   UNIQUE KEY `uniq_imgSrc` (`imgSrc`(512)) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=121968 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=135485 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Дамп данных таблицы master_v_balashihe.image: ~345 rows (приблизительно)
+-- Дамп данных таблицы master_v_balashihe.image: ~353 rows (приблизительно)
 INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `title`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
 	(64, '/image/upload/webp/avatar-nnm-another-copy-pinguine-pirate-1644835997144-299703.webp', 678, 678, NULL, NULL, NULL, '2023-03-13 18:06:05', '2023-10-18 19:19:32', 678, 678, NULL, NULL);
 INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `title`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
@@ -724,6 +724,22 @@ INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `title`, `al
 	(102428, '/image/upload/webp/dollardollar-devil-pngfuel-cutted-avatar-1671787729862-53935.webp', 821, 795, NULL, NULL, NULL, '2023-11-30 02:32:50', '2023-11-30 02:32:50', 821, 795, NULL, NULL);
 INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `title`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
 	(102431, '/image/upload/webp/dollardollar-clipart-freebsd-freebsd-devil-1585413601569-373803.webp', 920, 1113, NULL, NULL, NULL, '2023-11-30 02:32:50', '2023-11-30 02:32:50', 920, 1113, NULL, NULL);
+INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `title`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
+	(125058, '/images/ticker/Foto847.jpg', 2560, 1920, NULL, NULL, NULL, '2023-12-04 17:39:18', '2023-12-04 17:39:18', 2560, 1920, NULL, NULL);
+INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `title`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
+	(125059, '/images/ticker/Polis-mamy.jpg', 1495, 2160, NULL, NULL, NULL, '2023-12-04 17:39:38', '2023-12-04 17:39:38', 1495, 2160, NULL, NULL);
+INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `title`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
+	(125060, '/images/ticker/DSC04882.jpg', 2880, 2160, NULL, NULL, NULL, '2023-12-04 17:40:03', '2023-12-04 17:40:03', 2880, 2160, NULL, NULL);
+INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `title`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
+	(125061, '/images/ticker/DSC04854.jpg', 2880, 2160, NULL, NULL, NULL, '2023-12-04 17:40:25', '2023-12-04 17:40:25', 2880, 2160, NULL, NULL);
+INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `title`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
+	(125124, '/images/ticker/Polis-mamy.webp', 1495, 2160, NULL, NULL, NULL, '2023-12-04 17:40:25', '2023-12-04 17:40:25', 1495, 2160, NULL, NULL);
+INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `title`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
+	(125155, '/images/ticker/Foto847.webp', 2560, 1920, NULL, NULL, NULL, '2023-12-04 17:40:26', '2023-12-04 17:40:26', 2560, 1920, NULL, NULL);
+INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `title`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
+	(125157, '/images/ticker/DSC04882.webp', 2880, 2160, NULL, NULL, NULL, '2023-12-04 17:40:26', '2023-12-04 17:40:26', 2880, 2160, NULL, NULL);
+INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `title`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
+	(125160, '/images/ticker/DSC04854.webp', 2880, 2160, NULL, NULL, NULL, '2023-12-04 17:40:26', '2023-12-04 17:40:26', 2880, 2160, NULL, NULL);
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

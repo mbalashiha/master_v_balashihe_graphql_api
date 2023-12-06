@@ -2,7 +2,7 @@
 -- Хост:                         192.168.0.50
 -- Версия сервера:               11.0.3-MariaDB-1:11.0.3+maria~ubu2204 - mariadb.org binary distribution
 -- Операционная система:         debian-linux-gnu
--- HeidiSQL Версия:              12.5.0.6677
+-- HeidiSQL Версия:              12.6.0.6765
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -14,7 +14,6 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
--- Дамп структуры для представление master_v_balashihe.checkout_view
 -- Удаление временной таблицы и создание окончательной структуры представления
 DROP TABLE IF EXISTS `checkout_view`;
 CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `checkout_view` AS select 1 AS `webUrl`,1 AS `checkoutName`,1 AS `taxesIncluded`,1 AS `completedAt`,1 AS `createdAt`,1 AS `updatedAt`;

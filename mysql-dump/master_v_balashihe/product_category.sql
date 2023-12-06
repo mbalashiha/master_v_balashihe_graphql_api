@@ -2,7 +2,7 @@
 -- Хост:                         192.168.0.50
 -- Версия сервера:               11.0.3-MariaDB-1:11.0.3+maria~ubu2204 - mariadb.org binary distribution
 -- Операционная система:         debian-linux-gnu
--- HeidiSQL Версия:              12.5.0.6677
+-- HeidiSQL Версия:              12.6.0.6765
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;

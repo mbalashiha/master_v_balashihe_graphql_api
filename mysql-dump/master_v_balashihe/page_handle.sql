@@ -2,7 +2,7 @@
 -- Хост:                         192.168.0.50
 -- Версия сервера:               11.0.3-MariaDB-1:11.0.3+maria~ubu2204 - mariadb.org binary distribution
 -- Операционная система:         debian-linux-gnu
--- HeidiSQL Версия:              12.5.0.6677
+-- HeidiSQL Версия:              12.6.0.6765
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -20,9 +20,9 @@ CREATE TABLE IF NOT EXISTS `page_handle` (
   `handle` varchar(1024) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `uniq_handle` (`handle`)
-) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Дамп данных таблицы master_v_balashihe.page_handle: ~31 rows (приблизительно)
+-- Дамп данных таблицы master_v_balashihe.page_handle: ~36 rows (приблизительно)
 INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
 	(17, '');
 INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
@@ -36,9 +36,23 @@ INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
 INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
 	(37, 'uslugi-mastera-v-balashihe');
 INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
+	(46, 'uslugi-mastera-v-balashihe/00000000000000000');
+INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
+	(43, 'uslugi-mastera-v-balashihe/11');
+INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
+	(44, 'uslugi-mastera-v-balashihe/22');
+INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
+	(45, 'uslugi-mastera-v-balashihe/234324324');
+INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
+	(47, 'uslugi-mastera-v-balashihe/3221321321');
+INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
+	(48, 'uslugi-mastera-v-balashihe/32432432');
+INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
 	(15, 'uslugi-mastera-v-balashihe/chastnyj-kompyuternyj-master-mgtu-mirea-(rossijskij-tehnologicheskij-universitet)');
 INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
 	(21, 'uslugi-mastera-v-balashihe/davajte-poznakomimsya-dmitrij-kompyuternyj-master');
+INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
+	(42, 'uslugi-mastera-v-balashihe/dfsdfsdf');
 INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
 	(16, 'uslugi-mastera-v-balashihe/dmitrij-chastnyj-kompyuternyj-master-mgtu-mirea-rossijskij-tehnologicheskij-universitet');
 INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES

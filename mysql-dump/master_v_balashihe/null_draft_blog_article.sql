@@ -2,7 +2,7 @@
 -- Хост:                         192.168.0.50
 -- Версия сервера:               11.0.3-MariaDB-1:11.0.3+maria~ubu2204 - mariadb.org binary distribution
 -- Операционная система:         debian-linux-gnu
--- HeidiSQL Версия:              12.5.0.6677
+-- HeidiSQL Версия:              12.6.0.6765
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -14,7 +14,6 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
--- Дамп структуры для представление master_v_balashihe.null_draft_blog_article
 -- Удаление временной таблицы и создание окончательной структуры представления
 DROP TABLE IF EXISTS `null_draft_blog_article`;
 CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `null_draft_blog_article` AS select NULL AS `id`,NULL AS `draftArticleId`,`a`.`handle` AS `handle`,`a`.`absURL` AS `absURL`,`a`.`title` AS `title`,`a`.`blogCategoryId` AS `blogCategoryId`,`a`.`text` AS `text`,`a`.`textHtml` AS `textHtml`,`a`.`textRawDraftContentState` AS `textRawDraftContentState`,`a`.`createdAt` AS `createdAt`,`a`.`updatedAt` AS `updatedAt`,coalesce(`a`.`publishedAt`,`a`.`createdAt`) AS `publishedAt`,`a`.`unPublished` AS `unPublished`,`a`.`notSearchable` AS `notSearchable`,`a`.`notInList` AS `notInList`,`a`.`orderNumber` AS `orderNumber`,`a`.`managerId` AS `managerId`,NULL AS `isDraftSaved`,`a`.`id` AS `existingArticleId`,`a`.`imageId` AS `imageId`,`a`.`keyTextHtml` AS `keyTextHtml`,`a`.`h2` AS `h2`,`a`.`secondImageId` AS `secondImageId`,`a`.`viewed` AS `viewed`,`a`.`templateId` AS `templateId`,`a`.`description` AS `description` from `blog_article_handle` `a`;

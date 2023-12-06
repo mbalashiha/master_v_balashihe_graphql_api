@@ -2,7 +2,7 @@
 -- Хост:                         192.168.0.50
 -- Версия сервера:               11.0.3-MariaDB-1:11.0.3+maria~ubu2204 - mariadb.org binary distribution
 -- Операционная система:         debian-linux-gnu
--- HeidiSQL Версия:              12.5.0.6677
+-- HeidiSQL Версия:              12.6.0.6765
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -14,7 +14,6 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
--- Дамп структуры для представление master_v_balashihe.product_category_breadcrumbs
 -- Удаление временной таблицы и создание окончательной структуры представления
 DROP TABLE IF EXISTS `product_category_breadcrumbs`;
 CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `product_category_breadcrumbs` AS select 1 AS `id`,1 AS `category_name`,1 AS `parent_id`,1 AS `handle`,1 AS `slug`,1 AS `breadcrumbs`,1 AS `uri_pathes`,1 AS `updatedAt`,1 AS `createdAt`,1 AS `product_category_id`,1 AS `productsCount`,1 AS `parentId`,1 AS `name`;

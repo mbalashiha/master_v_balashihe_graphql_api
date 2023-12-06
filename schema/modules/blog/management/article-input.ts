@@ -1,12 +1,12 @@
 import { createModule, gql } from "graphql-modules";
 import util from "util";
 import db from "@src/sql/execute-query";
-import sanitizeHtml from "sanitize-html";
 import { GraphQLError, GraphQLResolveInfo } from "graphql";
 import { GraphqlContext } from "@root/types/express-custom";
 import { Schema } from "@root/schema/types/schema";
 import { selectArticle } from "./sql";
 import { mysqlFormatDatetime } from "./draft";
+import fetch from "cross-fetch";
 
 export const BlogManagementModule = createModule({
   id: "blog-article-input-module",
@@ -52,8 +52,15 @@ export const BlogManagementModule = createModule({
       }
       type Mutation {
         managementSearchArticles(search: String): [BlogArticle]!
-        saveArticle(article: ArticleInput!): SavedArticleResponse!
-        deleteArticle(id: ID!, search: String): DeleteArticleResponse!
+        saveArticle(
+          article: ArticleInput!
+          hostOrigin: String!
+        ): SavedArticleResponse!
+        deleteArticle(
+          id: ID!
+          search: String
+          hostOrigin: String!
+        ): DeleteArticleResponse!
       }
       type Query {
         managementGetArticles(search: String): [BlogArticle]!
@@ -140,14 +147,14 @@ export const BlogManagementModule = createModule({
     Mutation: {
       saveArticle: async (
         parent: void,
-        variables: { article: Schema.ArticleInput },
+        variables: { article: Schema.ArticleInput; hostOrigin: string },
         context: GraphqlContext,
         info: GraphQLResolveInfo
       ) => {
         if (!context.manager || !context.manager.id) {
           throw new Error("Manager Unauthorized");
         }
-        const { article } = variables;
+        const { article, hostOrigin } = variables;
         const articleId = article.existingArticleId || null;
         try {
           article.text = (article.text || "").trim();
@@ -213,17 +220,60 @@ export const BlogManagementModule = createModule({
           if (!sqlResult) {
             throw new Error("sql procedure result is undefined!");
           }
-          const row: {
+          const selectRow: {
             success?: boolean;
             message?: string;
             articleId?: string | number;
+            articleHandle?: string;
+            categoryHandle?: string;
+            articleAbsUrl?: string;
+            categoryAbsUrl?: string;
           } = (sqlResult[0] && sqlResult[0][0]) || {};
-          if (!row.message) {
+          if (!selectRow.message) {
             throw new Error("No message from sql procedure!");
           }
+          const handlesToRevalidate = [];
+          if (selectRow.articleHandle) {
+            handlesToRevalidate.push(selectRow.articleHandle);
+          }
+          if (selectRow.categoryHandle) {
+            handlesToRevalidate.push(selectRow.categoryHandle);
+          }
+          if (selectRow.articleAbsUrl) {
+            handlesToRevalidate.push(selectRow.articleAbsUrl);
+          }
+          if (selectRow.categoryAbsUrl) {
+            handlesToRevalidate.push(selectRow.categoryAbsUrl);
+          }
+          if (
+            handlesToRevalidate.length &&
+            hostOrigin &&
+            process.env.REVALIDATE_API_URL
+          ) {
+            const apiUrl = `${hostOrigin}${process.env.REVALIDATE_API_URL}`;
+            const postBody = {
+              handlesToRevalidate,
+              secret: process.env.MY_SECRET_TOKEN || "",
+            };
+            try {
+              const fresp = await fetch(apiUrl, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json;charset=utf-8",
+                },
+                body: JSON.stringify(postBody),
+              });
+              // const json = await fresp.json();
+              // console.log(json);
+              // debugger;
+            } catch (e: any) {
+              console.error(e.message || e);
+              debugger;
+            }
+          }
           return {
-            ...row,
-            success: Boolean(row.success),
+            ...selectRow,
+            success: Boolean(selectRow.success),
           };
         } catch (e: any) {
           console.error(e.stack || e.message || e.stack || e);
@@ -245,22 +295,81 @@ export const BlogManagementModule = createModule({
       },
       deleteArticle: async (
         parent: void,
-        variables: { id: string | number; search?: string },
+        variables: { id: string | number; search?: string; hostOrigin: string },
         context: GraphqlContext,
         info: GraphQLResolveInfo
       ) => {
         if (!context.manager || !context.manager.id) {
           throw new Error("Manager Unauthorized");
         }
-        const { id } = variables;
+        const { id, hostOrigin } = variables;
         const search = variables.search || "";
         try {
+          const selectResult = await db.query(
+            `SELECT a.id AS articleId, 
+				CONCAT('/',ph.handle) AS articleHandle,
+				CONCAT('/',ch.handle) AS categoryHandle,
+				CONCAT('/',aph.handle) AS articleAbsUrl,
+				CONCAT('/',ach.handle) AS categoryAbsUrl
+			 FROM blog_article a
+			  LEFT JOIN page_handle ph ON ph.id=a.handleId
+			  LEFT JOIN page_handle aph ON aph.id=a.absURLid
+			  LEFT JOIN blog_category bc ON bc.blogCategoryId=a.blogCategoryId
+			  LEFT JOIN page_handle ch ON ch.id=bc.handleId 
+			  LEFT JOIN page_handle ach ON ach.id=bc.absURLid
+			   WHERE a.id=$id`,
+            {
+              id,
+            }
+          );
+          const handlesToRevalidate: string[] = [];
+          const selectRow = selectResult && selectResult[0];
+          if (selectRow) {
+            if (selectRow.articleHandle) {
+              handlesToRevalidate.push(selectRow.articleHandle);
+            }
+            if (selectRow.categoryHandle) {
+              handlesToRevalidate.push(selectRow.categoryHandle);
+            }
+            if (selectRow.articleAbsUrl) {
+              handlesToRevalidate.push(selectRow.articleAbsUrl);
+            }
+            if (selectRow.categoryAbsUrl) {
+              handlesToRevalidate.push(selectRow.categoryAbsUrl);
+            }
+          }
           const sqlResult = await db.excuteQuery({
             query: `delete from blog_article where id=$id`,
             variables: {
               id,
             },
           });
+          if (
+            handlesToRevalidate.length &&
+            hostOrigin &&
+            process.env.REVALIDATE_API_URL
+          ) {
+            const apiUrl = `${hostOrigin}${process.env.REVALIDATE_API_URL}`;
+            const postBody = {
+              handlesToRevalidate,
+              secret: process.env.MY_SECRET_TOKEN || "",
+            };
+            try {
+              const fresp = await fetch(apiUrl, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json;charset=utf-8",
+                },
+                body: JSON.stringify(postBody),
+              });
+              // const json = await fresp.json();
+              // console.log(json);
+              // debugger;
+            } catch (e: any) {
+              console.error(e.message || e);
+              debugger;
+            }
+          }
           return {
             search,
             success: true,

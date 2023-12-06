@@ -2,7 +2,7 @@
 -- Хост:                         192.168.0.50
 -- Версия сервера:               11.0.3-MariaDB-1:11.0.3+maria~ubu2204 - mariadb.org binary distribution
 -- Операционная система:         debian-linux-gnu
--- HeidiSQL Версия:              12.5.0.6677
+-- HeidiSQL Версия:              12.6.0.6765
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -177,7 +177,18 @@ BEGIN
 					in_templateId
 				);
 			SET stored_articleId := LAST_INSERT_ID();
-			SELECT a.publishedAt, stored_articleId AS articleId, true as success, 'Article has been created' AS message, stored_articleId AS articleId FROM blog_article a WHERE a.id=stored_articleId;
+			SELECT a.publishedAt, stored_articleId AS articleId, true as success, 'Article has been created' AS message, stored_articleId AS articleId, 
+				CONCAT('/',ph.handle) AS articleHandle,
+				CONCAT('/',ch.handle) AS categoryHandle,
+				CONCAT('/',aph.handle) AS articleAbsUrl,
+				CONCAT('/',ach.handle) AS categoryAbsUrl
+			 FROM blog_article a
+			  LEFT JOIN page_handle ph ON ph.id=a.handleId
+			  LEFT JOIN page_handle aph ON aph.id=a.absURLid
+			  LEFT JOIN blog_category bc ON bc.blogCategoryId=a.blogCategoryId
+			  LEFT JOIN page_handle ch ON ch.id=bc.handleId 
+			  LEFT JOIN page_handle ach ON ach.id=bc.absURLid
+			   WHERE a.id=stored_articleId;
 		Else
 			UPDATE blog_article SET 
 				managerId=in_managerId,
@@ -202,7 +213,18 @@ BEGIN
 				 templateId=in_templateId
 				WHERE id=in_existingArticleId;
 			SET stored_articleId := in_existingArticleId;
-			SELECT a.publishedAt, stored_articleId AS articleId, true as success, 'Article was updated' AS message FROM blog_article a WHERE a.id=stored_articleId;
+			SELECT a.publishedAt, stored_articleId AS articleId, true as success, 'Article was updated' AS message, 
+				CONCAT('/',ph.handle) AS articleHandle,
+				CONCAT('/',ch.handle) AS categoryHandle,
+				CONCAT('/',aph.handle) AS articleAbsUrl,
+				CONCAT('/',ach.handle) AS categoryAbsUrl
+			 FROM blog_article a
+			  LEFT JOIN page_handle ph ON ph.id=a.handleId
+			  LEFT JOIN page_handle aph ON aph.id=a.absURLid
+			  LEFT JOIN blog_category bc ON bc.blogCategoryId=a.blogCategoryId
+			  LEFT JOIN page_handle ch ON ch.id=bc.handleId 
+			  LEFT JOIN page_handle ach ON ach.id=bc.absURLid
+			   WHERE a.id=stored_articleId;
 		END IF;
 		SET @today_string := DATE_FORMAT(NOW(), '%Y%m%d');
 		INSERT INTO archived_blog_article(archivedDateDay, existingArticleId, managerId, createdByManagerId, title, handleId, absURLid, blogCategoryId, 

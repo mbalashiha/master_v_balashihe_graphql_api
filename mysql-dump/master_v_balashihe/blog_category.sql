@@ -2,7 +2,7 @@
 -- Хост:                         192.168.0.50
 -- Версия сервера:               11.0.3-MariaDB-1:11.0.3+maria~ubu2204 - mariadb.org binary distribution
 -- Операционная система:         debian-linux-gnu
--- HeidiSQL Версия:              12.5.0.6677
+-- HeidiSQL Версия:              12.6.0.6765
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -22,17 +22,20 @@ CREATE TABLE IF NOT EXISTS `blog_category` (
   `parent_id` int(10) unsigned DEFAULT NULL,
   `updatedAt` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `createdAt` timestamp NULL DEFAULT current_timestamp(),
+  `absURLid` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`blogCategoryId`) USING BTREE,
   UNIQUE KEY `uniq_blog_category_category_name` (`categoryName`(100)) USING BTREE,
   KEY `FK_blog_category_blog_category_index` (`parent_id`) USING BTREE,
   KEY `FK_blog_category_page_handle` (`handleId`),
+  KEY `FK_blog_category_page_handle_2` (`absURLid`) USING BTREE,
   CONSTRAINT `FK_blog_category_blog_category_constraint` FOREIGN KEY (`parent_id`) REFERENCES `blog_category` (`blogCategoryId`),
-  CONSTRAINT `FK_blog_category_page_handle` FOREIGN KEY (`handleId`) REFERENCES `page_handle` (`id`) ON UPDATE CASCADE
+  CONSTRAINT `FK_blog_category_page_handle` FOREIGN KEY (`handleId`) REFERENCES `page_handle` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `FK_blog_category_page_handle_2` FOREIGN KEY (`absURLid`) REFERENCES `page_handle` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Дамп данных таблицы master_v_balashihe.blog_category: ~1 rows (приблизительно)
-INSERT IGNORE INTO `blog_category` (`blogCategoryId`, `categoryName`, `handleId`, `parent_id`, `updatedAt`, `createdAt`) VALUES
-	(1, 'uslugi-mastera-v-balashihe', 37, NULL, '2023-12-02 17:42:01', '2023-12-02 17:34:01');
+INSERT IGNORE INTO `blog_category` (`blogCategoryId`, `categoryName`, `handleId`, `parent_id`, `updatedAt`, `createdAt`, `absURLid`) VALUES
+	(1, 'uslugi-mastera-v-balashihe', 37, NULL, '2023-12-02 17:42:01', '2023-12-02 17:34:01', NULL);
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
