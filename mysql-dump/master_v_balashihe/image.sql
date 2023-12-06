@@ -727,13 +727,9 @@ INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `title`, `al
 INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `title`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
 	(125058, '/images/ticker/Foto847.jpg', 2560, 1920, NULL, NULL, NULL, '2023-12-04 17:39:18', '2023-12-04 17:39:18', 2560, 1920, NULL, NULL);
 INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `title`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
-	(125059, '/images/ticker/Polis-mamy.jpg', 1495, 2160, NULL, NULL, NULL, '2023-12-04 17:39:38', '2023-12-04 17:39:38', 1495, 2160, NULL, NULL);
-INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `title`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
 	(125060, '/images/ticker/DSC04882.jpg', 2880, 2160, NULL, NULL, NULL, '2023-12-04 17:40:03', '2023-12-04 17:40:03', 2880, 2160, NULL, NULL);
 INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `title`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
 	(125061, '/images/ticker/DSC04854.jpg', 2880, 2160, NULL, NULL, NULL, '2023-12-04 17:40:25', '2023-12-04 17:40:25', 2880, 2160, NULL, NULL);
-INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `title`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
-	(125124, '/images/ticker/Polis-mamy.webp', 1495, 2160, NULL, NULL, NULL, '2023-12-04 17:40:25', '2023-12-04 17:40:25', 1495, 2160, NULL, NULL);
 INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `title`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
 	(125155, '/images/ticker/Foto847.webp', 2560, 1920, NULL, NULL, NULL, '2023-12-04 17:40:26', '2023-12-04 17:40:26', 2560, 1920, NULL, NULL);
 INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `title`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES

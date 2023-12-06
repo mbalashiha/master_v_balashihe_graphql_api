@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS `page_handle` (
   UNIQUE KEY `uniq_handle` (`handle`)
 ) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Дамп данных таблицы master_v_balashihe.page_handle: ~36 rows (приблизительно)
+-- Дамп данных таблицы master_v_balashihe.page_handle: ~38 rows (приблизительно)
 INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
 	(17, '');
 INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES

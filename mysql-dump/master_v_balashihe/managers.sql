@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS `managers` (
   UNIQUE KEY `Индекс 2` (`login`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Дамп данных таблицы master_v_balashihe.managers: ~0 rows (приблизительно)
+-- Дамп данных таблицы master_v_balashihe.managers: ~1 rows (приблизительно)
 INSERT IGNORE INTO `managers` (`id`, `login`, `password`, `is_admin`, `friendly_name`, `email`, `created`, `updated`) VALUES
 	(1, 'me-mini', 'E58955FF*AFBFEDCDF5978E56A722EB29FADE84897B7EDCA6', NULL, 'Владелец', NULL, '2022-09-28 11:36:45', '2023-06-13 18:02:32');
 
