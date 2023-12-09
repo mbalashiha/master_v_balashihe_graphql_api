@@ -214,7 +214,7 @@ app.use(
   })
 );
 app.listen(parseInt(LISTENING_PORT), "127.0.0.1", () => {
-  setTimeout(() => parseImagesToDB(), 15000);
+  setTimeout(() => parseImagesToDB(), 3000);
   // `Running a GraphQL API server at http://localhost:${LISTENING_PORT}/graphql/api`
 });
 export default app;
