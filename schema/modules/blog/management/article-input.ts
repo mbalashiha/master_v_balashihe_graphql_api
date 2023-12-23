@@ -7,6 +7,11 @@ import { Schema } from "@root/schema/types/schema";
 import { selectArticle } from "./sql";
 import { mysqlFormatDatetime } from "./draft";
 import fetch from "cross-fetch";
+import { glob } from "glob";
+import path from "path";
+import fsa from "fs/promises";
+import { postIndexNow } from "@src/utils/index-now/post-index-now";
+import { getYaIndexNowKey } from "@src/utils/index-now/get-yandex-index-now-key";
 
 export const BlogManagementModule = createModule({
   id: "blog-article-input-module",
@@ -259,10 +264,18 @@ export const BlogManagementModule = createModule({
               const fresp = await fetch(apiUrl, {
                 method: "POST",
                 headers: {
-                  "Content-Type": "application/json;charset=utf-8",
+                  "Content-Type": "application/json; charset=utf-8",
                 },
                 body: JSON.stringify(postBody),
               });
+              const indexNowKey = await getYaIndexNowKey();
+              const indexNowResult = await postIndexNow({
+                apiUrl: `https://yandex.com/indexnow`,
+                indexNowKey,
+                urlList: handlesToRevalidate,
+              });
+              // console.l//og(indexNowResult);
+              // debugger;
               // const json = await fresp.json();
               // console.log(json);
               // debugger;
@@ -358,10 +371,18 @@ export const BlogManagementModule = createModule({
               const fresp = await fetch(apiUrl, {
                 method: "POST",
                 headers: {
-                  "Content-Type": "application/json;charset=utf-8",
+                  "Content-Type": "application/json; charset=utf-8",
                 },
                 body: JSON.stringify(postBody),
               });
+              const indexNowKey = await getYaIndexNowKey();
+              const indexNowResult = await postIndexNow({
+                apiUrl: `https://yandex.com/indexnow`,
+                indexNowKey,
+                urlList: handlesToRevalidate,
+              });
+              console.log(indexNowResult);
+              debugger;
               // const json = await fresp.json();
               // console.log(json);
               // debugger;
