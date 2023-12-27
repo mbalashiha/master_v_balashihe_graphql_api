@@ -273,7 +273,7 @@ export const BlogManagementModule = createModule({
                 apiUrl: `https://yandex.com/indexnow`,
                 indexNowKey,
                 urlList: handlesToRevalidate,
-              });
+              });  
               // console.l//og(indexNowResult);
               // debugger;
               // const json = await fresp.json();

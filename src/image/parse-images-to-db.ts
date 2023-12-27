@@ -47,9 +47,17 @@ async function convertToWebp(
       convertedImagePath !== imagePath &&
       (await fse.pathExists(convertedImagePath))
     ) {
+      let format: string = meta.format || "";
+      if (!format) {
+        const m = imagePath.match(/\.([\w]+)$/im);
+        if (m && m[1]) {
+          format = m[1];
+        } else {
+          format = "unknown";
+        }
+      }
       convertedImagePath =
-        imagePath.replace(/\.[\w]+$/im, "") +
-        `-from-${meta.format || "unknown"}.webp`;
+        imagePath.replace(/\.[\w]+$/im, "") + `-from-${format}.webp`;
     }
     while (loopPathSize >= IMAGE_UPPER_SIZE_LIMIT && currentQuality > 0) {
       if (needResize) {
@@ -342,7 +350,7 @@ export const parseImagesToDB = async () => {
   // const useAsRandomFolder = path.join(SITE_PUBLIC_FOLDER, "images", "random");
   // const imagesAlt = await glob(SITE_PUBLIC_FOLDER + "/**/*.{webp,png,jpg,jpeg}");
   const imagesList = new Glob(
-    SITE_PUBLIC_FOLDER + "/**/*.{webp,png,jpg,jpeg}",
+    SITE_PUBLIC_FOLDER + "/**/*.{webp,png,jpg,jpeg,jfif}",
     { stat: true, withFileTypes: true, nocase: true }
   );
   for await (const path of imagesList) {
@@ -379,4 +387,4 @@ export const parseImagesToDB = async () => {
         }
       );
     }
-  }*/ 
+  }*/

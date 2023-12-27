@@ -8,7 +8,7 @@ export const parseImagesToRandom = async () => {
   }
   const SITE_PUBLIC_FOLDER = path.resolve(process.env["SITE_PUBLIC_FOLDER"]);
   const useAsRandomFolder = path.join(SITE_PUBLIC_FOLDER, "images", "random");
-  const imagesAlt = await glob(useAsRandomFolder + "/*.{webp,png,jpg,jpeg}", {
+  const imagesAlt = await glob(useAsRandomFolder + "/*.{webp,png,jpg,jpeg,jfif}", {
     nocase: true,
   });
   for (const image of imagesAlt) {

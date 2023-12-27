@@ -16,7 +16,7 @@ export const collectAllPublicImagesToDB = async () => {
   // const useAsRandomFolder = path.join(SITE_PUBLIC_FOLDER, "images", "random");
   // const imagesAlt = await glob(SITE_PUBLIC_FOLDER + "/**/*.{webp,png,jpg,jpeg}");
   const imagesList = new Glob(
-    SITE_PUBLIC_FOLDER + "/**/*.{ico,svg,gif,webp,png,jpg,jpeg}",
+    SITE_PUBLIC_FOLDER + "/**/*.{ico,svg,gif,webp,png,jpg,jpeg,jfif}",
     { stat: true, withFileTypes: true, nocase: true }
   );
   const receivedPathes = new Set<string>();
