@@ -48,6 +48,7 @@ import { parseImagesToDB } from "./image/parse-images-to-db";
 import prettierReact from "./utils/prettier-react";
 import { imagesModule } from "@root/schema/modules/management/images";
 import { imagesQueryModule } from "@root/schema/modules/images";
+import { nextjs_revalidate_module } from "@root/schema/modules/nextjs_revalidate";
 
 /**const corsOptions = {
   origin: "http://localhost:3000", //change with your own client URL
@@ -57,6 +58,7 @@ import { imagesQueryModule } from "@root/schema/modules/images";
 const application = createApplication({
   modules: [
     baseModule,
+    nextjs_revalidate_module,
     imagesModule,
     imagesQueryModule,
     signInModule,

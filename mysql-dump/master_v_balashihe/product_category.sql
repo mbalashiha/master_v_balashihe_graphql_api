@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS `product_category` (
   CONSTRAINT `FK_product_category_product_category` FOREIGN KEY (`parent_id`) REFERENCES `product_category` (`product_category_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Дамп данных таблицы master_v_balashihe.product_category: ~4 rows (приблизительно)
+-- Дамп данных таблицы master_v_balashihe.product_category: ~0 rows (приблизительно)
 INSERT IGNORE INTO `product_category` (`product_category_id`, `category_name`, `handle`, `parent_id`, `updatedAt`, `createdAt`) VALUES
 	(5, '11', '11', NULL, '2022-07-07 20:15:23', '2022-07-07 20:15:23');
 INSERT IGNORE INTO `product_category` (`product_category_id`, `category_name`, `handle`, `parent_id`, `updatedAt`, `createdAt`) VALUES

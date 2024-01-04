@@ -23,7 +23,7 @@ export function startSMTPserver(): any {
     cert =
       fs.readFileSync("/home/safeuser/certs/smtp.mbalashiha.ru/cert.pem") ||
       undefined;
-    // console.log("---> cert and priv key for SMTP server loaded correctly.");
+    // console.l//og("---> cert and priv key for SMTP server loaded correctly.");
   } catch (e: any) {
     console.error(e.message || e);
   }

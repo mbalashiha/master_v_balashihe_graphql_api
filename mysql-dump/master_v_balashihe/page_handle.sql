@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS `page_handle` (
   `handle` varchar(1024) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `uniq_handle` (`handle`)
-) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Дамп данных таблицы master_v_balashihe.page_handle: ~38 rows (приблизительно)
 INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
@@ -61,6 +61,8 @@ INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
 	(22, 'uslugi-mastera-v-balashihe/dmitrij-kompyuternyj-master-v-balashihe-mgtu-mirea-eerossijskij-tehnologicheskij-universitet');
 INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
 	(19, 'uslugi-mastera-v-balashihe/dmitrij-kompyuternyj-master-v-balashihe-mgtu-mirea-rossijskij-tehnologicheskij-universitet');
+INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
+	(49, 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js');
 INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES
 	(8, 'uslugi-mastera-v-balashihe/kompyuternye-sistemnye-bloki-v-balashihe-remont-pk');
 INSERT IGNORE INTO `page_handle` (`id`, `handle`) VALUES

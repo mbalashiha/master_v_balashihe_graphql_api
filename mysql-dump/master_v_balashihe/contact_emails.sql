@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS `contact_emails` (
   PRIMARY KEY (`timestamp`,`ip`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Дамп данных таблицы master_v_balashihe.contact_emails: ~42 rows (приблизительно)
+-- Дамп данных таблицы master_v_balashihe.contact_emails: ~32 rows (приблизительно)
 INSERT IGNORE INTO `contact_emails` (`timestamp`, `ip`, `createdAt`, `counts`, `valuesText`, `textBody`, `response`) VALUES
 	('2023-07-30 22:34:32', _binary 0xc0a80005, '2023-07-30 22:34:32', NULL, ';+7(234)324-32-43', NULL, '250 OK id=1qQEzg-00EQSG-05');
 INSERT IGNORE INTO `contact_emails` (`timestamp`, `ip`, `createdAt`, `counts`, `valuesText`, `textBody`, `response`) VALUES
@@ -111,6 +111,8 @@ INSERT IGNORE INTO `contact_emails` (`timestamp`, `ip`, `createdAt`, `counts`, `
 	('2023-10-22 19:45:10', _binary 0x7f000001, '2023-10-22 19:45:13', NULL, '32432423432432432;Не важно, можно не сегодня;Другая техника;Нет, это впервые;+7 (234) 324-32-43;Настроить Интернет или WI-FI;Настроить или проконсультироваться', NULL, '250 OK id=1queNs-00B59m-2n');
 INSERT IGNORE INTO `contact_emails` (`timestamp`, `ip`, `createdAt`, `counts`, `valuesText`, `textBody`, `response`) VALUES
 	('2023-10-22 20:05:46', _binary 0x7f000001, '2023-10-22 20:05:47', NULL, '234324324;Можно вечером;Настольный ПК;Нет, это впервые;+7 (234) 324-32-43;Всё хорошо, но надо что-то установить или настроить;Исправить ошибки или глюки', NULL, '250 OK id=1quehn-006Wmn-14');
+INSERT IGNORE INTO `contact_emails` (`timestamp`, `ip`, `createdAt`, `counts`, `valuesText`, `textBody`, `response`) VALUES
+	('2023-12-06 23:55:40', _binary 0x7f000001, '2023-12-06 23:55:40', NULL, '324234;Не важно, можно не сегодня;Apple Mac;Да, уже ремонтировали;+7 (234) 324-32-43;Починить Mac, а то не работает', NULL, '250 OK id=1rB1jw-00HM40-16');
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

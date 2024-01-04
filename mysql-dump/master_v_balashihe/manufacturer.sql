@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS `manufacturer` (
   UNIQUE KEY `Индекс 2` (`manufacturerName`(100)) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Дамп данных таблицы master_v_balashihe.manufacturer: ~1 rows (приблизительно)
+-- Дамп данных таблицы master_v_balashihe.manufacturer: ~0 rows (приблизительно)
 INSERT IGNORE INTO `manufacturer` (`manufacturerId`, `manufacturerName`) VALUES
 	(16, 'EincodeTest');
 

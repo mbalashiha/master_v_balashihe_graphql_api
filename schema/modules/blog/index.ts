@@ -172,7 +172,7 @@ export const blogArticlesModule = createModule({
               .replace(/\.(js|jsx|tsx)$/i, "")
               .replace(/\\/g, "/")
           );
-          // console.log("pages:", pages);
+          // console.l//og("pages:", pages);
           const filtered = articles
             .filter((elem: any) => elem && typeof elem.handle === "string")
             .map(({ handle }: any) => ({
@@ -182,7 +182,7 @@ export const blogArticlesModule = createModule({
                 .replace(/^index$/i, ""),
             }))
             .filter(({ handle }: any) => !pages.includes(handle));
-          // console.log("filtered:", filtered);
+          // console.l//og("filtered:", filtered);
           return filtered;
         } catch (e: any) {
           console.error(e.stack || e.message || e);

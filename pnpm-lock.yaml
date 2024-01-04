@@ -53,6 +53,9 @@ dependencies:
   '@types/stale-lru-cache':
     specifier: 5.1.3
     version: 5.1.3
+  '@types/uuid':
+    specifier: ^9.0.7
+    version: 9.0.7
   body-parser:
     specifier: 1.20.1
     version: 1.20.1
@@ -143,6 +146,9 @@ dependencies:
   stale-while-revalidate-cache:
     specifier: 1.2.0
     version: 1.2.0
+  uuid:
+    specifier: ^9.0.1
+    version: 9.0.1
 
 devDependencies:
   '@types/node':
@@ -676,6 +682,10 @@ packages:
 
   /@types/stale-lru-cache@5.1.3:
     resolution: {integrity: sha512-jd6xwWSQBRUq3G4IDd0QlS/ohXGR4WRKrWuTtxaBPCYTg/j1Ik4/oWlh8pIjHfm327/hYCK+x8PdGFV6lpgkeQ==}
+    dev: false
+
+  /@types/uuid@9.0.7:
+    resolution: {integrity: sha512-WUtIVRUZ9i5dYXefDEAI7sh9/O7jGvHg7Df/5O/gtH3Yabe5odI3UWopVR1qbPXQtvOxWu3mM4XxlYeZtMWF4g==}
     dev: false
 
   /@types/ws@8.5.4:
@@ -4913,6 +4923,11 @@ packages:
     resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
     hasBin: true
     dev: true
+
+  /uuid@9.0.1:
+    resolution: {integrity: sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==}
+    hasBin: true
+    dev: false
 
   /value-or-promise@1.0.11:
     resolution: {integrity: sha512-41BrgH+dIbCFXClcSapVs5M6GkENd3gQOJpEfPDNa71LsUGMXDL0jMWpI/Rh7WhX+Aalfz2TTS3Zt5pUsbnhLg==}
