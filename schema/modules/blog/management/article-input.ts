@@ -17,6 +17,7 @@ import {
 import { getYaIndexNowKey } from "@src/utils/index-now/get-yandex-index-now-key";
 import { stringify } from "crypto-js/enc-base64";
 import { revalidateNextjsUrls } from "../../../../src/utils/index-now/revalidate-nextjs-urls";
+import { graphqlProductionUuidsByIndexNow } from "@src/utils/index-now/graphql-productionUuidsByIndexNow-method";
 
 export const BlogManagementModule = createModule({
   id: "blog-article-input-module",
@@ -52,6 +53,7 @@ export const BlogManagementModule = createModule({
         message: String
         success: Boolean!
         articleList: ManagementArticlesCards!
+        productionUuidsByIndexNow: ProductionUuidIndexNowResponse
       }
       type ProductionUuidIndexNow {
         uuid: String!
@@ -129,53 +131,11 @@ export const BlogManagementModule = createModule({
           hostOrigin,
           NEXT_PUBLIC_PRODUCTION_SITE_ORIGIN,
         } = parent;
-        try {
-          if (
-            handlesToRevalidate.length &&
-            hostOrigin &&
-            process.env.REVALIDATE_API_URL
-          ) {
-            const { revalidateUuids, productionUuidsByIndexNow } =
-              await saveIndexNowRequests({
-                apiUrl: [
-                  `https://yandex.com/indexnow`,
-                  `https://www.bing.com/indexnow`,
-                  `https://api.indexnow.org/indexnow`,
-                ],
-                urlList: handlesToRevalidate,
-                NEXT_PUBLIC_PRODUCTION_SITE_ORIGIN,
-                hostOrigin,
-              });
-            // const apiUrl = `${hostOrigin}${process.env.REVALIDATE_API_URL}`;
-            const frespArray = await revalidateNextjsUrls({
-              hostOrigin,
-              NEXT_PUBLIC_PRODUCTION_SITE_ORIGIN,
-              revalidateUuids,
-              secret: process.env.MY_SECRET_TOKEN || "",
-            });
-            // console.l//og(frespArray);
-            /*const indexNowKey = await getYaIndexNowKey();
-            const indexNowResults = await postIndexNow({
-              indexNowKey,
-              revalidateUuids,
-              hostOrigin,
-              NEXT_PUBLIC_PRODUCTION_SITE_ORIGIN,
-            });*/
-            // console.l//og("indexNowResults:", indexNowResults);
-            // const indexNowKey = await getYaIndexNowKey();
-            // const indexNowResults = await postIndexNow({
-            //   indexNowKey,
-            //   revalidateUuids,
-            // });
-            return productionUuidsByIndexNow;
-          } else {
-            return null;
-          }
-        } catch (e: any) {
-          console.error(e.stack || e.message || e);
-          debugger;
-          throw e;
-        }
+        return await graphqlProductionUuidsByIndexNow({
+          handlesToRevalidate,
+          hostOrigin,
+          NEXT_PUBLIC_PRODUCTION_SITE_ORIGIN,
+        });
       },
       articleDraft: async (
         parent: { articleId?: string },
@@ -199,6 +159,28 @@ export const BlogManagementModule = createModule({
       },
     },
     DeleteArticleResponse: {
+      productionUuidsByIndexNow: async (
+        parent: {
+          articleId?: string;
+          handlesToRevalidate: string[];
+          hostOrigin: string;
+          NEXT_PUBLIC_PRODUCTION_SITE_ORIGIN: string;
+        },
+        variables: void,
+        context: { manager: { id: string | number } },
+        info: GraphQLResolveInfo
+      ) => {
+        const {
+          handlesToRevalidate,
+          hostOrigin,
+          NEXT_PUBLIC_PRODUCTION_SITE_ORIGIN,
+        } = parent;
+        return await graphqlProductionUuidsByIndexNow({
+          handlesToRevalidate,
+          hostOrigin,
+          NEXT_PUBLIC_PRODUCTION_SITE_ORIGIN,
+        });
+      },
       articleList: async (
         parent: void,
         variables: void,
@@ -453,49 +435,23 @@ export const BlogManagementModule = createModule({
               id,
             },
           });
-          if (
-            handlesToRevalidate.length &&
-            hostOrigin &&
-            process.env.REVALIDATE_API_URL
-          ) {
-            const apiUrl = `${hostOrigin}${process.env.REVALIDATE_API_URL}`;
-            const postBody = {
-              handlesToRevalidate,
-              secret: process.env.MY_SECRET_TOKEN || "",
-            };
-            try {
-              const fresp = await fetch(apiUrl, {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json; charset=utf-8",
-                },
-                body: JSON.stringify(postBody),
-              });
-              const indexNowKey = await getYaIndexNowKey();
-              // const indexNowResult = await postIndexNow({
-              //   apiUrl: `https://yandex.com/indexnow`,
-              //   indexNowKey,
-              //   urlList: handlesToRevalidate,
-              //   NEXT_PUBLIC_PRODUCTION_SITE_ORIGIN,
-              // });
-              // console.l//og(indexNowResult);
-              debugger;
-              // const json = await fresp.json();
-              // console.l//og(json);
-              // debugger;
-            } catch (e: any) {
-              console.error(e.message || e);
-              debugger;
-            }
-          }
           return {
             search,
             success: true,
             message: "article deleted",
+            handlesToRevalidate,
+            hostOrigin,
+            NEXT_PUBLIC_PRODUCTION_SITE_ORIGIN,
           };
         } catch (e: any) {
           console.error(e.stack || e.message);
-          return { success: false, error: e.stack || e.message || e };
+          return {
+            success: false,
+            error: e.stack || e.message || e,
+            handlesToRevalidate: [],
+            hostOrigin,
+            NEXT_PUBLIC_PRODUCTION_SITE_ORIGIN,
+          };
         }
       },
       managementSearchArticles: async (
