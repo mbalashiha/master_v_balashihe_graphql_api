@@ -65,7 +65,7 @@ export const nextjs_revalidate_module = createModule({
             }
             return uuid;
           });
-          const indexNowKey = await getYaIndexNowKey();
+          const indexNowKey = await getYaIndexNowKey(requestApiUrl);
           const result = await postIndexNow({
             apiUrl: requestApiUrl,
             indexNowKey,
@@ -91,12 +91,17 @@ export const nextjs_revalidate_module = createModule({
             message:
               status && status !== 200
                 ? `${apiUrl}: ${
-                    json?.message ||
-                    json?.error ||
-                    json?.code ||
-                    statusText ||
-                    status ||
-                    ""
+                    json?.message
+                      ? `${json?.message} (${status})`
+                      : json?.error
+                      ? `${json?.error} (${status})`
+                      : json?.code
+                      ? `${json?.code} (${status})`
+                      : statusText
+                      ? `${statusText} (${status})`
+                      : status
+                      ? status
+                      : ""
                   }`
                 : null,
             error: ok

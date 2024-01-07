@@ -28,17 +28,23 @@ CREATE TABLE IF NOT EXISTS `index_now_request` (
   PRIMARY KEY (`uuid`(100))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Дамп данных таблицы master_v_balashihe.index_now_request: ~544 rows (приблизительно)
+-- Дамп данных таблицы master_v_balashihe.index_now_request: ~584 rows (приблизительно)
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('0005a7ce-01f3-4d15-8c25-f2dff5e6f764', 'https://www.bing.com/indexnow', 'mbalashiha.ru', 'http://localhost:5000', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-02 16:53:22', 1, NULL, NULL);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('007494d4-ee14-4e81-b6b2-0f3180def868', 'https://yandex.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-04 19:20:20', NULL, 1, 202);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
+	('012c53df-f2a7-4113-8d04-47db97586824', 'https://yandex.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-04 22:22:04', 1, 1, 202);
+INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('01608a76-19d1-4a62-bb14-ae3718b128b7', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-04 17:12:35', NULL, 1, 200);
+INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
+	('018537dc-2c17-49fa-b36d-23957660bc3e', 'https://yandex.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-07 16:47:43', 1, 1, 202);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('01ca5502-e874-4d71-9f13-8cd95662384d', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-04 20:42:26', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('02284aba-2168-4af9-b55d-e289531e1b07', 'https://yandex.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-04 17:01:34', NULL, 1, 202);
+INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
+	('0229f6bf-20d1-4e6b-9b2d-2bb4101438ad', '', 'mbalashiha.ru', 'http://localhost:5000', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-07 17:51:52', 1, NULL, NULL);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('033a3f3c-0d70-4361-be3e-cc42e2c0e746', 'https://yandex.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-04 17:09:54', NULL, 1, 202);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
@@ -54,6 +60,8 @@ INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigi
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('06cfc7d1-21ed-4b60-9446-3c26064693b8', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-02 21:48:59', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
+	('07e07bd8-89f1-4014-99ef-c8ce7ec50701', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-04 22:21:39', 1, 1, 200);
+INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('0825d7e3-5b95-43a0-80b8-a006edcd0c77', 'https://www.bing.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-02 22:02:55', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('09732e42-9e89-4fd9-96bd-ecf4fd028d1d', 'https://yandex.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-04 17:09:54', NULL, 1, 202);
@@ -61,6 +69,8 @@ INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigi
 	('0a27bad0-f7c6-41f4-986b-cefde5c013db', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-04 16:57:49', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('0a3ea960-64c3-4441-ba60-f64a817363a2', 'https://www.bing.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-03 00:26:13', NULL, 1, 200);
+INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
+	('0aabd91c-c67a-45e7-80de-183f2f86d306', 'https://yandex.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-07 17:50:10', 1, 1, 202);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('0b045b49-fcce-46f1-b660-0ba68f3a15a8', 'https://www.bing.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-04 21:11:32', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
@@ -72,13 +82,21 @@ INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigi
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('0c572154-21b4-49f4-9640-35dac444a1ab', 'https://www.bing.com/indexnow', 'mbalashiha.ru', 'http://localhost:5000', 'uslugi-mastera-v-balashihe', '2024-01-02 22:02:55', NULL, NULL, NULL);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
+	('0cfae64f-170f-4b42-96f5-3e99e226ca5b', 'https://yandex.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/fsfsdf', '2024-01-04 22:21:39', 1, 1, 200);
+INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('0d829a39-295f-40f9-8cc4-54aa7d2f5e17', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-02 21:54:15', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('0e496516-d332-41d1-a414-9f079dae61e8', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-04 16:56:13', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
+	('0f2b9e21-ac5a-4745-83f4-ba4f0d829558', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-07 16:47:43', 1, 1, 202);
+INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
+	('0f3e8b08-3f63-4ec3-9670-49b617daa585', 'https://yandex.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-07 17:51:52', 1, NULL, NULL);
+INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('0f60d05d-a9d9-443b-a147-e6a78db83b87', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-02 16:57:52', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('0f9705ab-7709-4f1f-ba79-2e4fa6889c31', 'https://www.bing.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-04 17:01:34', NULL, 1, 200);
+INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
+	('1003665c-1cc7-48df-9395-f1d8e3852932', '', 'mbalashiha.ru', 'http://localhost:5000', 'uslugi-mastera-v-balashihe', '2024-01-04 22:21:39', 1, NULL, NULL);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('10f16122-ba7a-4dc6-b501-92f8bf11da8a', 'https://yandex.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-02 21:55:29', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
@@ -89,6 +107,8 @@ INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigi
 	('14263a25-dbf4-4fd3-a2fe-d970b2be97f9', 'https://yandex.com/indexnow', 'mbalashiha.ru', 'http://localhost:5000', 'uslugi-mastera-v-balashihe', '2024-01-02 16:53:22', 1, NULL, NULL);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('14c616fa-4bec-4bbf-8ca6-f92dbe30b52e', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-02 16:53:22', NULL, 1, 200);
+INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
+	('1543a305-27e6-49c8-836a-2f078243b01a', 'https://www.bing.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-07 17:51:52', 1, NULL, NULL);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('156c3777-a5a2-4cf0-81ac-4521a295585e', 'https://yandex.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-02 16:53:22', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
@@ -112,7 +132,7 @@ INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigi
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('1afeef13-f767-4626-9d7d-89c5dd36d1ee', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-04 17:01:34', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
-	('1c06a521-9d85-4ecf-910d-16927bb317b7', 'https://www.bing.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-04 21:17:05', NULL, NULL, NULL);
+	('1c06a521-9d85-4ecf-910d-16927bb317b7', 'https://www.bing.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-04 21:17:05', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('1c0f2d69-5c15-4221-bab4-874fc7155cad', 'https://yandex.com/indexnow', 'mbalashiha.ru', 'http://localhost:5000', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-03 00:26:13', 1, NULL, NULL);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
@@ -139,6 +159,8 @@ INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigi
 	('2192b344-7351-4f75-b5e7-fe6f1d454a03', 'https://yandex.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-04 20:53:32', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('21e9cc4a-9688-4a69-8e16-1789b335eb86', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'http://localhost:5000', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-02 21:52:58', NULL, NULL, NULL);
+INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
+	('22312ce2-1859-40bc-9e66-71feb65e4592', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/fsfsdf', '2024-01-04 22:21:39', 1, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('223447a5-5878-4b62-bf07-166cd5b77d0a', '', 'mbalashiha.ru', 'http://localhost:5000', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-04 21:15:09', 1, NULL, NULL);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
@@ -184,6 +206,8 @@ INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigi
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('2b6083a5-9ab9-4a32-b50f-af51ade4b665', 'https://yandex.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-02 22:00:09', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
+	('2c72aa5c-aaf1-426f-81cd-9d84bbde6a31', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-04 22:22:04', 1, 1, 202);
+INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('2cc09a8f-4fb7-488e-abce-660b774848b2', 'https://yandex.com/indexnow', 'mbalashiha.ru', 'http://localhost:5000', 'uslugi-mastera-v-balashihe', '2024-01-02 16:53:22', 1, NULL, NULL);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('2ce1607c-6831-4120-9909-e737f0cca611', 'https://yandex.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-04 17:22:30', NULL, 1, 202);
@@ -212,6 +236,8 @@ INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigi
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('3034b6cb-42db-4f06-b66f-c453526512c1', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-02 16:53:22', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
+	('30c02c37-5902-420e-bfd4-2c6dc370e39f', 'https://www.bing.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-07 17:51:52', 1, NULL, NULL);
+INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('312d9d0b-4c5d-4d57-93ed-f8223e960539', 'https://yandex.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-04 17:28:15', NULL, 1, 202);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('3176448b-52c7-4b66-913b-b08e70f2754c', 'https://yandex.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-02 16:53:22', NULL, 1, 200);
@@ -221,6 +247,8 @@ INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigi
 	('3199658f-e727-489a-b517-c35d59aa2356', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-02 16:53:22', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('319ad6db-8198-45f3-9b73-17eb286015ca', 'https://www.bing.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-04 17:40:24', NULL, 1, 200);
+INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
+	('31ce4b4c-31ff-422c-a6b7-561a8b2adf92', 'https://yandex.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-04 22:21:39', 1, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('31d31821-4d20-4f79-bc05-e66c58735442', 'https://yandex.com/indexnow', 'mbalashiha.ru', 'http://localhost:5000', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-02 21:54:15', NULL, NULL, NULL);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
@@ -248,6 +276,8 @@ INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigi
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('39216218-1cb4-465f-80f8-e3d703289325', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'http://localhost:5000', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-03 00:27:58', 1, NULL, NULL);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
+	('39ac57bb-bc33-4896-8a4e-0135c021a433', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-07 17:50:10', 1, 1, 202);
+INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('39d36291-9540-4bf8-8165-871151bc3745', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'http://localhost:5000', 'uslugi-mastera-v-balashihe', '2024-01-02 16:53:22', 1, NULL, NULL);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('3a20f35b-f3a6-4f6b-bddf-09ab3f3f6b48', 'https://yandex.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-04 17:10:44', NULL, 1, 202);
@@ -258,7 +288,11 @@ INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigi
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('3b5976f8-ab3a-41b5-ab24-d5583fd96776', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-04 20:53:06', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
+	('3b5df27d-30f1-4f79-bf72-d8dceb83447d', '', 'mbalashiha.ru', 'http://localhost:5000', 'uslugi-mastera-v-balashihe', '2024-01-07 17:50:10', 1, NULL, NULL);
+INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('3badd563-3399-480d-8550-c88dd8c4e9fb', 'https://yandex.com/indexnow', 'mbalashiha.ru', 'http://localhost:5000', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-02 16:53:22', 1, NULL, NULL);
+INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
+	('3bc05911-71ac-42e1-a588-d8994d126b70', '', 'mbalashiha.ru', 'http://localhost:5000', 'uslugi-mastera-v-balashihe', '2024-01-07 16:47:43', 1, NULL, NULL);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('3bff7b3c-a99a-4288-87c6-9091dbdcbb59', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-03 00:41:29', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
@@ -268,7 +302,7 @@ INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigi
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('3d949c06-29fe-4664-9467-d2879c1581e1', 'https://www.bing.com/indexnow', 'mbalashiha.ru', 'http://localhost:5000', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-03 00:26:13', 1, NULL, NULL);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
-	('3d949f69-b05d-4ba4-9185-56d84d722131', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-04 21:12:04', NULL, NULL, NULL);
+	('3d949f69-b05d-4ba4-9185-56d84d722131', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-04 21:12:04', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('3da37c8d-dce0-4e23-a98e-198ff1d73ff9', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'http://localhost:5000', 'uslugi-mastera-v-balashihe', '2024-01-02 17:15:29', 1, NULL, NULL);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
@@ -279,6 +313,8 @@ INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigi
 	('3f812d2d-6b20-40eb-8b20-933ad3ec6458', 'https://www.bing.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-02 16:53:22', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('3fa304ee-fbc6-46ca-b27a-0bc2d2d0faee', '', 'mbalashiha.ru', 'http://localhost:5000', 'uslugi-mastera-v-balashihe', '2024-01-04 20:53:32', 1, NULL, NULL);
+INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
+	('3fc956d1-3346-4e1d-bb7c-9a24d790f905', 'https://www.bing.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-07 17:50:10', 1, 1, 202);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('404d0943-963d-4fa6-953f-d4a0153e30e3', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'http://localhost:5000', 'uslugi-mastera-v-balashihe', '2024-01-02 16:53:22', 1, NULL, NULL);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
@@ -327,6 +363,8 @@ INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigi
 	('49f69f8b-03a8-44bd-85dd-34956009a043', '', 'mbalashiha.ru', 'http://localhost:5000', 'uslugi-mastera-v-balashihe', '2024-01-04 20:49:10', 1, NULL, NULL);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('4aa96fb6-d94e-4d08-961d-9fff816e05db', 'https://yandex.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-04 21:11:32', NULL, 1, 200);
+INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
+	('4b46311a-c0e8-4805-baf0-c7da3d82fb61', '', 'mbalashiha.ru', 'http://localhost:5000', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-07 17:50:10', 1, NULL, NULL);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('4b861549-5312-4ee7-a1ce-959923f286b2', '', 'mbalashiha.ru', 'http://localhost:5000', 'uslugi-mastera-v-balashihe', '2024-01-04 17:28:15', 1, NULL, NULL);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
@@ -378,6 +416,8 @@ INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigi
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('593f1857-44e2-439d-a555-220e5ed26ac8', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'http://localhost:5000', 'uslugi-mastera-v-balashihe', '2024-01-02 17:06:12', 1, NULL, NULL);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
+	('59afb721-290c-455b-8d18-273109efae0e', '', 'mbalashiha.ru', 'http://localhost:5000', 'uslugi-mastera-v-balashihe/fsfsdf', '2024-01-04 22:22:04', 1, NULL, NULL);
+INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('59b5f8b9-2852-4018-82e2-13d1cdb3d5fe', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'http://localhost:5000', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-03 00:43:48', 1, NULL, NULL);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('5b005538-0a30-4293-a023-d5f56751c87d', 'https://www.bing.com/indexnow', 'mbalashiha.ru', 'http://localhost:5000', 'uslugi-mastera-v-balashihe', '2024-01-02 16:53:22', 1, NULL, NULL);
@@ -385,6 +425,8 @@ INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigi
 	('5bebbadf-ab99-4ce1-a305-8e954aad8528', 'https://www.bing.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-02 21:55:29', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('5d013770-5b61-4650-9c62-1a431bdaf452', 'https://yandex.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-03 00:43:48', NULL, 1, 202);
+INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
+	('5d266534-1a78-4ec3-9381-e54994cb83fb', 'https://www.bing.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/fsfsdf', '2024-01-04 22:22:04', 1, NULL, NULL);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('5d51a9ac-dbf1-4730-a862-dd62ee0f03da', '', 'mbalashiha.ru', 'http://localhost:5000', 'uslugi-mastera-v-balashihe', '2024-01-04 16:56:31', 1, NULL, NULL);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
@@ -394,6 +436,8 @@ INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigi
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('5e5302da-fd6f-40f0-8b85-fa435a50c60f', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-04 17:28:15', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
+	('5e72e579-a145-43f6-a1d3-7a1091769d27', '', 'mbalashiha.ru', 'http://localhost:5000', 'uslugi-mastera-v-balashihe', '2024-01-07 17:51:52', 1, NULL, NULL);
+INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('5f10e4e9-34e0-409a-b956-e0ac6045f039', 'https://www.bing.com/indexnow', 'mbalashiha.ru', 'http://localhost:5000', 'uslugi-mastera-v-balashihe', '2024-01-02 22:02:00', NULL, NULL, NULL);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('5f9548cf-302d-46ef-8cdb-a0b55820d2b8', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'http://localhost:5000', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-02 21:48:59', NULL, NULL, NULL);
@@ -402,13 +446,15 @@ INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigi
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('5fce8214-b31f-49c9-aa7a-0cee6bbf5c7e', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-03 00:31:26', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
+	('60131994-9134-4bbb-a006-bab2a8bd1b0b', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-07 16:47:43', 1, 1, 202);
+INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('6067111d-47d8-4321-bd9d-168915bd4249', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-04 17:42:31', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('60f95504-aa60-455d-823f-7b048216c1d1', 'https://yandex.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-04 21:11:32', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('622b1d21-5e78-4e57-85ba-973e2da8eb3c', 'https://www.bing.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-04 16:57:49', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
-	('6336a8ba-ffe9-42ce-8b77-1c2270ad23f1', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-04 21:15:10', NULL, NULL, NULL);
+	('6336a8ba-ffe9-42ce-8b77-1c2270ad23f1', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-04 21:15:10', NULL, 1, 202);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('633f96e2-af73-41fb-bb97-aa5a60b2e955', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-04 17:33:09', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
@@ -430,7 +476,11 @@ INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigi
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('6787edb8-c66b-44dd-9f75-84e2fb9b6c1c', 'https://yandex.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-04 20:52:23', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
+	('678dbd1f-4b92-4b3e-8242-2183f9ade901', 'https://www.bing.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-04 22:22:04', 1, 1, 202);
+INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('67a96e22-2777-4b19-8ab0-b3c891365a65', 'https://www.bing.com/indexnow', 'mbalashiha.ru', 'http://localhost:5000', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-02 21:54:15', NULL, NULL, NULL);
+INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
+	('67c0e4d2-ff3d-4463-b61a-97a228d8dc6d', 'https://www.bing.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-07 16:47:43', 1, 1, 202);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('67e44f7c-6efa-45c2-bddc-bf042710c50f', 'https://www.bing.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-02 16:53:22', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
@@ -440,7 +490,7 @@ INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigi
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('6812329b-8c0e-470c-877a-11049a2c15d5', 'https://yandex.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-02 22:02:55', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
-	('69ae7255-e7ff-4ba1-ab63-d6f1a18890b0', 'https://yandex.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-04 21:12:04', NULL, NULL, NULL);
+	('69ae7255-e7ff-4ba1-ab63-d6f1a18890b0', 'https://yandex.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-04 21:12:04', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('6a060852-b615-4a35-aae8-a807f9106517', 'https://www.bing.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-04 16:57:49', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
@@ -456,7 +506,7 @@ INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigi
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('6c5d2ded-9f37-41a3-bfa6-363bfb62ad24', '', 'mbalashiha.ru', 'http://localhost:5000', 'uslugi-mastera-v-balashihe', '2024-01-04 16:56:13', 1, NULL, NULL);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
-	('6c6cbf7c-9fc9-44ad-9568-c00fa362bc09', 'https://yandex.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-04 21:15:10', NULL, NULL, NULL);
+	('6c6cbf7c-9fc9-44ad-9568-c00fa362bc09', 'https://yandex.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-04 21:15:10', NULL, 1, 202);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('6cba719e-ffb7-4477-bb85-d7652e510e46', 'https://www.bing.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-04 17:09:54', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
@@ -464,9 +514,13 @@ INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigi
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('6e1f060c-9e43-4006-a5af-c6e20cfa5c37', 'https://www.bing.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-03 00:27:58', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
+	('6e49ab00-6bfa-4268-ab71-32278c182852', '', 'mbalashiha.ru', 'http://localhost:5000', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-07 16:47:43', 1, NULL, NULL);
+INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('6e9e3574-8038-446d-aa17-176cb58f1bfc', 'https://www.bing.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-04 20:53:06', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('6ebc5a3b-7c35-4027-b1e0-4fcf722ca89a', 'https://www.bing.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-02 22:00:09', NULL, 1, 200);
+INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
+	('6edc1b15-f8a8-4f44-a45f-20b5df0a2475', 'https://www.bing.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-07 16:47:43', 1, 1, 202);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('6ef390ab-cb0b-47dc-8284-f1462f1e484c', 'https://yandex.com/indexnow', 'mbalashiha.ru', 'http://localhost:5000', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-02 16:53:22', 1, NULL, NULL);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
@@ -550,7 +604,7 @@ INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigi
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('81fb0ba6-25eb-45e7-a741-8cff153db25d', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-04 20:53:32', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
-	('82eca99a-30df-4d04-a28d-e869607aa3a4', 'https://www.bing.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-04 21:17:05', NULL, NULL, NULL);
+	('82eca99a-30df-4d04-a28d-e869607aa3a4', 'https://www.bing.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-04 21:17:05', NULL, 1, 202);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('83bc1328-f537-4cc1-a581-8b6a61129c88', 'https://www.bing.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-03 00:43:48', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
@@ -612,7 +666,7 @@ INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigi
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('90f12f94-bdc9-46ef-99e3-4ec7cf21613b', 'https://www.bing.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-04 20:44:11', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
-	('910ce476-9bb9-4c2d-8fe3-6e18442880c5', 'https://www.bing.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-04 21:15:10', NULL, NULL, NULL);
+	('910ce476-9bb9-4c2d-8fe3-6e18442880c5', 'https://www.bing.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-04 21:15:10', NULL, 1, 202);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('91ef33af-5a6d-46f8-8451-0f9278ce2143', 'https://yandex.com/indexnow', 'mbalashiha.ru', 'http://localhost:5000', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-02 22:02:00', NULL, NULL, NULL);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
@@ -630,6 +684,8 @@ INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigi
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('95fca54d-f406-4ada-b6f5-7a1720004bd3', 'https://www.bing.com/indexnow', 'mbalashiha.ru', 'http://localhost:5000', 'uslugi-mastera-v-balashihe', '2024-01-02 17:06:12', 1, NULL, NULL);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
+	('9614cb8d-7bfc-4dbe-a34f-277fd3af6c36', 'https://yandex.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/fsfsdf', '2024-01-04 22:22:04', 1, NULL, NULL);
+INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('963123ed-a46a-49d4-ae9b-9e23a23c7ac3', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-02 22:00:09', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('9813f8b7-9b0f-43b7-927d-e78f486ec987', 'https://yandex.com/indexnow', 'mbalashiha.ru', 'http://localhost:5000', 'uslugi-mastera-v-balashihe', '2024-01-03 00:41:29', 1, NULL, NULL);
@@ -639,6 +695,8 @@ INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigi
 	('99ad1c28-e62f-4073-ab2e-3326f16ff08c', 'https://yandex.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-04 16:54:49', NULL, 1, 202);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('99d40625-6ae0-43b3-afd7-ea3f77ded5b0', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-02 17:15:29', NULL, 1, 200);
+INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
+	('99f652c6-73f9-4fda-898d-82a5ab70ac7b', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-07 17:51:52', 1, NULL, NULL);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('9a77efab-04be-46f2-a66f-3ed29efd324c', 'https://yandex.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-02 16:53:22', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
@@ -666,11 +724,15 @@ INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigi
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('9d1d5f06-2e5c-48d1-b826-8c0f1aa7d702', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-02 17:02:46', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
+	('9d970044-46f1-4253-95dd-dc31ea7287f9', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-07 17:50:10', 1, 1, 202);
+INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('9daf5e23-71d1-4f7c-b62f-9f0ac60a8b24', 'https://www.bing.com/indexnow', 'mbalashiha.ru', 'http://localhost:5000', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-03 00:31:26', 1, NULL, NULL);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('9df3af7b-6c99-4664-9ca4-b91314e8533b', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'http://localhost:5000', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-02 16:53:22', 1, NULL, NULL);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('9f21c447-5f28-4c5c-a140-c6dc3aa233fe', 'https://www.bing.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-02 17:06:12', NULL, 1, 200);
+INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
+	('9f4f347b-18cd-415b-b2dd-631472668337', 'https://yandex.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-07 16:47:43', 1, 1, 202);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('9f9fc14f-535e-40b6-9f46-b68336bee29d', 'https://yandex.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-02 16:53:22', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
@@ -706,13 +768,15 @@ INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigi
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('a60bc694-9201-41c5-bff5-8e77e82f23b8', 'https://www.bing.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-04 17:25:11', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
-	('a6499e46-9bd7-424a-b351-9696d599f68c', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-04 21:17:05', NULL, NULL, NULL);
+	('a6499e46-9bd7-424a-b351-9696d599f68c', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-04 21:17:05', NULL, 1, 202);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('a660c71c-0028-4567-96f2-5b514a425614', 'https://www.bing.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-04 17:40:24', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('a67f17c5-b2b9-4427-85a1-0f89b84fa0f6', 'https://yandex.com/indexnow', 'mbalashiha.ru', 'http://localhost:5000', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-02 16:53:22', 1, NULL, NULL);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('a6bfe529-6304-46da-8576-0ce96539dd08', 'https://www.bing.com/indexnow', 'mbalashiha.ru', 'http://localhost:5000', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-03 00:41:29', 1, NULL, NULL);
+INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
+	('a783b004-802d-4ac4-a040-76ff18148ddd', 'https://www.bing.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-04 22:21:39', 1, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('a7864539-6921-42e1-8ca0-89723f4eb8be', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-04 20:52:23', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
@@ -740,7 +804,7 @@ INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigi
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('ab7d94e9-5b87-49a3-825e-3e2a03f54197', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-04 17:28:15', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
-	('ab9aaaa1-adad-4b18-9be3-a3148add226d', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-04 21:12:04', NULL, NULL, NULL);
+	('ab9aaaa1-adad-4b18-9be3-a3148add226d', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-04 21:12:04', NULL, 1, 202);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('ac431996-d045-44c6-97fd-950173a42f99', 'https://www.bing.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-02 21:48:59', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
@@ -760,9 +824,9 @@ INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigi
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('af22c4d1-026b-4ea6-8f56-12405da16630', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'http://localhost:5000', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-03 00:26:13', 1, NULL, NULL);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
-	('af60a7ad-7b34-41a9-981f-1b9c1751d898', 'https://yandex.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-04 21:17:05', NULL, NULL, NULL);
+	('af60a7ad-7b34-41a9-981f-1b9c1751d898', 'https://yandex.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-04 21:17:05', NULL, 1, 202);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
-	('af7b4ffa-922b-40c8-bb12-85f700bb4514', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-04 21:17:05', NULL, NULL, NULL);
+	('af7b4ffa-922b-40c8-bb12-85f700bb4514', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-04 21:17:05', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('aff26033-bfa9-4583-b35c-449e3171581d', 'https://yandex.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-02 17:06:12', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
@@ -796,7 +860,7 @@ INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigi
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('b5e36b6b-2007-4fac-8561-64e4ff411e24', '', 'mbalashiha.ru', 'http://localhost:5000', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-04 21:11:32', 1, NULL, NULL);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
-	('b7969f31-f80a-495a-a4de-105162e2fa15', 'https://yandex.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-04 21:17:05', NULL, NULL, NULL);
+	('b7969f31-f80a-495a-a4de-105162e2fa15', 'https://yandex.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-04 21:17:05', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('b79c05dd-6f7c-421a-bb41-6e671d05a57f', 'https://www.bing.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-04 17:42:31', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
@@ -812,7 +876,7 @@ INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigi
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('b998deda-0477-42b0-b53a-d82e2764626a', 'https://yandex.com/indexnow', 'mbalashiha.ru', 'http://localhost:5000', 'uslugi-mastera-v-balashihe', '2024-01-02 22:03:39', NULL, NULL, NULL);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
-	('bad0e408-9680-40b5-bdd2-24596566ee98', 'https://www.bing.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-04 21:12:04', NULL, NULL, NULL);
+	('bad0e408-9680-40b5-bdd2-24596566ee98', 'https://www.bing.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-04 21:12:04', NULL, 1, 202);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('bae52b67-f116-4a6f-98c9-0ea95496d8a5', 'https://yandex.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-04 21:02:11', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
@@ -840,7 +904,7 @@ INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigi
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('be38f9f4-8fa3-49e3-89dd-9867ee4c1d51', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'http://localhost:5000', 'uslugi-mastera-v-balashihe', '2024-01-02 22:03:39', NULL, NULL, NULL);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
-	('bf3eee62-a405-4fd6-b16e-46bf685ba263', 'https://www.bing.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-04 21:15:10', NULL, NULL, NULL);
+	('bf3eee62-a405-4fd6-b16e-46bf685ba263', 'https://www.bing.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-04 21:15:10', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('bf65319b-bf3b-45f7-89ba-285d9c71ba27', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-04 19:20:20', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
@@ -910,7 +974,11 @@ INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigi
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('c96488de-13ef-459d-87ca-01f1c056075e', '', 'mbalashiha.ru', 'http://localhost:5000', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-04 20:44:11', 1, NULL, NULL);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
+	('c9be9dc7-e1f9-4178-9a20-2ff2e8b35c24', '', 'mbalashiha.ru', 'http://localhost:5000', 'uslugi-mastera-v-balashihe/fsfsdf', '2024-01-04 22:21:39', 1, NULL, NULL);
+INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('ca2e424c-5ae9-4cc6-b15b-605f55263cf7', '', 'mbalashiha.ru', 'http://localhost:5000', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-04 17:12:35', 1, NULL, NULL);
+INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
+	('ca5e7585-d719-4b1c-b731-e24882c80879', 'https://www.bing.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-07 17:50:10', 1, 1, 202);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('cae220e8-dd57-4dee-b879-4142c6ce8725', 'https://www.bing.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-04 17:10:44', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
@@ -946,11 +1014,13 @@ INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigi
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('d1957186-f317-4189-8c21-7a1533271c5c', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-04 21:11:32', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
+	('d1b25cd9-d4d5-41fb-abca-096ee4114f85', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/fsfsdf', '2024-01-04 22:22:04', 1, NULL, NULL);
+INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('d2778f83-ddf6-45f6-b41f-6a0802398e0d', 'https://www.bing.com/indexnow', 'mbalashiha.ru', 'http://localhost:5000', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-02 16:53:22', 1, NULL, NULL);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('d29514c9-dd10-4022-8b92-d59b9084c3e5', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-02 16:53:22', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
-	('d2c30bf2-6a7e-4321-bdd5-024907841939', 'https://www.bing.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-04 21:12:04', NULL, NULL, NULL);
+	('d2c30bf2-6a7e-4321-bdd5-024907841939', 'https://www.bing.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-04 21:12:04', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('d3205c43-68f5-4071-9fb4-383be7b58e68', '', 'mbalashiha.ru', 'http://localhost:5000', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-04 21:02:11', 1, NULL, NULL);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
@@ -982,11 +1052,15 @@ INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigi
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('db1ca07a-2523-4523-a851-d715233d645a', '', 'mbalashiha.ru', 'http://localhost:5000', 'uslugi-mastera-v-balashihe', '2024-01-04 20:53:06', 1, NULL, NULL);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
+	('db861705-ff62-4b77-9d98-29e814752285', 'https://www.bing.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/fsfsdf', '2024-01-04 22:21:39', 1, 1, 200);
+INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('db96616a-d3b1-4c57-b84b-17740309bfba', '', 'mbalashiha.ru', 'http://localhost:5000', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-04 21:01:49', 1, NULL, NULL);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('dc421c14-bc1e-46db-972c-cde367c8be5c', 'https://www.bing.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-02 22:02:00', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
-	('dcf08ad7-5ef4-4d15-8b14-3cac98f02ce4', 'https://yandex.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-04 21:15:10', NULL, NULL, NULL);
+	('dc500004-45db-4fcf-a2e7-97c145a5de88', '', 'mbalashiha.ru', 'http://localhost:5000', 'uslugi-mastera-v-balashihe', '2024-01-04 22:22:04', 1, NULL, NULL);
+INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
+	('dcf08ad7-5ef4-4d15-8b14-3cac98f02ce4', 'https://yandex.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-04 21:15:10', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('dd204b00-cc06-441e-809b-e9d11200c51b', '', 'mbalashiha.ru', 'http://localhost:5000', 'uslugi-mastera-v-balashihe', '2024-01-04 21:01:49', 1, NULL, NULL);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
@@ -1030,7 +1104,7 @@ INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigi
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('e81aee37-404b-4359-823b-4840a89dd262', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-02 16:53:22', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
-	('e88e368d-22e1-4d1f-b90a-344420862a73', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-04 21:15:10', NULL, NULL, NULL);
+	('e88e368d-22e1-4d1f-b90a-344420862a73', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-04 21:15:10', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('e8c255b6-fe30-4549-97dd-79c9cfd4144a', 'https://www.bing.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-02 16:53:22', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
@@ -1050,7 +1124,7 @@ INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigi
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('ed501b86-4210-4958-80af-ec9eda0a6dba', '', 'mbalashiha.ru', 'http://localhost:5000', 'uslugi-mastera-v-balashihe', '2024-01-04 21:17:05', 1, NULL, NULL);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
-	('ed89bd6f-c554-44e8-adcb-52b2feb21919', 'https://yandex.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-04 21:12:04', NULL, NULL, NULL);
+	('ed89bd6f-c554-44e8-adcb-52b2feb21919', 'https://yandex.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-04 21:12:04', NULL, 1, 202);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('edd1de94-78af-4f66-9a3e-025d587133e7', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-04 21:11:32', NULL, 1, 200);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
@@ -1078,7 +1152,13 @@ INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigi
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('f3e8983d-8ce0-4932-9722-4851191e34d4', '', 'mbalashiha.ru', 'http://localhost:5000', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-04 21:12:04', 1, NULL, NULL);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
+	('f53b6874-6048-4732-9348-fe9604a7dce9', 'https://yandex.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-07 17:50:10', 1, 1, 202);
+INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
+	('f56cb5a1-bc47-4a04-b608-97aec1700b35', 'https://yandex.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-07 17:51:52', 1, NULL, NULL);
+INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('f5fd49c0-3273-4845-9565-d105f22e8d20', 'https://yandex.com/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-02 16:57:52', NULL, 1, 200);
+INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
+	('f73f3bf6-f505-4243-977b-eb3527680e95', 'https://api.indexnow.org/indexnow', 'mbalashiha.ru', 'https://mbalashiha.ru', 'uslugi-mastera-v-balashihe', '2024-01-07 17:51:52', 1, NULL, NULL);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES
 	('f791e128-de2b-4d9c-97a7-a37cc1896810', 'https://www.bing.com/indexnow', 'mbalashiha.ru', 'http://localhost:5000', 'uslugi-mastera-v-balashihe/kak-vstavit-schyotchiki-yandex-metrika-na-sajt-s-next-js', '2024-01-02 16:57:52', 1, NULL, NULL);
 INSERT IGNORE INTO `index_now_request` (`uuid`, `apiUrl`, `siteHost`, `siteOrigin`, `url`, `created`, `revalidated`, `indexNowSended`, `indexNowStatus`) VALUES

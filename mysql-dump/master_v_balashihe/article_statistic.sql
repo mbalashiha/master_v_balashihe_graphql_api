@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS `article_statistic` (
   CONSTRAINT `FK_article_statistic_blog_article` FOREIGN KEY (`articleId`) REFERENCES `blog_article` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Дамп данных таблицы master_v_balashihe.article_statistic: ~525 rows (приблизительно)
+-- Дамп данных таблицы master_v_balashihe.article_statistic: ~560 rows (приблизительно)
 INSERT IGNORE INTO `article_statistic` (`timestamp`, `ip`, `articleId`, `createdAt`, `duplicate`) VALUES
 	('2023-08-09 17:25:28', _binary 0xc6104e2d, 77, '2023-08-09 17:25:27', NULL);
 INSERT IGNORE INTO `article_statistic` (`timestamp`, `ip`, `articleId`, `createdAt`, `duplicate`) VALUES
@@ -1133,6 +1133,20 @@ INSERT IGNORE INTO `article_statistic` (`timestamp`, `ip`, `articleId`, `created
 	('2024-01-04 20:45:39', _binary 0x05ffe7a3, 96, '2024-01-04 20:46:18', NULL);
 INSERT IGNORE INTO `article_statistic` (`timestamp`, `ip`, `articleId`, `createdAt`, `duplicate`) VALUES
 	('2024-01-04 21:10:54', _binary 0x5f1de552, 96, '2024-01-04 21:10:53', NULL);
+INSERT IGNORE INTO `article_statistic` (`timestamp`, `ip`, `articleId`, `createdAt`, `duplicate`) VALUES
+	('2024-01-05 04:40:21', _binary 0x284dbd1c, 77, '2024-01-05 04:40:21', NULL);
+INSERT IGNORE INTO `article_statistic` (`timestamp`, `ip`, `articleId`, `createdAt`, `duplicate`) VALUES
+	('2024-01-06 03:51:08', _binary 0x05ffe7b5, 77, '2024-01-06 03:51:09', NULL);
+INSERT IGNORE INTO `article_statistic` (`timestamp`, `ip`, `articleId`, `createdAt`, `duplicate`) VALUES
+	('2024-01-06 08:11:02', _binary 0x5f6cd55d, 77, '2024-01-06 08:11:07', NULL);
+INSERT IGNORE INTO `article_statistic` (`timestamp`, `ip`, `articleId`, `createdAt`, `duplicate`) VALUES
+	('2024-01-06 17:32:08', _binary 0x5f6cd5cb, 76, '2024-01-06 17:32:08', NULL);
+INSERT IGNORE INTO `article_statistic` (`timestamp`, `ip`, `articleId`, `createdAt`, `duplicate`) VALUES
+	('2024-01-06 23:26:49', _binary 0x6db8699d, 96, '2024-01-06 23:26:45', NULL);
+INSERT IGNORE INTO `article_statistic` (`timestamp`, `ip`, `articleId`, `createdAt`, `duplicate`) VALUES
+	('2024-01-07 07:07:26', _binary 0xb9a65492, 77, '2024-01-07 07:07:27', NULL);
+INSERT IGNORE INTO `article_statistic` (`timestamp`, `ip`, `articleId`, `createdAt`, `duplicate`) VALUES
+	('2024-01-07 14:51:18', _binary 0xd5b4cb0b, 77, '2024-01-07 14:51:19', NULL);
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

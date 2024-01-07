@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS `image` (
   `useAsRandom` tinyint(1) unsigned DEFAULT NULL,
   PRIMARY KEY (`imageId`) USING BTREE,
   UNIQUE KEY `uniq_imgSrc` (`imgSrc`(512)) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=351035 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=387254 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Дамп данных таблицы master_v_balashihe.image: ~357 rows (приблизительно)
 INSERT IGNORE INTO `image` (`imageId`, `imgSrc`, `width`, `height`, `title`, `altText`, `format`, `createdAt`, `updatedAt`, `originalWidth`, `originalHeight`, `pathOfOriginal`, `useAsRandom`) VALUES
