@@ -119,6 +119,8 @@ export const nextjs_revalidate_module = createModule({
           console.error(e.stack || e.message || e.stack || e);
           let errorMessage = e.message || e.stack || e;
           throw e;
+        } finally {
+          
         }
       },
       getNextjsRevalidateUrls: async (

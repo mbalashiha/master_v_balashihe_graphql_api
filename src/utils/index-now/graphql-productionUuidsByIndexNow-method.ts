@@ -1,3 +1,4 @@
+import db from "@src/sql/execute-query";
 import { saveIndexNowRequests } from "./post-index-now";
 import { revalidateNextjsUrls } from "./revalidate-nextjs-urls";
 
@@ -56,5 +57,16 @@ export async function graphqlProductionUuidsByIndexNow({
     console.error(e.stack || e.message || e);
     debugger;
     throw e;
+  } finally {
+    if (handlesToRevalidate.length) {
+      try {
+        await db.query(`
+          Delete from index_now_request 
+            WHERE created < DATE_SUB(Now(), INTERVAL 7 day)
+        `);
+      } catch (e: any) {
+        console.error(e.message || e);
+      }
+    }
   }
 }
