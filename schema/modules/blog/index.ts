@@ -2,18 +2,13 @@ import { createModule, gql } from "graphql-modules";
 import util from "util";
 import db from "@src/sql/execute-query";
 import { GraphQLResolveInfo } from "graphql";
-import { isPositiveInteger } from "@src/utils/type-checkers";
-import { sql } from "@schema/sql-query";
-import { Console } from "console";
-import { normalizePriceCurrency } from "@src/utils/currency/converter";
-import { FullProductInput, ProductInput } from "@schema/types/indext";
 import { fullTextSearch } from "@src/sql/full-text-search";
 import { Schema } from "@root/schema/types/schema";
 import { parseImagesToRandom } from "@src/image/parse-images-to-random";
 import dateToISO from "@src/utils/date-to-iso";
-import getnextJsPagePath from "@src/utils/get-next-js-page-path";
 import path from "path";
 import { glob } from "glob";
+/*
 const getFirst = async (notThisId: number | string) => {
   const rows = await db.excuteQuery({
     query: `SELECT 1 as itIsloop, id, title, handle, imageId FROM blog_article_handle WHERE absURL is NULL AND id = (SELECT MIN(id) FROM blog_article_handle Where absURL is NULL) And id != $articleId`,
@@ -29,6 +24,7 @@ const getLast = async (notThisId: number | string) => {
   });
   return rows[0] || { itIsloop: 1, id: null, title: "", handle: "" };
 };
+*/
 const getPrev = (id: number | string) =>
   db.excuteQuery({
     query: `SELECT null as itIsloop, id, title, handle, imageId FROM blog_article_handle 
@@ -42,9 +38,6 @@ const getNext = (id: number | string) =>
     variables: { articleId: id },
   });
 
-function onlyUnique(value: any, index: any, self: string | any[]) {
-  return self.indexOf(value) === index;
-}
 export const blogArticlesModule = createModule({
   id: "blog-articles-module",
   dirname: __dirname,
