@@ -199,7 +199,7 @@ export async function postIndexNow({
     const test = await db.query(
       `select 1 from index_now_request 
          WHERE indexNowSended is Not Null And 
-               created > DATE_SUB(Now(), INTERVAL 10 minute) And
+               created > DATE_SUB(Now(), INTERVAL 18 hour) And
                url=$url And siteOrigin=$siteOrigin And apiUrl=$apiUrl`,
       {
         url,

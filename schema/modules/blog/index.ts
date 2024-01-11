@@ -62,8 +62,8 @@ export const blogArticlesModule = createModule({
         itIsloop: Boolean
       }
       type BlogArticleNavigation {
-        prev: NavigationItem!
-        next: NavigationItem!
+        prev: NavigationItem
+        next: NavigationItem
         nearestSiblings: [NavigationItem]
       }
       type OpenGraphDates {
@@ -528,14 +528,6 @@ export const blogArticlesModule = createModule({
             { ...parent, handle: "" },
             ...articlesAfterList,
           ];
-          if (!prev) {
-            prev = await getLast(parent.id);
-          }
-          if (!next) {
-            next = await getFirst(parent.id);
-          }
-          next.itIsloop = Boolean(next.itIsloop);
-          prev.itIsloop = Boolean(prev.itIsloop);
           nearestSiblings.forEach((elem: any) => {
             elem.itIsloop = Boolean(elem.itIsloop);
           });
