@@ -1,6 +1,6 @@
 import { createModule, gql } from "graphql-modules";
 import util from "util";
-import db from "@src/sql/execute-query";
+import { db } from "@src/sql";
 import { GraphQLResolveInfo } from "graphql";
 import { isPositiveInteger } from "@src/utils/type-checkers";
 import { sql } from "@schema/sql-query";

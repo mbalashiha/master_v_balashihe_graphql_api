@@ -2,7 +2,7 @@ import { createModule, gql } from "graphql-modules";
 import util from "util";
 import expressJwt from "express-jwt";
 import jwt from "jsonwebtoken";
-import db from "@src/sql/execute-query";
+import { db } from "@src/sql";
 import { Request, Response } from "express";
 import { GraphQLResolveInfo } from "graphql";
 import { isPositiveInteger } from "@src/utils/type-checkers";
@@ -68,13 +68,15 @@ export const managementLoginMiddleware = async (
             // domain: "localhost:4402", //set your domain
           });
           return res.json(result);
-        };
+        }
       }
     }
     throw { message: "Authentification failed" };
   } catch (e: any) {
     console.error(e.stack || e.message);
-    return res.status(403).json({ success: false, error: e.stack || e.message || e });
+    return res
+      .status(403)
+      .json({ success: false, error: e.stack || e.message || e });
   }
 };
 export const managementSignoutMiddleware = async (

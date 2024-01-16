@@ -2,7 +2,7 @@ import path from "path";
 import fs from "fs/promises";
 import { glob, globSync, globStream, globStreamSync, Glob } from "glob";
 import sharp from "sharp";
-import db from "@src/sql/execute-query";
+import { db } from "@src/sql";
 
 export const getImgSrcUri = (imagePath: string): string =>
   imagePath.substring((process.env["SITE_PUBLIC_FOLDER"] || "").length);
@@ -20,7 +20,7 @@ export const saveToDb = async (imagePath: string): Promise<boolean> => {
       const imgSrc = getImgSrcUri(imagePath);
       const useAsRandom = imgSrc.includes(path.sep + "random" + path.sep)
         ? 1
-        : null;   
+        : null;
       let rows = await db.query(
         `select 1 from image where 
                   image.imgSrc = $imgSrc And

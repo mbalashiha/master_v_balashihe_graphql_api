@@ -1,4 +1,4 @@
-import db from "@src/sql/execute-query";
+import { db } from "@src/sql";
 export type SelectArticleDraftProps = {
   managerId?: string | number | null;
   articleId?: string | number | null;

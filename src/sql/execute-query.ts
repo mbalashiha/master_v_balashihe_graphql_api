@@ -19,22 +19,35 @@ interface QueryProps {
   query: string;
   variables?: (string | number | null)[] | { [key: string]: any };
 }
-class MysqlDbWrapper {
+type MysqlPartialConfig = {
+  host?: string;
+  port?: number;
+  database?: string;
+  user?: string;
+  password?: string;
+};
+export class MysqlDbWrapper {
   public readonly db: mysql.ServerlessMysql;
-  constructor() {
-    if (process.env.MYSQL_PASS) {
-      this.db = (mysql as any)({
-        config: {
-          host: process.env.MYSQL_HOST,
-          port: parseInt((process.env.MYSQL_PORT as any) || 3306),
-          database: process.env.MYSQL_DB,
-          user: process.env.MYSQL_USER,
-          password: process.env.MYSQL_PASS,
-        },
-      }) as mysql.ServerlessMysql;
-    } else {
-      throw database_env_unavailable_error as any;
+  constructor(inConfig?: MysqlPartialConfig) {
+    const config = {
+      host: inConfig?.host || process.env.MYSQL_HOST,
+      port: inConfig?.port || parseInt((process.env.MYSQL_PORT as any) || 3306),
+      database: inConfig?.database || process.env.MYSQL_DB,
+      user: inConfig?.user || process.env.MYSQL_USER,
+      password: inConfig?.password || process.env.MYSQL_PASS,
+    };
+    if (
+      !config.host ||
+      !config.port ||
+      !config.database ||
+      !config.user ||
+      !config.password
+    ) {
+      throw new Error("mysql connection config are incomplite!");
     }
+    this.db = mysql({
+      config,
+    });
   }
   public escapeId(
     value: string,
@@ -254,5 +267,7 @@ class MysqlDbWrapper {
     return this.db.getErrorCount();
   }
 }
-const db = new MysqlDbWrapper();
-export default db;
+export function getMysqlDbWrapper(partialConfig?: MysqlPartialConfig) {
+  return new MysqlDbWrapper(partialConfig);
+}
+export default MysqlDbWrapper;

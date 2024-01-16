@@ -1,6 +1,6 @@
 import { createModule, gql } from "graphql-modules";
 import util from "util";
-import db from "@src/sql/execute-query";
+import { db } from "@src/sql";
 import { GraphQLError, GraphQLResolveInfo } from "graphql";
 import { fullTextSearch } from "@src/sql/full-text-search";
 import { Schema } from "@root/schema/types/schema";

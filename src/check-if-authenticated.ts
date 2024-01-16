@@ -2,7 +2,7 @@ import { createModule, gql } from "graphql-modules";
 import util from "util";
 import expressJwt from "express-jwt";
 import jwt from "jsonwebtoken";
-import db from "@src/sql/execute-query";
+import { db } from "@src/sql";
 import { Request, Response } from "express";
 import { GraphQLResolveInfo } from "graphql";
 import { isPositiveInteger } from "@src/utils/type-checkers";
@@ -18,7 +18,7 @@ export const checkIfAuthenticated = async (
   next: Function
 ) => {
   try {
-    const managerToken = req.cookies && req.cookies["manager"] || "";
+    const managerToken = (req.cookies && req.cookies["manager"]) || "";
     if (!managerToken) {
       return res
         .status(401)

@@ -1,6 +1,6 @@
 import { createModule, gql } from "graphql-modules";
 import util from "util";
-import db from "@src/sql/execute-query";
+import { db } from "@src/sql";
 import { GraphqlContext } from "@root/types/express-custom";
 import { GraphQLResolveInfo } from "graphql";
 import { getYaIndexNowKey } from "@src/utils/index-now/get-yandex-index-now-key";

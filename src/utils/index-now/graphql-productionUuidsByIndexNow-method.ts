@@ -1,4 +1,4 @@
-import db from "@src/sql/execute-query";
+import { db } from "@src/sql";
 import { saveIndexNowRequests } from "./post-index-now";
 import { revalidateNextjsUrls } from "./revalidate-nextjs-urls";
 

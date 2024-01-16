@@ -25,7 +25,7 @@ import cors from "cors";
 import { Request, Response } from "express";
 import { graphqlHTTP } from "express-graphql";
 import cookieParser from "cookie-parser";
-import excuteQuery from "@src/sql/execute-query";
+import excuteQuery from "@src/sql";
 import { createApplication } from "graphql-modules";
 import { baseModule } from "@modules/base";
 import { blogArticlesModule } from "@modules/blog";

@@ -2,7 +2,7 @@ import fetch from "cross-fetch";
 import { glob } from "glob";
 import path from "path";
 import fsa from "fs/promises";
-import db from "@src/sql/execute-query";
+import { db } from "@src/sql";
 import { v4 as uuidv4 } from "uuid";
 
 type ObjectByIndexNowUrl = {

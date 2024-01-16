@@ -1,7 +1,7 @@
 import path from "path";
 import fs from "fs/promises";
 import { glob, globSync, globStream, globStreamSync, Glob } from "glob";
-import db from "@src/sql/execute-query";
+import { db } from "@src/sql";
 
 import { getImgAbsolutePath, saveToDb } from "./parse-images-save-to-db-query";
 

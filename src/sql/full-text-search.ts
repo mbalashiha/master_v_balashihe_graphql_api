@@ -1,4 +1,4 @@
-import db from "@src/sql/execute-query";
+import { db } from "@src/sql";
 const onlyLettersRegexp = new RegExp("[^\\p{L}\\d]+", "gimu");
 const keepOnlyLetters = (search: string): string => {
   onlyLettersRegexp.lastIndex = 0;
@@ -125,7 +125,9 @@ export const fullTextSearch = async ({
   const tempMap = new Map<string, any>();
   for (const el of resultArray) {
     if (!el.id) {
-      throw new Error('These is no entity id from mysql full text search rows.');
+      throw new Error(
+        "These is no entity id from mysql full text search rows."
+      );
     }
     const fromMap = tempMap.get(el.id);
     if (!fromMap || fromMap.score < el.score) {
