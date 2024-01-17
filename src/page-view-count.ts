@@ -1,21 +1,7 @@
-import { createModule, gql } from "graphql-modules";
-import util from "util";
-import expressJwt from "express-jwt";
-import jwt from "jsonwebtoken";
 import { db } from "@src/sql";
 import { Request, Response } from "express";
-import { GraphQLResolveInfo } from "graphql";
-import { isPositiveInteger } from "@src/utils/type-checkers";
-import { sql } from "@schema/sql-query";
-import { Console } from "console";
-import { normalizePriceCurrency } from "@src/utils/currency/converter";
-import { FullProductInput, ProductInput } from "@schema/types/indext";
-import { AuthRequest } from "@root/types/express-custom";
-
 import { simpleDecrypt } from "@src/encryption/message-hmac-private-key";
-import mailContact from "./utils/node-mailer";
 
-// mailContact().catch(console.error);
 export const pageViewCount = async (req: Request, res: Response) => {
   try {
     const ip: string = req.headers["x-forwarded-for"]

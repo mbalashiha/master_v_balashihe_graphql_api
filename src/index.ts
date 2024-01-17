@@ -1,6 +1,5 @@
 import path from "path";
 import fs from "fs";
-import fse from "fs-extra";
 import initUploadDirs from "./utils/init-upload-dirs";
 initUploadDirs();
 
@@ -22,10 +21,8 @@ import express from "express";
 import bodyParser from "body-parser";
 import jwt from "jsonwebtoken";
 import cors from "cors";
-import { Request, Response } from "express";
 import { graphqlHTTP } from "express-graphql";
 import cookieParser from "cookie-parser";
-import excuteQuery from "@src/sql";
 import { createApplication } from "graphql-modules";
 import { baseModule } from "@modules/base";
 import { blogArticlesModule } from "@modules/blog";

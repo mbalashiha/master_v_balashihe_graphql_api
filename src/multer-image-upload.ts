@@ -6,7 +6,7 @@ import multer from "multer";
 import delay from "delay";
 import util from "util";
 import sharp from "sharp";
-import db from "./sql/execute-query";
+import { db } from "./sql";
 import { processImage } from "./image/parse-images-to-db";
 export interface UploadedFileUriObject {
   absolutePathOfOriginal: string;
